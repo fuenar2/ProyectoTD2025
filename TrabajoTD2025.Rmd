@@ -206,4 +206,6 @@ if (!is.null(tickets_df)) {
 
 ```
 
-# *Mini Proyecto 2025. Análisis de tickets de supermercado
+# Mini Proyecto 2025. Análisis de tickets de supermercado
+
+##
