@@ -73,6 +73,20 @@ procesar_ticket <- function(ticket){
   # Número de operador
   op <- str_extract(texto, "OP: \\d+")
   op <- ifelse(!is.na(op), str_remove(op, "OP: "), NA)
+  
+  # Número de tienda, caja y factura
+  factura <- str_extract(texto, "FACTURA SIMPLIFICADA: \\d+-\\d+-\\d+")
+  if (!is.na(factura)) {
+    partes <- unlist(str_split(str_remove(factura, "FACTURA SIMPLIFICADA: "), "-"))
+    tienda <- partes[1]
+    caja <- partes[2]
+    num_factura <- partes[3]
+  } else {
+    tienda <- NA
+    caja <- NA
+    num_factura <- NA
+  }
+
 
 
 
