@@ -177,5 +177,30 @@ lista_tickets <- lapply(tickets, function(ticket) {
 # Combinamos todos los data frames y filtramos los nulos
 tickets_df <- de.call(rbind, lista_tickets[!sapply(lista_tickets, is.null)])
 
+# Cambiar los tipos de datos
+if (!is.null(tickets_df)) {
+  tickets_df <- tickets_df %>%
+    mutate(
+      cantidad = as.integer(cantidad),
+      codigo_postal = as.integer(codigo_postal),
+      telefono = as.integer(telefono),
+      op = as.integer(op),
+      tienda = as.integer(tienda),
+      caja = as.integer(caja),
+      num_factura = as.integer(num_factura),
+      tarjeta = as.integer(tarjeta),
+      nc = as.integer(nc),
+      aut = as.integer(aut),
+      arc = as.integer(arc),
+      fecha = dmy(fecha),
+      hora = as.POSIXct(hora, format = "%H:%M"),
+      entrada = as.POSIXct(entrada, format = "%H:%M"),
+      salida = as.POSIXct(salida, format = "%H:%M")
+    )
+  
+ 
+}
+
+
 ```
 
