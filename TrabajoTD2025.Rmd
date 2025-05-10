@@ -69,6 +69,11 @@ procesar_ticket <- function(ticket){
   
   #Hora
   hora <- str_extract(texto, "(?<=\\d{2}/\\d{2}/\\d{4} )\\d{2}:\\d{2}")
+  
+  # Número de operador
+  op <- str_extract(texto, "OP: \\d+")
+  op <- ifelse(!is.na(op), str_remove(op, "OP: "), NA)
+
 
 
 
