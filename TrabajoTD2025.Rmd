@@ -103,6 +103,10 @@ procesar_ticket <- function(ticket){
   
   nc <- str_extract(texto, "N\\.C: \\d+")
   nc <- ifelse(!is.na(nc), str_remove(nc, "N\\.C: "), NA)
+  
+  aut <- str_extract(texto, "AUT: \\d+")
+  aut <- ifelse(!is.na(aut), str_remove(aut, "AUT: "), NA)
+
 
 
 
