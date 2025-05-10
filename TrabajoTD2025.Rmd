@@ -100,6 +100,10 @@ procesar_ticket <- function(ticket){
   #Tarjeta
   tarjeta <- str_extract(texto, "TARJ\\. BANCARIA.*?(\\d{4})")
   tarjeta <- ifelse(!is.na(tarjeta), str_extract(tarjeta, "\\d{4}"), NA)
+  
+  nc <- str_extract(texto, "N\\.C: \\d+")
+  nc <- ifelse(!is.na(nc), str_remove(nc, "N\\.C: "), NA)
+
 
 
 
