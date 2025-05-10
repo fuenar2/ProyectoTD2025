@@ -24,7 +24,7 @@ library(kableExtra)
 
 ```{r Exportacion-tickets, include=FALSE}
 
-carpeta_data <- "data"
+carpeta_data <- "../data"
 
 # Obtenemos todos los nombres de los tickets que tengan extensión pdf y los guardamos en una lista
 tickets <- list.files(carpeta_data, pattern = "\\.pdf$", full.names = TRUE)
