@@ -174,5 +174,8 @@ lista_tickets <- lapply(tickets, function(ticket) {
  
 })
 
+# Combinamos todos los data frames y filtramos los nulos
+tickets_df <- de.call(rbind, lista_tickets[!sapply(lista_tickets, is.null)])
+
 ```
 
