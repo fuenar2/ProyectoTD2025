@@ -56,6 +56,9 @@ procesar_ticket <- function(ticket){
   # Código postal
   linea_cp_municipio <- lineas[grepl("^\\s*\\d{5}\\s+\\w+", lineas)][1]
   codigo_postal <- ifelse(!is.na(linea_cp_municipio), str_extract(linea_cp_municipio, "\\d{5}"), NA)
+  
+  #Municipio
+  municipio <- ifelse(!is.na(linea_cp_municipio), str_trim(str_remove(linea_cp_municipio, "^\\s*\\d{5}\\s+")), NA)
 
 
 
