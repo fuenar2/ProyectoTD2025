@@ -41,6 +41,10 @@ procesar_ticket <- function(ticket){
   texto <- paste(texto, collapse = "\n") # unimos todo el texto en un solo string
   
   supermercado <- "MERCADONA"
+  
+  # Obtenemos las líneas de texto individuales 
+  lineas <- str_split(texto, "\n")[[1]]
+
 }
 ```
 
