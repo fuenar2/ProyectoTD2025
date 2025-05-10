@@ -116,11 +116,9 @@ procesar_ticket <- function(ticket){
   #Arc
   arc <- str_extract(texto, "ARC: \\d+")
   arc <- ifelse(!is.na(arc), str_remove(arc, "ARC: "), NA)
-
-
-
-
-
+  
+  #Tipo de pago
+  tipo_pago <- str_match(texto, "(VISA|MASTERCARD|AMEX|DÉBITO|CRÉDITO|DEBITO|CREDITO|EFECTIVO)[ /A-Z]*")[,1]
 
 
 
