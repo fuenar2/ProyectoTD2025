@@ -203,7 +203,7 @@ if (!is.null(tickets_df)) {
  
 }
 
-
+#prueba2
 ```
 
 # Mini Proyecto 2025. Análisis de tickets de supermercado
