@@ -36,6 +36,9 @@ tickets <- list.files(carpeta_data, pattern = "\\.pdf$", full.names = TRUE)
 
 #Esta función procesa un ticket
 procesar_ticket <- function(ticket){
+  # Extraemos toda la información del ticket como un vector
+  texto <- pdf_text(ticket)
+  texto <- paste(texto, collapse = "\n") # unimos todo el texto en un solo string
   
 }
 ```
