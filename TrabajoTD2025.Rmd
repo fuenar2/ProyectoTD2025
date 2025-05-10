@@ -96,6 +96,10 @@ procesar_ticket <- function(ticket){
   # Total
   total <- str_match(texto, "TOTAL \\(€\\)\\s+(\\d+,\\d{2})")[,2]
   total <- ifelse(!is.na(total), as.numeric(str_replace(total, ",", ".")), NA)
+  
+  #Tarjeta
+  tarjeta <- str_extract(texto, "TARJ\\. BANCARIA.*?(\\d{4})")
+  tarjeta <- ifelse(!is.na(tarjeta), str_extract(tarjeta, "\\d{4}"), NA)
 
 
 
