@@ -165,15 +165,14 @@ procesar_ticket <- function(ticket){
   } else {
     NULL
   }
-}
-
-
-
-
-
-
-
 
 }
+
+# Procesamos todos los tickets
+lista_tickets <- lapply(tickets, function(ticket) {
+    procesar_ticket(ticket)
+ 
+})
+
 ```
 
