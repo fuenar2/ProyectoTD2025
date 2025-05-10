@@ -119,6 +119,9 @@ procesar_ticket <- function(ticket){
   
   #Tipo de pago
   tipo_pago <- str_match(texto, "(VISA|MASTERCARD|AMEX|DÉBITO|CRÉDITO|DEBITO|CREDITO|EFECTIVO)[ /A-Z]*")[,1]
+  
+  # Productos
+  idx_productos <- grep("^\\d+\\s+.*\\d+,\\d{2}$", lineas)
 
 
 
