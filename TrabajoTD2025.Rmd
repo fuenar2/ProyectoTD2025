@@ -1,0 +1,11 @@
+---
+title: "TrabajoTD2025"
+author: "Mar Fuentes Armenteros, Paula Girbés Plaza, Pablo Fernando Navarro Sánchez, Andrés Serrano Briz, Hugo Cuñat Alabau y Rafael Cebrián Pérez"
+date: "2025-05-10"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
