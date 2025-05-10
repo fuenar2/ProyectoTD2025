@@ -203,4 +203,3 @@ if (!is.null(tickets_df)) {
 
 
 ```
-
