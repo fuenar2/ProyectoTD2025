@@ -32,3 +32,11 @@ tickets <- list.files(carpeta_data, pattern = "\\.pdf$", full.names = TRUE)
 
 ```
 
+```{r Procesamiento-ticket, include=FALSE}
+
+#Esta función procesa un ticket
+procesar_ticket <- function(ticket){
+  
+}
+```
+
