@@ -63,6 +63,9 @@ procesar_ticket <- function(ticket){
   # Teléfono
   telefono <- str_extract(texto, "TELÉFONO: \\d+")
   telefono <- ifelse(!is.na(telefono), str_remove(telefono, "TELÉFONO: "), NA)
+  
+  # Fecha 
+  fecha <- str_extract(texto, "\\d{2}/\\d{2}/\\d{4}")
 
 
 
