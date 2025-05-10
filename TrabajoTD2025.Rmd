@@ -59,6 +59,10 @@ procesar_ticket <- function(ticket){
   
   #Municipio
   municipio <- ifelse(!is.na(linea_cp_municipio), str_trim(str_remove(linea_cp_municipio, "^\\s*\\d{5}\\s+")), NA)
+  
+  # Teléfono
+  telefono <- str_extract(texto, "TELÉFONO: \\d+")
+  telefono <- ifelse(!is.na(telefono), str_remove(telefono, "TELÉFONO: "), NA)
 
 
 
