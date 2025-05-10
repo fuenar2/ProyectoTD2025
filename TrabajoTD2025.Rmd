@@ -101,14 +101,21 @@ procesar_ticket <- function(ticket){
   tarjeta <- str_extract(texto, "TARJ\\. BANCARIA.*?(\\d{4})")
   tarjeta <- ifelse(!is.na(tarjeta), str_extract(tarjeta, "\\d{4}"), NA)
   
+  #Nc
   nc <- str_extract(texto, "N\\.C: \\d+")
   nc <- ifelse(!is.na(nc), str_remove(nc, "N\\.C: "), NA)
   
+  #Aut
   aut <- str_extract(texto, "AUT: \\d+")
   aut <- ifelse(!is.na(aut), str_remove(aut, "AUT: "), NA)
   
+  #Aid
   aid <- str_extract(texto, "AID: [\\w\\d]+")
   aid <- ifelse(!is.na(aid), str_remove(aid, "AID: "), NA)
+  
+  #Arc
+  arc <- str_extract(texto, "ARC: \\d+")
+  arc <- ifelse(!is.na(arc), str_remove(arc, "ARC: "), NA)
 
 
 
