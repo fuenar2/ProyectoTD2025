@@ -86,6 +86,11 @@ procesar_ticket <- function(ticket){
     caja <- NA
     num_factura <- NA
   }
+  
+  # Parking
+  entrada <- str_extract(texto, "ENTRADA\\s+\\d{2}:\\d{2}")
+  entrada <- ifelse(is.na(entrada), NA, str_extract(entrada, "\\d{2}:\\d{2}"))
+
 
 
 
