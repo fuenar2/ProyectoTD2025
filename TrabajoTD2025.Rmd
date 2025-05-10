@@ -90,6 +90,8 @@ procesar_ticket <- function(ticket){
   # Parking
   entrada <- str_extract(texto, "ENTRADA\\s+\\d{2}:\\d{2}")
   entrada <- ifelse(is.na(entrada), NA, str_extract(entrada, "\\d{2}:\\d{2}"))
+  salida <- str_extract(texto, "SALIDA\\s+\\d{2}:\\d{2}")
+  salida <- ifelse(is.na(salida), NA, str_extract(salida, "\\d{2}:\\d{2}"))
 
 
 
