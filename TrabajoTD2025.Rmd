@@ -40,6 +40,7 @@ procesar_ticket <- function(ticket){
   texto <- pdf_text(ticket)
   texto <- paste(texto, collapse = "\n") # unimos todo el texto en un solo string
   
+  supermercado <- "MERCADONA"
 }
 ```
 
