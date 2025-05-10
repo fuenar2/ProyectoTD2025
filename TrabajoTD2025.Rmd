@@ -44,6 +44,15 @@ procesar_ticket <- function(ticket){
   
   # Obtenemos las líneas de texto individuales 
   lineas <- str_split(texto, "\n")[[1]]
+  
+  # Dirección (línea que contenga "CTRA.")
+  idx_mercadona <- grep("MERCADONA, S\\.A\\.", lineas)
+  direccion <- if (length(idx_mercadona) > 0 && idx_mercadona + 1 <= length(lineas)) {
+    str_trim(lineas[idx_mercadona + 1])
+  } else {
+    NA
+  }
+
 
 }
 ```
