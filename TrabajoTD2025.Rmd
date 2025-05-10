@@ -66,6 +66,10 @@ procesar_ticket <- function(ticket){
   
   # Fecha 
   fecha <- str_extract(texto, "\\d{2}/\\d{2}/\\d{4}")
+  
+  #Hora
+  hora <- str_extract(texto, "(?<=\\d{2}/\\d{2}/\\d{4} )\\d{2}:\\d{2}")
+
 
 
 
