@@ -1,9 +1,11 @@
 ---
 title: "TrabajoTD2025"
-author: "Mar Fuentes Armenteros, Paula Girbés Plaza, Pablo Fernando Navarro Sánchez, Andreu Serrano Briz, Hugo Cuñat Alabau y Rafael Cebrián Pérez"
+author: Mar Fuentes Armenteros, Paula Girbés Plaza, Pablo Fernando Navarro Sánchez,
+  Andreu Serrano Briz, Hugo Cuñat Alabau y Rafael Cebrián Pérez
 date: "2025-05-10"
-output: html_document
-css: styles.css
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -24,7 +26,7 @@ library(kableExtra)
 
 ```{r Exportacion-tickets, include=FALSE}
 
-carpeta_data <- "../data"
+carpeta_data <- "data"
 
 # Obtenemos todos los nombres de los tickets que tengan extensión pdf y los guardamos en una lista
 tickets <- list.files(carpeta_data, pattern = "\\.pdf$", full.names = TRUE)
@@ -203,3 +205,8 @@ if (!is.null(tickets_df)) {
 
 
 ```
+<<<<<<< HEAD
+=======
+
+# *Mini Proyecto 2025. Análisis de tickets de supermercado
+>>>>>>> 608f4c80880f048f329167e0ce1a63eeeb697a09
