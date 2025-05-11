@@ -183,11 +183,35 @@ procesar_ticket <- function(ticket){
       }
     })
     
-    do.call(rbind, productos)
+    df_productos <- do.call(rbind, productos) %>% 
+      mutate(
+        ticket_id = factura,
+        supermercado = supermercado,
+        direccion = direccion,
+        codigo_postal = codigo_postal,
+        municipio = municipio,
+        telefono = telefono,
+        fecha = fecha,
+        hora = hora,
+        op = op,
+        tienda = tienda,
+        caja = caja,
+        num_factura = num_factura,
+        entrada = entrada,
+        salida = salida,
+        total = total,
+        tarjeta = tarjeta,
+        nc = nc,
+        aut = aut,
+        aid = aid,
+        arc = arc,
+        tipo_pago = tipo_pago
+      )
+    
+    return(df_productos)
   } else {
-    NULL
+    return(NULL)
   }
-
 }
 
 # Procesamiento con filtrado
