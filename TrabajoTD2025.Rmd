@@ -212,93 +212,51 @@ if (!is.null(tickets_df)) {
 
 ```
 
-
 # Introducción
-En este proyecto se aborda el análisis exploratorio de
-datos a partir de tickets de supermercado, con el objetivo de extraer
-información relevante sobre los hábitos de consumo, productos
-adquiridos, precios y comportamiento de compra. El conjunto de datos que se utiliza pertenece a varios tickets del supermercado Mercadona proporcionados por la Universidad de Valencia (UV). En concreto, pertenece a una recolecta entre el profesor y varios alumnos de la asignatura de Tratamiento de datos.
-Este proyecto tiene como objetivo analizar los datos extraidos de los tickets para responder a las siguientes preguntas:
 
-¿Cuáles son los 5 productos, de los vendidos por unidades, con más ventas ? ¿Cuántas unidades de cada uno se han vendido ?
-Si consideramos la categoría de FRUTAS Y VERDURAS. Cuáles son los 5 productos más vendidos ? ¿Cuántos kilos se han vendido de cada uno de estos productos ?
-Si consideramos la categoría de PESCADO. Cuáles son los 5 productos más vendidos ? ¿Cuántos kilos se han vendido de cada uno de estos productos ?
-Muestra mediante un gráfico de líneas como ha variado el precio por kilo de las bananas y los plátanos en los tickets disponibles, a lo largo del tiempo.
-¿ Cuál es la procedencia de los tickets ?¿ Qué ciudad/ pueblo tiene un mayor número de tickets ?
-Muestra mediante un diagrama el número de tickets recogidos cada día de las semana. ¿Si tuvieses que cerrar un día entre semana qué día lo harías ?
+En este proyecto se aborda el análisis exploratorio de datos a partir de tickets de supermercado, con el objetivo de extraer información relevante sobre los hábitos de consumo, productos adquiridos, precios y comportamiento de compra. El conjunto de datos que se utiliza pertenece a varios tickets del supermercado Mercadona proporcionados por la Universidad de Valencia (UV). En concreto, pertenece a una recolecta entre el profesor y varios alumnos de la asignatura de Tratamiento de datos. Este proyecto tiene como objetivo analizar los datos extraidos de los tickets para responder a las siguientes preguntas:
 
-1.¿Cuáles son las frutas más compradas durante la
-primavera? (Filtrar por fecha y categoría de producto).
+¿Cuáles son los 5 productos, de los vendidos por unidades, con más ventas ? ¿Cuántas unidades de cada uno se han vendido ? Si consideramos la categoría de FRUTAS Y VERDURAS. Cuáles son los 5 productos más vendidos ? ¿Cuántos kilos se han vendido de cada uno de estos productos ? Si consideramos la categoría de PESCADO. Cuáles son los 5 productos más vendidos ? ¿Cuántos kilos se han vendido de cada uno de estos productos ? Muestra mediante un gráfico de líneas como ha variado el precio por kilo de las bananas y los plátanos en los tickets disponibles, a lo largo del tiempo. ¿ Cuál es la procedencia de los tickets ?¿ Qué ciudad/ pueblo tiene un mayor número de tickets ? Muestra mediante un diagrama el número de tickets recogidos cada día de las semana. ¿Si tuvieses que cerrar un día entre semana qué día lo harías ?
 
-2.¿Qué productos suelen comprarse más durante festivos como Navidad,
-Semana Santa o Fallas? (Comparar ventas en fechas clave con el resto del
-año).
+1.¿Cuáles son las frutas más compradas durante la primavera? (Filtrar por fecha y categoría de producto).
 
-3.¿Se compran productos diferentes en zonas urbanas frente a rurales?
-(Agrupar por ciudad o código postal y comparar top productos).
+2.¿Qué productos suelen comprarse más durante festivos como Navidad, Semana Santa o Fallas? (Comparar ventas en fechas clave con el resto del año).
 
-4.¿Qué productos suelen comprarse juntos con frecuencia? (por ejemplo,
-pan con chocolate) (Analizar combinaciones frecuentes dentro del mismo
-ticket).
+3.¿Se compran productos diferentes en zonas urbanas frente a rurales? (Agrupar por ciudad o código postal y comparar top productos).
 
-5.¿Qué productos se mantienen en la cesta aunque cambien de precio?
-(Observar si bajadas o subidas de precio afectan a las unidades
-compradas).
+4.¿Qué productos suelen comprarse juntos con frecuencia? (por ejemplo, pan con chocolate) (Analizar combinaciones frecuentes dentro del mismo ticket).
 
-6.¿Cuántos productos se compran en promedio por ticket? (Contar
-productos por ticket y calcular la media).
+5.¿Qué productos se mantienen en la cesta aunque cambien de precio? (Observar si bajadas o subidas de precio afectan a las unidades compradas).
 
-7.¿Qué categorías suelen comprarse en conjunto? (Ej. frutas + lácteos)
-(Clasificar productos por categoría y ver combinaciones más frecuentes).
+6.¿Cuántos productos se compran en promedio por ticket? (Contar productos por ticket y calcular la media).
 
-8.¿Cómo cambia el gasto promedio según el día de la semana? (Comparar el
-total gastado y cantidad de tickets por día).
+7.¿Qué categorías suelen comprarse en conjunto? (Ej. frutas + lácteos) (Clasificar productos por categoría y ver combinaciones más frecuentes).
 
-9.¿Qué día tiene menos volumen de compras? ¿Y cuál el mayor? (Contar
-número de tickets por día de la semana).
+8.¿Cómo cambia el gasto promedio según el día de la semana? (Comparar el total gastado y cantidad de tickets por día).
 
-10¿Qué mes registra mayores compras de frutas y verduras? (Filtrar por
-categoría y agrupar por mes).
+9.¿Qué día tiene menos volumen de compras? ¿Y cuál el mayor? (Contar número de tickets por día de la semana).
 
-11. ¿Qué productos tienen mayor rotación semanal y cuáles permanecen más
-    tiempo sin comprarse? (Agrupar ventas por semana y producto,
-    analizar frecuencia de compra).
+10¿Qué mes registra mayores compras de frutas y verduras? (Filtrar por categoría y agrupar por mes).
 
-12. ¿Cómo afecta la climatología al tipo de productos comprados? (ej.
-    helados en verano, sopas en invierno) (Relacionar fechas con
-    estaciones y tipos de producto).
+11. ¿Qué productos tienen mayor rotación semanal y cuáles permanecen más tiempo sin comprarse? (Agrupar ventas por semana y producto, analizar frecuencia de compra).
 
-13. ¿Qué impacto tienen las promociones o descuentos en la cantidad
-    comprada de un producto? (Comparar unidades vendidas antes, durante
-    y después de una promoción).
+12. ¿Cómo afecta la climatología al tipo de productos comprados? (ej. helados en verano, sopas en invierno) (Relacionar fechas con estaciones y tipos de producto).
 
-14. ¿Qué ticket promedio se observa según el tipo de establecimiento
-    (urbano, rural, turístico)? (Agrupar por zona y calcular gasto
-    promedio por ticket).
+13. ¿Qué impacto tienen las promociones o descuentos en la cantidad comprada de un producto? (Comparar unidades vendidas antes, durante y después de una promoción).
 
-15. ¿Qué productos suelen ser los primeros en desaparecer en compras
-    grandes (+20 productos)? (Analizar orden de productos en tickets
-    extensos).
+14. ¿Qué ticket promedio se observa según el tipo de establecimiento (urbano, rural, turístico)? (Agrupar por zona y calcular gasto promedio por ticket).
 
-16. ¿Existen diferencias de compra entre clientes que compran entre
-    semana frente a fines de semana? (Comparar volumen y tipo de
-    productos por día).
+15. ¿Qué productos suelen ser los primeros en desaparecer en compras grandes (+20 productos)? (Analizar orden de productos en tickets extensos).
 
-17. ¿Hay patrones de consumo distintos entre zonas costeras y zonas del
-    interior? (Comparar categorías más compradas según localización
-    geográfica).
+16. ¿Existen diferencias de compra entre clientes que compran entre semana frente a fines de semana? (Comparar volumen y tipo de productos por día).
 
-18. ¿Qué marcas blancas se compran más en comparación con productos de
-    marca? (Clasificar productos por tipo de marca y analizar
-    proporciones de compra).
+17. ¿Hay patrones de consumo distintos entre zonas costeras y zonas del interior? (Comparar categorías más compradas según localización geográfica).
 
-19. ¿Cuáles son los productos más comprados por la mañana frente a la
-    tarde? (Agrupar tickets por franja horaria y analizar top
-    productos).
+18. ¿Qué marcas blancas se compran más en comparación con productos de marca? (Clasificar productos por tipo de marca y analizar proporciones de compra).
 
-20. ¿Qué artículos aumentan su venta a fin de mes (posiblemente por
-    cobro de sueldos)? (Comparar ventas por semana del mes,
-    especialmente última semana)
+19. ¿Cuáles son los productos más comprados por la mañana frente a la tarde? (Agrupar tickets por franja horaria y analizar top productos).
+
+20. ¿Qué artículos aumentan su venta a fin de mes (posiblemente por cobro de sueldos)? (Comparar ventas por semana del mes, especialmente última semana)
 
 # Material y Métodos
 
@@ -328,9 +286,7 @@ knitr::kable(
 )
 ```
 
-
 Para el correcto desarrollo de la exportación y análisis de los datos, en primer lugar, se cargan todas las librerías necesarias al principio del código. Estas librerías son las mostradas en la Tabla \ref{tab:tabla-librerias}.
-
 
 ## *Características de los datos*
 
@@ -342,16 +298,17 @@ Para el correcto desarrollo de la exportación y análisis de los datos, en prim
 
 ### *Análisis de los outliers*
 
-
-
 # Resultados
 
 # Conclusiones
 
 ¿Cuáles son los 5 productos, de los vendidos por unidades, con más ventas ? ¿Cuántas unidades de cada uno se han vendido ?
+
 ```{r}
 #Analizamos primero el nombre de todas las columnas para que el analisis sea más claro
 colnames(tickets_df)
+
+
 
 # Agrupar por producto y sumar cantidad vendida
 top_5_unidades <- tickets_df %>%
@@ -362,6 +319,7 @@ top_5_unidades <- tickets_df %>%
 top_5_unidades
 
 # Gráfico
+library(ggplot2)
 ggplot(top_5_unidades, aes(x = reorder(producto, unidades_vendidas), y = unidades_vendidas)) +
   geom_bar(stat = "identity", fill = "steelblue") +
   coord_flip() +
@@ -375,6 +333,7 @@ ggplot(top_5_unidades, aes(x = reorder(producto, unidades_vendidas), y = unidade
 
 
 ```
+
 Para responder esta pregunta, se ha analizado la columna producto del conjunto de datos y se ha calculado el total de unidades vendidas a través de la variable cantidad. Posteriormente, se han ordenado los productos en función del total acumulado y se han seleccionado los cinco con mayor número de unidades vendidas.
 
 Como se muestra en la tabla, los cinco productos más vendidos por unidades han sido:
