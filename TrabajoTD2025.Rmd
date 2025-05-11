@@ -263,6 +263,12 @@ productos por ticket y calcular la media).
 ```{r}
 library(tidyr)
 library(dplyr)
+
+productos_unicos <- tickets_df %>%
+  distinct(producto) %>%
+  mutate(categoria = NA)
+
+
 ```
 
 
