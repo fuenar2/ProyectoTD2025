@@ -226,6 +226,7 @@ Si consideramos la categoría de PESCADO. Cuáles son los 5 productos más vendi
 Muestra mediante un gráfico de líneas como ha variado el precio por kilo de las bananas y los plátanos en los tickets disponibles, a lo largo del tiempo.
 ¿ Cuál es la procedencia de los tickets ?¿ Qué ciudad/ pueblo tiene un mayor número de tickets ?
 Muestra mediante un diagrama el número de tickets recogidos cada día de las semana. ¿Si tuvieses que cerrar un día entre semana qué día lo harías ?
+
 1.¿Cuáles son las frutas más compradas durante la
 primavera? (Filtrar por fecha y categoría de producto).
 
@@ -346,3 +347,11 @@ Para el correcto desarrollo de la exportación y análisis de los datos, en prim
 # Resultados
 
 # Conclusiones
+
+
+```{r}
+#Analizamos primero el nombre de todas las columnas para que el analisis sea más claro
+colnames(tickets_df)
+
+```
+
