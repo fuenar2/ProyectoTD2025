@@ -260,6 +260,12 @@ productos por ticket y calcular la media).
 7.¿Qué categorías suelen comprarse en conjunto? (Ej. frutas + lácteos)
 (Clasificar productos por categoría y ver combinaciones más frecuentes).
 
+```{r}
+library(tidyr)
+library(dplyr)
+```
+
+
 8.¿Cómo cambia el gasto promedio según el día de la semana? (Comparar el
 total gastado y cantidad de tickets por día).
 
