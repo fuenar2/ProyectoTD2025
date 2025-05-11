@@ -299,6 +299,7 @@ categoría y agrupar por mes).
     cobro de sueldos)? (Comparar ventas por semana del mes,
     especialmente última semana)
 
+# Material y Métodos
 
 ## *Carga de librerías necesarias para el análisis*
 
@@ -330,5 +331,18 @@ knitr::kable(
 Para el correcto desarrollo de la exportación y análisis de los datos, en primer lugar, se cargan todas las librerías necesarias al principio del código. Estas librerías son las mostradas en la Tabla \ref{tab:tabla-librerias}.
 
 
+## *Características de los datos*
 
-# *Resultados*
+### *Análisis de missing data en nuestro conjunto de interés*
+
+### *Variables de tipo numérico*
+
+### *Variables de tipo categórico*
+
+### *Análisis de los outliers*
+
+
+
+# Resultados
+
+# Conclusiones
