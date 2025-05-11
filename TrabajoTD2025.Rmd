@@ -216,7 +216,15 @@ if (!is.null(tickets_df)) {
 
 En este proyecto se aborda el análisis exploratorio de datos a partir de tickets de supermercado, con el objetivo de extraer información relevante sobre los hábitos de consumo, productos adquiridos, precios y comportamiento de compra. El conjunto de datos que se utiliza pertenece a varios tickets del supermercado Mercadona proporcionados por la Universidad de Valencia (UV). En concreto, pertenece a una recolecta entre el profesor y varios alumnos de la asignatura de Tratamiento de datos. Este proyecto tiene como objetivo analizar los datos extraidos de los tickets para responder a las siguientes preguntas:
 
-¿Cuáles son los 5 productos, de los vendidos por unidades, con más ventas ? ¿Cuántas unidades de cada uno se han vendido ? Si consideramos la categoría de FRUTAS Y VERDURAS. Cuáles son los 5 productos más vendidos ? ¿Cuántos kilos se han vendido de cada uno de estos productos ? Si consideramos la categoría de PESCADO. Cuáles son los 5 productos más vendidos ? ¿Cuántos kilos se han vendido de cada uno de estos productos ? Muestra mediante un gráfico de líneas como ha variado el precio por kilo de las bananas y los plátanos en los tickets disponibles, a lo largo del tiempo. ¿ Cuál es la procedencia de los tickets ?¿ Qué ciudad/ pueblo tiene un mayor número de tickets ? Muestra mediante un diagrama el número de tickets recogidos cada día de las semana. ¿Si tuvieses que cerrar un día entre semana qué día lo harías ?
+¿Cuáles son los 5 productos, de los vendidos por unidades, con más ventas ? ¿Cuántas unidades de cada uno se han vendido ?
+
+Si consideramos la categoría de FRUTAS Y VERDURAS. Cuáles son los 5 productos más vendidos ? ¿Cuántos kilos se han vendido de cada uno de estos productos ?
+
+Si consideramos la categoría de PESCADO. Cuáles son los 5 productos más vendidos ? ¿Cuántos kilos se han vendido de cada uno de estos productos ?
+
+Muestra mediante un gráfico de líneas como ha variado el precio por kilo de las bananas y los plátanos en los tickets disponibles, a lo largo del tiempo. ¿ Cuál es la procedencia de los tickets ?¿ Qué ciudad/ pueblo tiene un mayor número de tickets ? Muestra mediante un diagrama el número de tickets recogidos cada día de las semana.
+
+¿Si tuvieses que cerrar un día entre semana qué día lo harías ?
 
 1.¿Cuáles son las frutas más compradas durante la primavera? (Filtrar por fecha y categoría de producto).
 
@@ -352,4 +360,11 @@ Se observa que los productos lácteos (leche y queso), así como productos de co
 
 Este análisis es útil para identificar productos de alta rotación, lo cual tiene aplicaciones prácticas en gestión de inventario y promociones específicas.
 
-Nota: El gráfico representa las cantidades totales vendidas por producto de manera descendente, lo que permite una interpretación visual clara y directa de los datos.
+**Si consideramos la categoría de FRUTAS Y VERDURAS. Cuáles son los 5 productos más vendidos ? ¿Cuántos kilos se han vendido de cada uno de estos productos ?**
+
+```{r}
+# Palabras clave típicas de frutas y verduras
+frutas_verduras_pattern <- "manzana|pera|naranja|plátano|kiwi|sandía|melón|limón|zanahoria|tomate|lechuga|pepino|cebolla|ajo|pimiento|calabacín|brócoli|espinaca"
+
+
+```
