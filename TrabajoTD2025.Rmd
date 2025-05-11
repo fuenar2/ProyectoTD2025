@@ -1,10 +1,10 @@
 ---
-title: "TrabajoTD2025"
-author: Mar Fuentes Armenteros, Paula Girbés Plaza, Pablo Fernando Navarro Sánchez,
-  Andreu Serrano Briz, Hugo Cuñat Alabau y Rafael Cebrián Pérez
+title: " Mini Proyecto 2025. Análisis de tickets de supermercado"
+author: "Mar Fuentes Armenteros, Paula Girbés Plaza, Pablo Fernando Navarro Sánchez, Andreu Serrano Briz, Hugo Cuñat Alabau y Rafael Cebrián Pérez"
 date: "2025-05-10"
 output:
-  pdf_document: default
+  pdf_document:
+    latex_engine: pdflatex
   html_document: default
 ---
 
@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r Carga-librerias, include=FALSE}
-
+ 
 library(pdftools)
 library(stringr)
 library(dplyr)
@@ -206,9 +206,12 @@ if (!is.null(tickets_df)) {
 
 ```
 
-# Mini Proyecto 2025. Análisis de tickets de supermercado
 
-##
+## 1 Introducción
+En este proyecto se aborda el análisis exploratorio de
+datos a partir de tickets de supermercado, con el objetivo de extraer
+información relevante sobre los hábitos de consumo, productos
+adquiridos, precios y comportamiento de compra. El conjunto de datos que se utiliza pertenece a varios tickets del supermercado Mercadona proporcionados por la Universidad de Valencia (UV). En concreto, pertenece a una recolecta entre el profesor y varios alumnos de la asignatura de Tratamiento de datos.
 
 
 
