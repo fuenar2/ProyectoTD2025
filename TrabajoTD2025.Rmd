@@ -145,6 +145,7 @@ procesar_ticket <- function(ticket){
       importe <- ifelse(!is.na(partes[5]), as.numeric(str_replace(partes[5], ",", ".")), precio_unit * cantidad)
       
       data.frame(
+        ticket_id = factura,
         producto = producto,
         cantidad = cantidad,
         precio_unitario = precio_unit,
@@ -180,14 +181,13 @@ procesar_ticket <- function(ticket){
 
 }
 
-# Procesamos todos los tickets
-lista_tickets <- lapply(tickets, function(ticket) {
-    procesar_ticket(ticket)
- 
-})
+# Procesamiento con filtrado
+lista_tickets <- lapply(tickets, procesar_ticket)
+lista_tickets <- lista_tickets[!sapply(lista_tickets, is.null)] 
 
-# Combinamos todos los data frames y filtramos los nulos
-tickets_df <- do.call(rbind, lista_tickets[!sapply(lista_tickets, is.null)])
+# Combina y elimina duplicados 
+tickets_df <- do.call(rbind, lista_tickets)
+tickets_df <- tickets_df[!duplicated(tickets_df[, c("ticket_id", "producto", "cantidad", "precio_unitario")]), ]
 
 # Cambiar los tipos de datos
 if (!is.null(tickets_df)) {
