@@ -10,6 +10,7 @@ output:
     fig_caption: yes
     df_print: kable
  
+ 
 ---
 
 ```{r setup, include=FALSE}
@@ -47,7 +48,10 @@ procesar_ticket <- function(ticket){
   # Extraemos toda la información del ticket como un vector
   texto <- pdf_text(ticket)
   texto <- paste(texto, collapse = "\n") # unimos todo el texto en un solo string
-  
+  # 1. Verificación rápida de Mercadona (antes de todo el procesamiento)
+  if (!str_detect(texto, "MERCADONA, S\\.A\\.")) {
+    return(NULL)  # Descarta inmediatamente si no es Mercadona
+  }
   supermercado <- "MERCADONA"
   
   # Obtenemos las líneas de texto individuales 
@@ -221,11 +225,17 @@ adquiridos, precios y comportamiento de compra. El conjunto de datos que se util
 Este proyecto tiene como objetivo analizar los datos extraidos de los tickets para responder a las siguientes preguntas:
 
 ¿Cuáles son los 5 productos, de los vendidos por unidades, con más ventas ? ¿Cuántas unidades de cada uno se han vendido ?
+
 Si consideramos la categoría de FRUTAS Y VERDURAS. Cuáles son los 5 productos más vendidos ? ¿Cuántos kilos se han vendido de cada uno de estos productos ?
+
 Si consideramos la categoría de PESCADO. Cuáles son los 5 productos más vendidos ? ¿Cuántos kilos se han vendido de cada uno de estos productos ?
+
 Muestra mediante un gráfico de líneas como ha variado el precio por kilo de las bananas y los plátanos en los tickets disponibles, a lo largo del tiempo.
+
 ¿ Cuál es la procedencia de los tickets ?¿ Qué ciudad/ pueblo tiene un mayor número de tickets ?
+
 Muestra mediante un diagrama el número de tickets recogidos cada día de las semana. ¿Si tuvieses que cerrar un día entre semana qué día lo harías ?
+
 1.¿Cuáles son las frutas más compradas durante la
 primavera? (Filtrar por fecha y categoría de producto).
 
@@ -301,7 +311,7 @@ categoría y agrupar por mes).
 
 # Material y Métodos
 
-## *Carga de librerías necesarias para el análisis*
+## *Carga de librerías y datos necesarios para el análisis*
 
 ```{r tabla-librerias}
 librerias <- data.frame(
@@ -330,6 +340,7 @@ knitr::kable(
 
 Para el correcto desarrollo de la exportación y análisis de los datos, en primer lugar, se cargan todas las librerías necesarias al principio del código. Estas librerías son las mostradas en la Tabla \ref{tab:tabla-librerias}.
 
+Posteriormente, se realiza la carga de los tickets. Estos tickets se encuentran
 
 ## *Características de los datos*
 
