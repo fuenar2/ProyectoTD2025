@@ -219,6 +219,13 @@ datos a partir de tickets de supermercado, con el objetivo de extraer
 información relevante sobre los hábitos de consumo, productos
 adquiridos, precios y comportamiento de compra. El conjunto de datos que se utiliza pertenece a varios tickets del supermercado Mercadona proporcionados por la Universidad de Valencia (UV). En concreto, pertenece a una recolecta entre el profesor y varios alumnos de la asignatura de Tratamiento de datos.
 Este proyecto tiene como objetivo analizar los datos extraidos de los tickets para responder a las siguientes preguntas:
+
+¿Cuáles son los 5 productos, de los vendidos por unidades, con más ventas ? ¿Cuántas unidades de cada uno se han vendido ?
+Si consideramos la categoría de FRUTAS Y VERDURAS. Cuáles son los 5 productos más vendidos ? ¿Cuántos kilos se han vendido de cada uno de estos productos ?
+Si consideramos la categoría de PESCADO. Cuáles son los 5 productos más vendidos ? ¿Cuántos kilos se han vendido de cada uno de estos productos ?
+Muestra mediante un gráfico de líneas como ha variado el precio por kilo de las bananas y los plátanos en los tickets disponibles, a lo largo del tiempo.
+¿ Cuál es la procedencia de los tickets ?¿ Qué ciudad/ pueblo tiene un mayor número de tickets ?
+Muestra mediante un diagrama el número de tickets recogidos cada día de las semana. ¿Si tuvieses que cerrar un día entre semana qué día lo harías ?
 1.¿Cuáles son las frutas más compradas durante la
 primavera? (Filtrar por fecha y categoría de producto).
 
