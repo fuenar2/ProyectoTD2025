@@ -55,7 +55,9 @@ procesar_ticket <- function(ticket){
   supermercado <- "MERCADONA"
   
   # Obtenemos las líneas de texto individuales 
-  lineas <- str_split(texto, "\n")[[1]]
+  lineas <- str_split(texto, "\n")[[1]]%>% 
+    str_trim() %>% 
+    .[. != ""]
   
   # Dirección (línea que contenga "CTRA.")
   idx_mercadona <- grep("MERCADONA, S\\.A\\.", lineas)
@@ -133,23 +135,57 @@ procesar_ticket <- function(ticket){
   tipo_pago <- str_match(texto, "(VISA|MASTERCARD|AMEX|DÉBITO|CRÉDITO|DEBITO|CREDITO|EFECTIVO)[ /A-Z]*")[,1]
   
   # Productos
-  idx_productos <- grep("^\\d+\\s+.*\\d+,\\d{2}$", lineas)
+  idx_productos <- grep("^(\\d+[.,]?\\d*\\s+)?[A-Za-z].*\\d+[.,]\\d{2}", lineas, value = FALSE)
   
   if (length(idx_productos) > 0) {
     productos <- lapply(lineas[idx_productos], function(linea) {
-      partes <- str_match(linea, "^(\\d+)\\s+(.*?)\\s+(\\d+,\\d{2})(?:\\s+(\\d+,\\d{2}))?$")
-      cantidad <- as.numeric(partes[2])
-      producto <- str_trim(partes[3])
-      precio_unit <- ifelse(is.na(partes[4]), partes[5], partes[4])
-      precio_unit <- as.numeric(str_replace(precio_unit, ",", "."))
-      importe <- ifelse(!is.na(partes[5]), as.numeric(str_replace(partes[5], ",", ".")), precio_unit * cantidad)
-      
-      data.frame(
+      partes <- str_match(linea, "^(?:(\\d+[.,]?\\d*)\\s+)?([A-Za-z].*?)\\s+(?:\\d+[.,]\\d+\\s+[€/]?[\\w]*\\s+)?(\\d+[.,]\\d{2})(?:\\s+(\\d+[.,]\\d{2}))?\\s*$")
+      if (str_detect(linea, "\\d+[.,]\\d+\\s*kg")) {
+        peso <- str_match(linea, "(\\d+[.,]\\d+)\\s*kg")[,2] %>% 
+          str_replace(",", ".") %>% 
+          as.numeric()
+        precio_kg <- str_match(linea, "(\\d+[.,]\\d+)\\s*€/kg")[,2] %>% 
+          str_replace(",", ".") %>% 
+          as.numeric()
+        importe <- str_match(linea, "(\\d+[.,]\\d{2})\\s*$")[,2] %>% 
+          str_replace(",", ".") %>% 
+          as.numeric()
+        
+        data.frame(
+          producto = str_match(linea, "([A-Za-z].*?)\\s+\\d")[,2] %>% str_trim(),
+          cantidad = peso,
+          precio_unitario = precio_kg,
+          importe = importe,
+          es_peso = TRUE,
+          stringsAsFactors = FALSE
+        )
+      } else {
+        # Productos normales
+        cantidad <- ifelse(!is.na(partes[2]), 
+                          partes[2] %>% str_replace(",", ".") %>% as.numeric(), 
+                          1)  # Valor por defecto 1 si no hay cantidad
+        producto <- partes[3] %>% str_trim()
+        precio_unit <- ifelse(!is.na(partes[4]), 
+                             partes[4] %>% str_replace(",", ".") %>% as.numeric(),
+                             NA)
+        importe <- ifelse(!is.na(partes[5]), 
+                         partes[5] %>% str_replace(",", ".") %>% as.numeric(),
+                         precio_unit * cantidad)
+        
+        data.frame(
+          producto = producto,
+          cantidad = cantidad,
+          precio_unitario = precio_unit,
+          importe = importe,
+          es_peso = FALSE,
+          stringsAsFactors = FALSE
+        )
+      }
+    })
+    
+    df_productos <- do.call(rbind, productos) %>% 
+      mutate(
         ticket_id = factura,
-        producto = producto,
-        cantidad = cantidad,
-        precio_unitario = precio_unit,
-        importe = importe,
         supermercado = supermercado,
         direccion = direccion,
         codigo_postal = codigo_postal,
@@ -169,16 +205,13 @@ procesar_ticket <- function(ticket){
         aut = aut,
         aid = aid,
         arc = arc,
-        tipo_pago = tipo_pago,
-        stringsAsFactors = FALSE
+        tipo_pago = tipo_pago
       )
-    })
     
-    do.call(rbind, productos)
+    return(df_productos)
   } else {
-    NULL
+    return(NULL)
   }
-
 }
 
 # Procesamiento con filtrado
@@ -205,9 +238,9 @@ if (!is.null(tickets_df)) {
       aut = as.integer(aut),
       arc = as.integer(arc),
       fecha = dmy(fecha),
-      hora = as.POSIXct(hora, format = "%H:%M"),
-      entrada = as.POSIXct(entrada, format = "%H:%M"),
-      salida = as.POSIXct(salida, format = "%H:%M")
+      hora = format(as.POSIXct(hora, format = "%H:%M"), "%H:%M"),  
+      entrada = format(as.POSIXct(entrada, format = "%H:%M"), "%H:%M"),  
+      salida = format(as.POSIXct(salida, format = "%H:%M"), "%H:%M")    
     )
   
  
