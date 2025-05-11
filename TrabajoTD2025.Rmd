@@ -238,9 +238,9 @@ if (!is.null(tickets_df)) {
       aut = as.integer(aut),
       arc = as.integer(arc),
       fecha = dmy(fecha),
-      hora = as.POSIXct(hora, format = "%H:%M"),
-      entrada = as.POSIXct(entrada, format = "%H:%M"),
-      salida = as.POSIXct(salida, format = "%H:%M")
+      hora = format(as.POSIXct(hora, format = "%H:%M"), "%H:%M"),  
+      entrada = format(as.POSIXct(entrada, format = "%H:%M"), "%H:%M"),  
+      salida = format(as.POSIXct(salida, format = "%H:%M"), "%H:%M")    
     )
   
  
