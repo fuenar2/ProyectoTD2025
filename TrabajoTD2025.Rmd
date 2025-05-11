@@ -358,6 +358,9 @@ colnames(tickets_df)
 # Agrupar por producto y sumar cantidad vendida
 top_5_unidades <- tickets_df %>%
   group_by(producto) %>%
+  summarise(unidades_vendidas = sum(cantidad, na.rm = TRUE)) %>%
+  arrange(desc(unidades_vendidas)) %>%
+ 
   
 
 
