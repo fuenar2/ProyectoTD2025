@@ -3,13 +3,13 @@ title: " Mini Proyecto 2025. Análisis de tickets de supermercado"
 author: "Mar Fuentes Armenteros, Paula Girbés Plaza, Pablo Fernando Navarro Sánchez, Andreu Serrano Briz, Hugo Cuñat Alabau y Rafael Cebrián Pérez"
 date: "`r Sys.Date()`"
 output:
-  bookdown::pdf_document2:
-    fig_caption: yes
-    df_print: kable
+ 
   bookdown::html_document2:
     fig_caption: yes
     df_print: kable
- 
+  bookdown::pdf_document2:
+    fig_caption: yes
+    df_print: kable
 ---
 
 ```{r setup, include=FALSE}
@@ -348,12 +348,10 @@ Para el correcto desarrollo de la exportación y análisis de los datos, en prim
 
 # Conclusiones
 
-
+¿Cuáles son los 5 productos, de los vendidos por unidades, con más ventas ? ¿Cuántas unidades de cada uno se han vendido ?
 ```{r}
 #Analizamos primero el nombre de todas las columnas para que el analisis sea más claro
 colnames(tickets_df)
-
-#¿Cuáles son los 5 productos, de los vendidos por unidades, con más ventas ? ¿Cuántas unidades de cada uno se han vendido ?
 
 # Agrupar por producto y sumar cantidad vendida
 top_5_unidades <- tickets_df %>%
@@ -377,4 +375,22 @@ ggplot(top_5_unidades, aes(x = reorder(producto, unidades_vendidas), y = unidade
 
 
 ```
+Para responder esta pregunta, se ha analizado la columna producto del conjunto de datos y se ha calculado el total de unidades vendidas a través de la variable cantidad. Posteriormente, se han ordenado los productos en función del total acumulado y se han seleccionado los cinco con mayor número de unidades vendidas.
 
+Como se muestra en la tabla, los cinco productos más vendidos por unidades han sido:
+
+LECHE DESNAT. CALCIO
+
+QUESO LONCHAS CABRA
+
+COPOS DE AVENA
+
+GARBANZO M.COCIDO
+
+BARRA CAMPESINA
+
+Se observa que los productos lácteos (leche y queso), así como productos de consumo básico como legumbres, pan y cereales, lideran el volumen de ventas por unidades. Esto puede indicar una alta frecuencia de consumo y reposición, probablemente porque son productos básicos en la cesta de la compra semanal.
+
+Este análisis es útil para identificar productos de alta rotación, lo cual tiene aplicaciones prácticas en gestión de inventario y promociones específicas.
+
+Nota: El gráfico representa las cantidades totales vendidas por producto de manera descendente, lo que permite una interpretación visual clara y directa de los datos.
