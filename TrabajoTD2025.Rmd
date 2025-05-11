@@ -352,7 +352,7 @@ Posteriormente, se realiza la carga de los tickets. Estos tickets se encuentran
 
 ### *Variables de tipo categórico*
 
-### *Análisis de los outliers*
+### *Análisis de loss outliers*
 
 
 
