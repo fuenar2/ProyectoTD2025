@@ -55,7 +55,9 @@ procesar_ticket <- function(ticket){
   supermercado <- "MERCADONA"
   
   # Obtenemos las líneas de texto individuales 
-  lineas <- str_split(texto, "\n")[[1]]
+  lineas <- str_split(texto, "\n")[[1]]%>% 
+    str_trim() %>% 
+    .[. != ""]
   
   # Dirección (línea que contenga "CTRA.")
   idx_mercadona <- grep("MERCADONA, S\\.A\\.", lineas)
