@@ -139,7 +139,7 @@ procesar_ticket <- function(ticket){
   
   if (length(idx_productos) > 0) {
     productos <- lapply(lineas[idx_productos], function(linea) {
-      partes <- str_match(linea, "^(\\d+)\\s+(.*?)\\s+(\\d+,\\d{2})(?:\\s+(\\d+,\\d{2}))?$")
+      partes <- str_match(linea, "^(?:(\\d+[.,]?\\d*)\\s+)?([A-Za-z].*?)\\s+(?:\\d+[.,]\\d+\\s+[€/]?[\\w]*\\s+)?(\\d+[.,]\\d{2})(?:\\s+(\\d+[.,]\\d{2}))?\\s*$")
       cantidad <- as.numeric(partes[2])
       producto <- str_trim(partes[3])
       precio_unit <- ifelse(is.na(partes[4]), partes[5], partes[4])
