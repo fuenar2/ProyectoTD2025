@@ -363,8 +363,24 @@ Este análisis es útil para identificar productos de alta rotación, lo cual ti
 **Si consideramos la categoría de FRUTAS Y VERDURAS. Cuáles son los 5 productos más vendidos ? ¿Cuántos kilos se han vendido de cada uno de estos productos ?**
 
 ```{r}
+library(dplyr)
+library(ggplot2)
+library(stringr)
+
 # Palabras clave típicas de frutas y verduras
-frutas_verduras_pattern <- "manzana|pera|naranja|plátano|kiwi|sandía|melón|limón|zanahoria|tomate|lechuga|pepino|cebolla|ajo|pimiento|calabacín|brócoli|espinaca"
+frutas_verduras_pattern <- "manzana|pera|naranja|plátano|kiwi|sandía|melón|zanahoria|tomate|lechuga|pepino|cebolla|ajo|pimiento|calabacín|brócoli|espinaca"
+
+# Filtrar productos de frutas y verduras
+fv_top5 <- tickets_df %>%
+  filter(str_detect(str_to_lower(producto), frutas_verduras_pattern)) %>%
+  group_by(producto) %>%
+  summarise(kilos_vendidos = sum(cantidad, na.rm = TRUE)) %>%
+  arrange(desc(kilos_vendidos)) %>%
+  slice_head(n = 5)
+
+# Ver tabla
+fv_top5
+
 
 
 ```
