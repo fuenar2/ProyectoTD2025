@@ -140,40 +140,47 @@ procesar_ticket <- function(ticket){
   if (length(idx_productos) > 0) {
     productos <- lapply(lineas[idx_productos], function(linea) {
       partes <- str_match(linea, "^(?:(\\d+[.,]?\\d*)\\s+)?([A-Za-z].*?)\\s+(?:\\d+[.,]\\d+\\s+[€/]?[\\w]*\\s+)?(\\d+[.,]\\d{2})(?:\\s+(\\d+[.,]\\d{2}))?\\s*$")
-      cantidad <- as.numeric(partes[2])
-      producto <- str_trim(partes[3])
-      precio_unit <- ifelse(is.na(partes[4]), partes[5], partes[4])
-      precio_unit <- as.numeric(str_replace(precio_unit, ",", "."))
-      importe <- ifelse(!is.na(partes[5]), as.numeric(str_replace(partes[5], ",", ".")), precio_unit * cantidad)
-      
-      data.frame(
-        ticket_id = factura,
-        producto = producto,
-        cantidad = cantidad,
-        precio_unitario = precio_unit,
-        importe = importe,
-        supermercado = supermercado,
-        direccion = direccion,
-        codigo_postal = codigo_postal,
-        municipio = municipio,
-        telefono = telefono,
-        fecha = fecha,
-        hora = hora,
-        op = op,
-        tienda = tienda,
-        caja = caja,
-        num_factura = num_factura,
-        entrada = entrada,
-        salida = salida,
-        total = total,
-        tarjeta = tarjeta,
-        nc = nc,
-        aut = aut,
-        aid = aid,
-        arc = arc,
-        tipo_pago = tipo_pago,
-        stringsAsFactors = FALSE
-      )
+      if (str_detect(linea, "\\d+[.,]\\d+\\s*kg")) {
+        peso <- str_match(linea, "(\\d+[.,]\\d+)\\s*kg")[,2] %>% 
+          str_replace(",", ".") %>% 
+          as.numeric()
+        precio_kg <- str_match(linea, "(\\d+[.,]\\d+)\\s*€/kg")[,2] %>% 
+          str_replace(",", ".") %>% 
+          as.numeric()
+        importe <- str_match(linea, "(\\d+[.,]\\d{2})\\s*$")[,2] %>% 
+          str_replace(",", ".") %>% 
+          as.numeric()
+        
+        data.frame(
+          producto = str_match(linea, "([A-Za-z].*?)\\s+\\d")[,2] %>% str_trim(),
+          cantidad = peso,
+          precio_unitario = precio_kg,
+          importe = importe,
+          es_peso = TRUE,
+          stringsAsFactors = FALSE
+        )
+      } else {
+        # Productos normales
+        cantidad <- ifelse(!is.na(partes[2]), 
+                          partes[2] %>% str_replace(",", ".") %>% as.numeric(), 
+                          1)  # Valor por defecto 1 si no hay cantidad
+        producto <- partes[3] %>% str_trim()
+        precio_unit <- ifelse(!is.na(partes[4]), 
+                             partes[4] %>% str_replace(",", ".") %>% as.numeric(),
+                             NA)
+        importe <- ifelse(!is.na(partes[5]), 
+                         partes[5] %>% str_replace(",", ".") %>% as.numeric(),
+                         precio_unit * cantidad)
+        
+        data.frame(
+          producto = producto,
+          cantidad = cantidad,
+          precio_unitario = precio_unit,
+          importe = importe,
+          es_peso = FALSE,
+          stringsAsFactors = FALSE
+        )
+      }
     })
     
     do.call(rbind, productos)
