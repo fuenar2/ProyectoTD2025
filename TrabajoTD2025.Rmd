@@ -1,11 +1,15 @@
 ---
 title: " Mini Proyecto 2025. Análisis de tickets de supermercado"
 author: "Mar Fuentes Armenteros, Paula Girbés Plaza, Pablo Fernando Navarro Sánchez, Andreu Serrano Briz, Hugo Cuñat Alabau y Rafael Cebrián Pérez"
-date: "2025-05-10"
+date: "`r Sys.Date()`"
 output:
-  pdf_document:
-    latex_engine: pdflatex
-  html_document: default
+  bookdown::pdf_document2:
+    fig_caption: yes
+    df_print: kable
+  bookdown::html_document2:
+    fig_caption: yes
+    df_print: kable
+ 
 ---
 
 ```{r setup, include=FALSE}
@@ -13,7 +17,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r Carga-librerias, include=FALSE}
- 
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE) 
 library(pdftools)
 library(stringr)
 library(dplyr)
@@ -21,6 +25,8 @@ library(lubridate)
 library(knitr)
 library(bookdown)
 library(kableExtra)
+
+options(OutDec = ",", digits = 2)
 
 ```
 
@@ -206,11 +212,41 @@ if (!is.null(tickets_df)) {
 ```
 
 
-## 1 Introducción
+# Introducción
 En este proyecto se aborda el análisis exploratorio de
 datos a partir de tickets de supermercado, con el objetivo de extraer
 información relevante sobre los hábitos de consumo, productos
 adquiridos, precios y comportamiento de compra. El conjunto de datos que se utiliza pertenece a varios tickets del supermercado Mercadona proporcionados por la Universidad de Valencia (UV). En concreto, pertenece a una recolecta entre el profesor y varios alumnos de la asignatura de Tratamiento de datos.
+
+## *Carga de librerías necesarias para el análisis*
+
+```{r tabla-librerias}
+librerias <- data.frame(
+  "Librería" = c("pdftools", "stringr", "dplyr", "lubridate", 
+                "knitr", "bookdown", "kableExtra", "purrr", "tidyr"),
+  "Función" = c(
+    "Extraer texto de archivos PDF",
+    "Manipulación de cadenas con regex",
+    "Transformación y manipulación de datos",
+    "Manejo avanzado de fechas/horas",
+    "Generación de informes dinámicos",
+    "Creación de documentos académicos",
+    "Formato profesional de tablas",
+    "Iteraciones y programación funcional",
+    "Organización de datos en formato tidy"
+  )
+)
+
+knitr::kable(
+  librerias,
+  caption = "Librerías utilizadas y su función",
+  booktabs = TRUE
+)
+```
+
+
+Para el correcto desarrollo de la exportación y análisis de los datos, en primer lugar, se cargan todas las librerías necesarias al principio del código. Estas librerías son las mostradas en la Tabla \ref{tab:tabla-librerias}.
+
 
 
 
