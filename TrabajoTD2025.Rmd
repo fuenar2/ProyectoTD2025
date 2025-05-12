@@ -385,8 +385,14 @@ Posteriormente, se realiza la carga de los tickets. Estos tickets se encuentran
 Pregunta -> ¿Cuáles son los 5 productos, de los vendidos por unidades, con más ventas ? ¿Cuántas unidades de cada uno se han vendido ?
 
 ```{r}
-# Filtrar productos vendidos por unidades
-productos_unidades <- df_productos %>%
+tickets_df %>%
   filter(categoria == "venta_por_unidades") %>%
+  group_by(producto) %>%
+  summarise(unidades_vendidas = sum(cantidad)) %>%
+  arrange(desc(unidades_vendidas)) %>%
+  
 ```
+
+
+
 
