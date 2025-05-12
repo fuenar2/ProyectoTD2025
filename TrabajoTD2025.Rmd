@@ -9,8 +9,7 @@ output:
   bookdown::html_document2:
     fig_caption: yes
     df_print: kable
- 
- 
+
 ---
 
 ```{r setup, include=FALSE}
@@ -239,8 +238,8 @@ if (!is.null(tickets_df)) {
 
 ```
 
-
 # Introducción
+
 En este proyecto se aborda el análisis exploratorio de
 datos a partir de tickets de supermercado, con el objetivo de extraer
 información relevante sobre los hábitos de consumo, productos
@@ -255,82 +254,175 @@ Si consideramos la categoría de PESCADO. Cuáles son los 5 productos más vendi
 
 Muestra mediante un gráfico de líneas como ha variado el precio por kilo de las bananas y los plátanos en los tickets disponibles, a lo largo del tiempo.
 
+
+***¿Cuáles son los 5 productos, de los vendidos por unidades, con más ventas ? ¿Cuántas unidades de cada uno se han vendido ?***
+
+```{r}
+library(ggplot2)
+
+# Filtrar, agrupar y seleccionar los 5 productos con más unidades vendidas
+top_productos_unidades <- tickets_df %>%
+  filter(categoria == "venta_por_unidades") %>%
+  group_by(producto) %>%
+  summarise(unidades_vendidas = sum(cantidad)) %>%
+  arrange(desc(unidades_vendidas)) %>%
+  slice_max(order_by = unidades_vendidas, n = 5)
+
+kable(top_productos_unidades)
+
+# Crear gráfico de barras
+ggplot(top_productos_unidades, aes(x = reorder(producto, unidades_vendidas), y = unidades_vendidas)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  labs(
+    title = "Top 5 productos vendidos por unidades",
+    x = "Producto",
+    y = "Unidades vendidas"
+  ) +
+  coord_flip() +
+  theme_minimal()
+
+```
+
+Destaca en primer lugar el producto HUEVOS GRANDES-L, con una cantidad notablemente superior al resto, lo que sugiere que es un artículo de consumo recurrente y básico en la cesta de la compra. Le siguen productos como ATÚN CLARO OLIVA y BOLSA PLÁSTICO, siendo este último un caso interesante por tratarse de un artículo no alimenticio que aparece con frecuencia debido probablemente a que se registra individualmente en cada compra. Completan la lista QUESO LONCHAS CABRA y YOGUR COCO, productos de valor añadido que podrían reflejar hábitos de consumo específicos.
+
+***Si consideramos la categoría de FRUTAS Y VERDURAS. Cuáles son los 5 productos más vendidos ? ¿Cuántos kilos se han vendido de cada uno de estos productos ?***
+
+```{r}
+# Top 5 frutas y verduras más vendidas por kilos
+
+top_frutas_verduras <- tickets_df %>%
+  filter(categoria == "fruta/verdura", es_peso == TRUE) %>%
+  group_by(producto) %>%
+  summarise(kilos_vendidos = sum(cantidad)) %>%
+  arrange(desc(kilos_vendidos)) %>%
+  slice_max(order_by = kilos_vendidos, n = 5)
+
+kable(top_frutas_verduras)
+
+ggplot(top_frutas_verduras, aes(x = reorder(producto, kilos_vendidos), y = kilos_vendidos)) +
+  geom_bar(stat = "identity", fill = "darkgreen") +
+  labs(
+    title = "Top 5 frutas y verduras más vendidas",
+    x = "Producto",
+    y = "Kilos vendidos"
+  ) +
+  coord_flip() +
+  theme_minimal()
+
+```
+
+El producto con mayor volumen de venta es claramente el PLÁTANO, con 59 kilos vendidos, lo que lo posiciona como el más demandado en este grupo. Le sigue la BANANA, con 26 kilos, lo que confirma que las frutas tropicales tienen una fuerte presencia en la cesta de la compra.
+
+En tercera y cuarta posición aparecen SANDÍA BAJA SEMILLAS y PEPINO, con 23 y 20 kilos respectivamente, productos frescos que suelen tener picos de consumo en temporadas cálidas. Cierra el ranking el MELÓN PIEL SAPO, con 16 kilos, otro producto estacional que se asocia al verano. En conjunto, estos resultados reflejan una preferencia clara por frutas frescas y jugosas, especialmente los plátanos, posiblemente por su versatilidad y consumo habitual.
+
+***Si consideramos la categoría de PESCADO. Cuáles son los 5 productos más vendidos ? ¿Cuántos kilos se han vendido de cada uno de estos productos ?***
+
+```{r}
+# Filtrar y agrupar productos de categoría "pescado"
+top_pescado <- tickets_df %>%
+  filter(categoria == "pescado", es_peso == TRUE) %>%
+  group_by(producto) %>%
+  summarise(kilos_vendidos = sum(cantidad)) %>%
+  arrange(desc(kilos_vendidos)) %>%
+  slice_max(order_by = kilos_vendidos, n = 5)
+
+# Mostrar tabla con los resultados
+kable(top_pescado)
+
+# Representación gráfica
+ggplot(top_pescado, aes(x = reorder(producto, kilos_vendidos), y = kilos_vendidos)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  labs(
+    title = "Top 5 productos de pescado más vendidos",
+    x = "Producto",
+    y = "Kilos vendidos"
+  ) +
+  coord_flip() +
+  theme_minimal()
+
+```
+
+El líder destacado en volumen de venta es el PLÁTANO, con 59 kilos, lo que lo sitúa como una fruta de consumo diario y constante, probablemente por su versatilidad, valor nutricional y bajo precio. En segundo lugar se encuentra la BANANA, con 26 kilos vendidos, lo que confirma la alta demanda general de frutas tropicales.
+
+El resto del ranking lo componen productos frescos y de consumo estacional como la SANDÍA BAJA SEMILLAS (23 kg), el PEPINO (20 kg) y el MELÓN PIEL SAPO (16 kg). Estos datos reflejan una clara inclinación del consumidor por productos frescos, saludables y especialmente apropiados para el verano, lo cual puede estar ligado al momento del año en que se recopilaron los tickets.
+
+***Muestra mediante un gráfico de líneas como ha variado el precio por kilo de las bananas y los plátanos en los tickets disponibles, a lo largo del tiempo.***
+
+```{r}
+
+library(lubridate)
+
+# Filtrar bananas y plátanos vendidos por peso
+banana_platano <- tickets_df %>%
+  filter(es_peso == TRUE, str_detect(tolower(producto), "banana|plátano|platano")) %>%
+  mutate(fecha = as.Date(fecha)) %>%
+  group_by(producto, fecha) %>%
+  summarise(precio_promedio = mean(precio_unitario), .groups = "drop")  
+
+# Gráfico de evolución temporal del precio por kilo
+ggplot(banana_platano, aes(x = fecha, y = precio_promedio, color = producto)) +
+  geom_line(linewidth = 1) + 
+  labs(
+    title = "Evolución del precio por kilo de bananas y plátanos",
+    x = "Fecha",
+    y = "Precio por kilo (€)"
+  ) +
+  theme_minimal()
+
+
+
+```
+
+Se aprecia que el precio del plátano ha sido más variable, alcanzando máximos por encima de los 3 €/kg durante el verano de 2024, lo que sugiere posibles efectos estacionales o fluctuaciones en la oferta. A partir de septiembre, ese precio desciende de forma gradual, estabilizándose en torno a los 2 €/kg a inicios de 2025.
+
+Por el contrario, el precio de la banana se mantiene relativamente estable en torno a 1,4 €/kg durante la mayor parte del periodo. Solo hacia finales de 2024 se observa una caída puntual por debajo de 1,2 €/kg, seguida de una recuperación en los primeros meses de 2025. Esta estabilidad podría deberse a una cadena de suministro más global o menos expuesta a factores locales.
+
+La comparación entre ambas frutas refleja cómo productos similares pueden comportarse de forma distinta en el mercado, y cómo el precio del plátano parece estar más expuesto a variaciones estacionales o logísticas.
+
+
 ¿ Cuál es la procedencia de los tickets ?¿ Qué ciudad/ pueblo tiene un mayor número de tickets ?
 
 Muestra mediante un diagrama el número de tickets recogidos cada día de las semana. ¿Si tuvieses que cerrar un día entre semana qué día lo harías ?
 
-1.¿Cuáles son las frutas más compradas durante la
-primavera? (Filtrar por fecha y categoría de producto).
+1.¿Cuáles son las frutas más compradas durante la primavera? (Filtrar por fecha y categoría de producto).
 
-2.¿Qué productos suelen comprarse más durante festivos como Navidad,
-Semana Santa o Fallas? (Comparar ventas en fechas clave con el resto del
-año).
+2.¿Qué productos suelen comprarse más durante festivos como Navidad, Semana Santa o Fallas? (Comparar ventas en fechas clave con el resto del año).
 
-3.¿Se compran productos diferentes en zonas urbanas frente a rurales?
-(Agrupar por ciudad o código postal y comparar top productos).
+3.¿Se compran productos diferentes en zonas urbanas frente a rurales? (Agrupar por ciudad o código postal y comparar top productos).
 
-4.¿Qué productos suelen comprarse juntos con frecuencia? (por ejemplo,
-pan con chocolate) (Analizar combinaciones frecuentes dentro del mismo
-ticket).
+4.¿Qué productos suelen comprarse juntos con frecuencia? (por ejemplo, pan con chocolate) (Analizar combinaciones frecuentes dentro del mismo ticket).
 
-5.¿Qué productos se mantienen en la cesta aunque cambien de precio?
-(Observar si bajadas o subidas de precio afectan a las unidades
-compradas).
+5.¿Qué productos se mantienen en la cesta aunque cambien de precio? (Observar si bajadas o subidas de precio afectan a las unidades compradas).
 
-6.¿Cuántos productos se compran en promedio por ticket? (Contar
-productos por ticket y calcular la media).
+6.¿Cuántos productos se compran en promedio por ticket? (Contar productos por ticket y calcular la media).
 
-7.¿Qué categorías suelen comprarse en conjunto? (Ej. frutas + lácteos)
-(Clasificar productos por categoría y ver combinaciones más frecuentes).
+7.¿Qué categorías suelen comprarse en conjunto? (Ej. frutas + lácteos) (Clasificar productos por categoría y ver combinaciones más frecuentes).
 
-8.¿Cómo cambia el gasto promedio según el día de la semana? (Comparar el
-total gastado y cantidad de tickets por día).
+8.¿Cómo cambia el gasto promedio según el día de la semana? (Comparar el total gastado y cantidad de tickets por día).
 
-9.¿Qué día tiene menos volumen de compras? ¿Y cuál el mayor? (Contar
-número de tickets por día de la semana).
+9.¿Qué día tiene menos volumen de compras? ¿Y cuál el mayor? (Contar número de tickets por día de la semana).
 
-10¿Qué mes registra mayores compras de frutas y verduras? (Filtrar por
-categoría y agrupar por mes).
+10¿Qué mes registra mayores compras de frutas y verduras? (Filtrar por categoría y agrupar por mes).
 
-11. ¿Qué productos tienen mayor rotación semanal y cuáles permanecen más
-    tiempo sin comprarse? (Agrupar ventas por semana y producto,
-    analizar frecuencia de compra).
+11. ¿Qué productos tienen mayor rotación semanal y cuáles permanecen más tiempo sin comprarse? (Agrupar ventas por semana y producto, analizar frecuencia de compra).
 
-12. ¿Cómo afecta la climatología al tipo de productos comprados? (ej.
-    helados en verano, sopas en invierno) (Relacionar fechas con
-    estaciones y tipos de producto).
+12. ¿Cómo afecta la climatología al tipo de productos comprados? (ej. helados en verano, sopas en invierno) (Relacionar fechas con estaciones y tipos de producto).
 
-13. ¿Qué impacto tienen las promociones o descuentos en la cantidad
-    comprada de un producto? (Comparar unidades vendidas antes, durante
-    y después de una promoción).
+13. ¿Qué impacto tienen las promociones o descuentos en la cantidad comprada de un producto? (Comparar unidades vendidas antes, durante y después de una promoción).
 
-14. ¿Qué ticket promedio se observa según el tipo de establecimiento
-    (urbano, rural, turístico)? (Agrupar por zona y calcular gasto
-    promedio por ticket).
+14. ¿Qué ticket promedio se observa según el tipo de establecimiento (urbano, rural, turístico)? (Agrupar por zona y calcular gasto promedio por ticket).
 
-15. ¿Qué productos suelen ser los primeros en desaparecer en compras
-    grandes (+20 productos)? (Analizar orden de productos en tickets
-    extensos).
+15. ¿Qué productos suelen ser los primeros en desaparecer en compras grandes (+20 productos)? (Analizar orden de productos en tickets extensos).
 
-16. ¿Existen diferencias de compra entre clientes que compran entre
-    semana frente a fines de semana? (Comparar volumen y tipo de
-    productos por día).
+16. ¿Existen diferencias de compra entre clientes que compran entre semana frente a fines de semana? (Comparar volumen y tipo de productos por día).
 
-17. ¿Hay patrones de consumo distintos entre zonas costeras y zonas del
-    interior? (Comparar categorías más compradas según localización
-    geográfica).
+17. ¿Hay patrones de consumo distintos entre zonas costeras y zonas del interior? (Comparar categorías más compradas según localización geográfica).
 
-18. ¿Qué marcas blancas se compran más en comparación con productos de
-    marca? (Clasificar productos por tipo de marca y analizar
-    proporciones de compra).
+18. ¿Qué marcas blancas se compran más en comparación con productos de marca? (Clasificar productos por tipo de marca y analizar proporciones de compra).
 
-19. ¿Cuáles son los productos más comprados por la mañana frente a la
-    tarde? (Agrupar tickets por franja horaria y analizar top
-    productos).
+19. ¿Cuáles son los productos más comprados por la mañana frente a la tarde? (Agrupar tickets por franja horaria y analizar top productos).
 
-20. ¿Qué artículos aumentan su venta a fin de mes (posiblemente por
-    cobro de sueldos)? (Comparar ventas por semana del mes,
-    especialmente última semana)
+20. ¿Qué artículos aumentan su venta a fin de mes (posiblemente por cobro de sueldos)? (Comparar ventas por semana del mes, especialmente última semana)
 
 # Material y Métodos
 
@@ -360,7 +452,6 @@ knitr::kable(
 )
 ```
 
-
 Para el correcto desarrollo de la exportación y análisis de los datos, en primer lugar, se cargan todas las librerías necesarias al principio del código. Estas librerías son las mostradas en la Tabla \ref{tab:tabla-librerias}.
 
 Posteriormente, se realiza la carga de los tickets. Estos tickets se encuentran
@@ -374,8 +465,6 @@ Posteriormente, se realiza la carga de los tickets. Estos tickets se encuentran
 ### *Variables de tipo categórico*
 
 ### *Análisis de los outliers*
-
-
 
 # Resultados
 
