@@ -382,13 +382,131 @@ La comparación entre ambas frutas refleja cómo productos similares pueden comp
 
 ¿ Cuál es la procedencia de los tickets ?¿ Qué ciudad/ pueblo tiene un mayor número de tickets ?
 
+```{r}
+library(dplyr)
+library(ggplot2)
+
+tickets_por_municipio <- tickets_df %>%
+  distinct(ticket_id, municipio) %>% #Asegura que cada ticket cuente una vex por municipio
+  count(municipio, sort = TRUE) #Agrupa por municipio y cuenta registros y ordena de manera desdendente
+
+head(tickets_por_municipio, 10) #Muestra los 10 primeros municipios
+
+tickets_por_municipio %>%
+  slice_max(n, n = 10) %>% #Selecciona los 10 municipios con mayor numero de tickets
+  ggplot(aes(x = reorder(municipio, n), y = n))  + #Ordena municipios por el valor de n (es decir, 10)
+  geom_bar(stat = "identity", fill = "steelblue") + #Creagrafico de barras
+  coord_flip() #Invierte el grafico para que se vea horizontal
+  labs(
+    title = "Top 10 municipios con más tickets",
+    x = "Municipio",
+    y = "Número de tickets"
+  ) +
+  theme_minimal()
+
+#Los tickets provienen de Valencia, y de pueblos de alrededor
+
+#La ciudad con mayor numero tickets es Valencia
+```
+Los tickets provienen de Valencia y de pueblos de alrededor. Y la ciudad con mayor número de tickets es Valencia.
+
+
+
 Muestra mediante un diagrama el número de tickets recogidos cada día de las semana. ¿Si tuvieses que cerrar un día entre semana qué día lo harías ?
 
+<<<<<<< HEAD
 1.¿Cuáles son las frutas más compradas durante la primavera? (Filtrar por fecha y categoría de producto).
+=======
+```{r}
+library(dplyr) 
+library(ggplot2)
+library(lubridate)
+
+# Asegurarse de que la columna fecha es tipo Date
+tickets_df <- tickets_df %>%
+  mutate(fecha = as.Date(fecha)) #convertir en tipo fecha (si no lo era)
+
+# Obtener día de la semana por ticket
+tickets_dia_semana <- tickets_df %>%
+  distinct(ticket_id, fecha) %>% #eliminar duplicados
+  mutate(dia_semana = wday(fecha, label = TRUE, abbr = FALSE)) %>% #extraer dia de la semana con wday y con label usar nombres de los dias de la semana.
+  count(dia_semana)
+
+ggplot(tickets_dia_semana, aes(x = reorder(dia_semana, n), y = n)) + #Ordenar los dias de la semana por frecuencia de tickets
+  geom_bar(stat = "identity", fill = "pink") +#crear grafico de barras vertical
+  labs(title = "Número de tickets por día de la semana", x = "Día", y = "Número de tickets") + 
+  coord_flip() + #invertir el grafico em horizontal
+  theme_minimal() 
+
+#Como el domingo está cerrado, el que menos ventas tiene es el Jueves.
+
+
+```
+En el ejercicio del diagrama del número de tickets por día, se puede observar que el dia que menos ventas hay y por lo cual sería el dia que cerraría, seria el jueves, aunque en el diagrama salga el domingo, pero ese dia siempre está cerrado el Mercadona.
+
+
+
+
+1.¿Cuáles son las frutas más compradas durante la
+primavera? (Filtrar por fecha y categoría de producto).
+>>>>>>> respuestas-preguntas
 
 2.¿Qué productos suelen comprarse más durante festivos como Navidad, Semana Santa o Fallas? (Comparar ventas en fechas clave con el resto del año).
 
+<<<<<<< HEAD
 3.¿Se compran productos diferentes en zonas urbanas frente a rurales? (Agrupar por ciudad o código postal y comparar top productos).
+=======
+```{r}
+library(dplyr)
+
+tickets_df <- tickets_df %>%
+  mutate(fecha = as.Date(fecha))
+
+top_navidad <- tickets_df %>%
+  filter(
+    (fecha >= as.Date("2023-12-20") & fecha <= as.Date("2023-12-31")) |  # Navidad 2023
+    (fecha >= as.Date("2024-12-20") & fecha <= as.Date("2024-12-31"))     # Navidad 2024
+  ) %>%
+  group_by(producto) %>%
+  summarise(unidades = sum(cantidad), .groups = "drop") %>%
+  arrange(desc(unidades)) %>%
+  slice_head(n = 3)
+
+top_semana_santa <- tickets_df %>%
+  filter(
+    fecha >= as.Date("2024-03-23") & fecha <= as.Date("2024-03-30")  # Semana Santa 2024
+  ) %>%
+  group_by(producto) %>%
+  summarise(unidades = sum(cantidad), .groups = "drop") %>%
+  arrange(desc(unidades)) %>%
+  slice_head(n = 3)
+
+top_fallas <- tickets_df %>%
+  filter(
+    (fecha >= as.Date("2024-03-15") & fecha <= as.Date("2024-03-19")) |  # Fallas 2024
+    (fecha >= as.Date("2025-03-15") & fecha <= as.Date("2025-03-15"))    # Único día disponible en 2025
+  ) %>%
+  group_by(producto) %>%
+  summarise(unidades = sum(cantidad), .groups = "drop") %>%
+  arrange(desc(unidades)) %>%
+  slice_head(n = 3)
+
+list("Navidad" = top_navidad %>% mutate(festivo = "Navidad"),      
+  "Semana Santa" = top_semana_santa %>% mutate(festivo = "Semana Santa"),
+  "Fallas" = top_fallas %>% mutate(festivo = "Fallas")
+) %>%
+  bind_rows() %>%               
+  select(festivo, producto, unidades) %>%  
+  arrange(festivo, desc(unidades)) 
+```
+Los productos que mas se suelen vender en Fallas son: Harina Integral, Habas y Azúcar. Mientras que en Navidad es: Cola sin cafeína, Yogur coco y Agua Cortes. Y por último en Semana Santa: Chapata Cristal, Tinto Bobal y Arroz.
+
+
+
+
+3.¿Se compran productos diferentes en zonas urbanas frente a rurales?
+(Agrupar por ciudad o código postal y comparar top productos).
+>>>>>>> respuestas-preguntas
 
 4.¿Qué productos suelen comprarse juntos con frecuencia? (por ejemplo, pan con chocolate) (Analizar combinaciones frecuentes dentro del mismo ticket).
 
@@ -422,7 +540,41 @@ Muestra mediante un diagrama el número de tickets recogidos cada día de las se
 
 19. ¿Cuáles son los productos más comprados por la mañana frente a la tarde? (Agrupar tickets por franja horaria y analizar top productos).
 
+<<<<<<< HEAD
 20. ¿Qué artículos aumentan su venta a fin de mes (posiblemente por cobro de sueldos)? (Comparar ventas por semana del mes, especialmente última semana)
+=======
+```{r}
+library(dplyr)
+library(lubridate)
+library(hms)
+
+tickets_df <- tickets_df %>%
+  mutate(
+    hora = ifelse(nchar(hora) == 5, paste0(hora, ":00"), hora), 
+    hora = as_hms(hora),  
+    franja_horaria = case_when(
+      hour(hora) < 15 ~ "mañana",
+      TRUE ~ "tarde"
+    )
+  )
+
+top_por_franja <- tickets_df %>%
+  group_by(franja_horaria, producto) %>%
+  summarise(unidades = sum(cantidad), .groups = "drop") %>%
+  group_by(franja_horaria) %>%
+  slice_max(order_by = unidades, n = 5)
+
+top_por_franja
+
+```
+Los productos que mas se venden por la mañana son: Tomate triturado, Atún claro calvom copos de avena, queso lonchas cabra y espárragos verde fino. Mientras que por la tarde: huevos grandes-L, plátano, atún claro oliva, bolsa plástico y yogur coco
+
+
+
+20. ¿Qué artículos aumentan su venta a fin de mes (posiblemente por
+    cobro de sueldos)? (Comparar ventas por semana del mes,
+    especialmente última semana)
+>>>>>>> respuestas-preguntas
 
 # Material y Métodos
 
