@@ -262,16 +262,16 @@ library(dplyr)
 library(ggplot2)
 
 tickets_por_municipio <- tickets_df %>%
-  distinct(ticket_id, municipio) %>%
-  count(municipio, sort = TRUE)
+  distinct(ticket_id, municipio) %>% #Asegura que cada ticket cuente una vex por municipio
+  count(municipio, sort = TRUE) #Agrupa por municipio y cuenta registros y ordena de manera desdendente
 
-head(tickets_por_municipio, 10)
+head(tickets_por_municipio, 10) #Muestra los 10 primeros municipios
 
 tickets_por_municipio %>%
-  slice_max(n, n = 10) %>%
-  ggplot(aes(x = reorder(municipio, n), y = n)) +
-  geom_bar(stat = "identity", fill = "steelblue") +
-  coord_flip() +
+  slice_max(n, n = 10) %>% #Selecciona los 10 municipios con mayor numero de tickets
+  ggplot(aes(x = reorder(municipio, n), y = n))  + #Ordena municipios por el valor de n (es decir, 10)
+  geom_bar(stat = "identity", fill = "steelblue") + #Creagrafico de barras
+  coord_flip() #Invierte el grafico para que se vea horizontal
   labs(
     title = "Top 10 municipios con más tickets",
     x = "Municipio",
