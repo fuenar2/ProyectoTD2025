@@ -352,7 +352,7 @@ frutas_verduras <- tickets_df %>%
 frutas_verduras %>%  
   kable(caption = "Número de compras de frutas/verduras por meses del año")
 ```
-
+El mes de Enero es el que registra mayores compras de fruta y verdura con un total de 68kg.
 
 11. ¿Qué productos tienen mayor rotación semanal y cuáles permanecen más
     tiempo sin comprarse? (Agrupar ventas por semana y producto,
