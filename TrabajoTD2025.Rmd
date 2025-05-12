@@ -438,35 +438,29 @@ categoría y agrupar por mes).
 
 ```{r}
 library(dplyr)
-library(readr)
-library(knitr)
+library(lubridate)
+library(hms)
 
-mañana_tarde <- tickets_df %>%
+tickets_df <- tickets_df %>%
   mutate(
-    hora_numeric = as.numeric(substr(hora, 1, 2)),  # Extraer hora
-    franja = case_when(
-      hora_numeric >= 8 & hora_numeric < 14 ~ "Mañana",
-      hora_numeric >= 14 & hora_numeric < 20 ~ "Tarde",
-      TRUE ~ "Otro"
+    hora = ifelse(nchar(hora) == 5, paste0(hora, ":00"), hora), 
+    hora = as_hms(hora),  
+    franja_horaria = case_when(
+      hour(hora) < 15 ~ "mañana",
+      TRUE ~ "tarde"
     )
-  ) %>%
-  filter(franja != "Otro")  
+  )
 
-top_productos <- tickets_df %>%
-  group_by(franja, producto) %>%
-  summarise(cantidad_total = sum(cantidad, na.rm = TRUE), .groups = "drop") %>%
-  group_by(franja) %>%
-  slice_max(order_by = cantidad_total, n = 5)  # Top 5 por franja
+top_por_franja <- tickets_df %>%
+  group_by(franja_horaria, producto) %>%
+  summarise(unidades = sum(cantidad), .groups = "drop") %>%
+  group_by(franja_horaria) %>%
+  slice_max(order_by = unidades, n = 5)
 
-kable(
-  top_productos,
-  caption = "Top 5 productos por franja horaria",
-  col.names = c("Franja", "Producto", "Cantidad Total")
-)
-
+top_por_franja
 
 ```
-Los productos que mas se venden por la mañana son: Espárragos verde fino, Atún claro oliva, Queso lonchas cabra, Tomate triturado y Sandía baja semillas. Mientras que por la tarde: Atún claro olivam Plátano, Yogur coco, Bolsa de plástico y Leche Desnatada
+Los productos que mas se venden por la mañana son: Tomate triturado, Atún claro calvom copos de avena, queso lonchas cabra y espárragos verde fino. Mientras que por la tarde: huevos grandes-L, plátano, atún claro oliva, bolsa plástico y yogur coco
 
 
 
