@@ -347,7 +347,15 @@ banana_platano <- tickets_df %>%
   group_by(producto, fecha) %>%
   summarise(precio_promedio = mean(precio_unitario), .groups = "drop")  
 
-
+# Gráfico de evolución temporal del precio por kilo
+ggplot(banana_platano, aes(x = fecha, y = precio_promedio, color = producto)) +
+  geom_line(linewidth = 1) + 
+  labs(
+    title = "Evolución del precio por kilo de bananas y plátanos",
+    x = "Fecha",
+    y = "Precio por kilo (€)"
+  ) +
+  theme_minimal()
 
 
 
