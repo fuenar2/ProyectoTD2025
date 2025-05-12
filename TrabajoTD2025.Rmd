@@ -314,7 +314,7 @@ ggplot(tickets_dia_semana, aes(x = reorder(dia_semana, n), y = n)) + #Ordenar lo
 
 
 ```
-En el ejercicio del diagrama del número de tickets por día, se puede observar que el dia que menos ventas hay y por lo cual sería el dia que cerraría, seria el jueves, aunque en el diagrama salga el domingo, pero ese dia siempre está cerrado el Mercadona.
+En el ejercicio del diagrama del número de tickets por día, se puede observar que el dia que menos ventas hay y por lo cual sería el dia que cerraría, seria el jueves, aunque en el diagrama salga el domingo, pero ese dia siempre está cerrado el Mercadona
 
 
 
