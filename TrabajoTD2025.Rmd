@@ -142,6 +142,28 @@ procesar_ticket <- function(ticket){
       en_pescado <- TRUE
       next
     }
+    
+    if (i < length(lineas)) {
+      linea_siguiente <- lineas[i + 1]
+
+      # Detectar formato de producto con peso
+      if (str_detect(linea_siguiente, "\\d+[.,]\\d+\\s*kg\\s+\\d+[.,]\\d+\\s*€/kg")) {
+        nombre <- linea
+        datos <- str_match(linea_siguiente, "(\\d+[.,]\\d+)\\s*kg\\s+(\\d+[.,]\\d+)\\s*€/kg\\s+(\\d+[.,]\\d{2})")
+        peso <- as.numeric(str_replace(datos[2], ",", "."))
+        precio_kg <- as.numeric(str_replace(datos[3], ",", "."))
+        importe <- as.numeric(str_replace(datos[4], ",", "."))
+
+        categoria <- if (en_pescado) "pescado" else if (str_detect(tolower(nombre), "kiwi|banana|mandarina|tomate|espinaca|ajo|champiñon")) "fruta/verdura" else "otros"
+
+        productos[[length(productos) + 1]] <- data.frame(
+          producto = nombre, cantidad = peso,
+          precio_unitario = precio_kg, importe = importe,
+          es_peso = TRUE, categoria = categoria, stringsAsFactors = FALSE
+        )
+        next
+      }
+    }
   idx_productos <- grep("^(\\d+[.,]?\\d*\\s+)?[A-Za-z].*\\d+[.,]\\d{2}", lineas, value = FALSE)
   
   if (length(idx_productos) > 0) {
