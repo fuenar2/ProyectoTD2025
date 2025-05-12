@@ -390,7 +390,8 @@ tickets_df %>%
   group_by(producto) %>%
   summarise(unidades_vendidas = sum(cantidad)) %>%
   arrange(desc(unidades_vendidas)) %>%
-  
+  slice_max(order_by = unidades_vendidas, n = 5) %>%
+  kable()
 ```
 
 
