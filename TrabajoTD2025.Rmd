@@ -297,7 +297,14 @@ ggplot(top_frutas_verduras, aes(x = reorder(producto, kilos_vendidos), y = kilos
 
 ```
 
-Si consideramos la categoría de PESCADO. Cuáles son los 5 productos más vendidos ? ¿Cuántos kilos se han vendido de cada uno de estos productos ?
+***Si consideramos la categoría de PESCADO. Cuáles son los 5 productos más vendidos ? ¿Cuántos kilos se han vendido de cada uno de estos productos ?***
+
+```{r}
+# Filtrar y agrupar productos de categoría "pescado"
+top_pescado <- tickets_df %>%
+  filter(categoria == "pescado", es_peso == TRUE) %>%
+  
+```
 
 Muestra mediante un gráfico de líneas como ha variado el precio por kilo de las bananas y los plátanos en los tickets disponibles, a lo largo del tiempo.
 
