@@ -257,6 +257,19 @@ Muestra mediante un gráfico de líneas como ha variado el precio por kilo de la
 
 ¿ Cuál es la procedencia de los tickets ?¿ Qué ciudad/ pueblo tiene un mayor número de tickets ?
 
+```{r}
+library(dplyr)
+library(ggplot2)
+
+tickets_por_municipio <- tickets_df %>%
+  distinct(ticket_id, municipio) %>%
+  count(municipio, sort = TRUE)
+
+head(tickets_por_municipio, 10)
+
+```
+
+
 Muestra mediante un diagrama el número de tickets recogidos cada día de las semana. ¿Si tuvieses que cerrar un día entre semana qué día lo harías ?
 
 1.¿Cuáles son las frutas más compradas durante la
