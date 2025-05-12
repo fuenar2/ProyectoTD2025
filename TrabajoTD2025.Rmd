@@ -230,9 +230,9 @@ if (!is.null(tickets_df)) {
       hora = format(as.POSIXct(hora, format = "%H:%M"), "%H:%M"),  
       entrada = format(as.POSIXct(entrada, format = "%H:%M"), "%H:%M"),  
       salida = format(as.POSIXct(salida, format = "%H:%M"), "%H:%M")    
-    )
-  
- 
+    )%>%mutate(
+    cantidad = ifelse(es_peso, round(importe / precio_unitario,1), cantidad)
+  )
 }
 #
 
