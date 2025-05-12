@@ -339,8 +339,11 @@ tickets_por_dia <- tickets_df %>%
   group_by(dia_semana) %>%
   summarise(tickets = n())%>%
   arrange(tickets)
-```
 
+tickets_por_dia %>%  
+  kable(caption = "Número de tickets por día de la semana")
+```
+El domingo registra el menor volumen de compras (solo 1 ticket), ya que Mercadona permanece cerrado ese día, excepto en fechas especiales como Navidad. Probablemente por este motivo, debido a la planificación de los clientes, el día con mayor actividad registrada es el sábado (alcanzando 81 tickets).
 
 10¿Qué mes registra mayores compras de frutas y verduras? (Filtrar por
 categoría y agrupar por mes).
