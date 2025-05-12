@@ -48,14 +48,17 @@ procesar_ticket <- function(ticket){
   # Extraemos toda la información del ticket como un vector
   texto <- pdf_text(ticket)
   texto <- paste(texto, collapse = "\n") # unimos todo el texto en un solo string
-  # 1. Verificación rápida de Mercadona (antes de todo el procesamiento)
+  
+  #Verificación de que es un ticket de Mercadona
   if (!str_detect(texto, "MERCADONA, S\\.A\\.")) {
-    return(NULL)  # Descarta inmediatamente si no es Mercadona
+    return(NULL)  
   }
   supermercado <- "MERCADONA"
   
   # Obtenemos las líneas de texto individuales 
-  lineas <- str_split(texto, "\n")[[1]]
+  lineas <- str_split(texto, "\n")[[1]]%>% 
+    str_trim() %>% 
+    .[. != ""]
   
   # Dirección (línea que contenga "CTRA.")
   idx_mercadona <- grep("MERCADONA, S\\.A\\.", lineas)
@@ -100,14 +103,11 @@ procesar_ticket <- function(ticket){
   }
   
   # Parking
-  entrada <- str_extract(texto, "ENTRADA\\s+\\d{2}:\\d{2}")
-  entrada <- ifelse(is.na(entrada), NA, str_extract(entrada, "\\d{2}:\\d{2}"))
-  salida <- str_extract(texto, "SALIDA\\s+\\d{2}:\\d{2}")
-  salida <- ifelse(is.na(salida), NA, str_extract(salida, "\\d{2}:\\d{2}"))
+  entrada <- str_extract(texto, "ENTRADA\\s+\\d{2}:\\d{2}") %>% str_extract("\\d{2}:\\d{2}")
+  salida <- str_extract(texto, "SALIDA\\s+\\d{2}:\\d{2}") %>% str_extract("\\d{2}:\\d{2}")
   
   # Total
-  total <- str_match(texto, "TOTAL \\(€\\)\\s+(\\d+,\\d{2})")[,2]
-  total <- ifelse(!is.na(total), as.numeric(str_replace(total, ",", ".")), NA)
+  total <- str_match(texto, "TOTAL \\(€\\)\\s+(\\d+,\\d{2})")[,2] %>% str_replace(",", ".") %>% as.numeric()
   
   #Tarjeta
   tarjeta <- str_extract(texto, "TARJ\\. BANCARIA.*?(\\d{4})")
@@ -133,53 +133,76 @@ procesar_ticket <- function(ticket){
   tipo_pago <- str_match(texto, "(VISA|MASTERCARD|AMEX|DÉBITO|CRÉDITO|DEBITO|CREDITO|EFECTIVO)[ /A-Z]*")[,1]
   
   # Productos
-  idx_productos <- grep("^\\d+\\s+.*\\d+,\\d{2}$", lineas)
+  productos <- list()
+  en_pescado <- FALSE
   
-  if (length(idx_productos) > 0) {
-    productos <- lapply(lineas[idx_productos], function(linea) {
-      partes <- str_match(linea, "^(\\d+)\\s+(.*?)\\s+(\\d+,\\d{2})(?:\\s+(\\d+,\\d{2}))?$")
-      cantidad <- as.numeric(partes[2])
-      producto <- str_trim(partes[3])
-      precio_unit <- ifelse(is.na(partes[4]), partes[5], partes[4])
-      precio_unit <- as.numeric(str_replace(precio_unit, ",", "."))
-      importe <- ifelse(!is.na(partes[5]), as.numeric(str_replace(partes[5], ",", ".")), precio_unit * cantidad)
-      
-      data.frame(
-        ticket_id = factura,
-        producto = producto,
-        cantidad = cantidad,
-        precio_unitario = precio_unit,
-        importe = importe,
-        supermercado = supermercado,
-        direccion = direccion,
-        codigo_postal = codigo_postal,
-        municipio = municipio,
-        telefono = telefono,
-        fecha = fecha,
-        hora = hora,
-        op = op,
-        tienda = tienda,
-        caja = caja,
-        num_factura = num_factura,
-        entrada = entrada,
-        salida = salida,
-        total = total,
-        tarjeta = tarjeta,
-        nc = nc,
-        aut = aut,
-        aid = aid,
-        arc = arc,
-        tipo_pago = tipo_pago,
-        stringsAsFactors = FALSE
-      )
-    })
+   for (i in seq_along(lineas)) {
+    linea <- lineas[i]
+    if (str_detect(linea, "^PESCADO$")) {
+      en_pescado <- TRUE
+      next
+    }
     
-    do.call(rbind, productos)
-  } else {
-    NULL
+    if (i < length(lineas)) {
+      linea_siguiente <- lineas[i + 1]
+
+      # Detectar formato de producto con peso
+      if (str_detect(linea_siguiente, "\\d+[.,]\\d+\\s*kg\\s+\\d+[.,]\\d+\\s*€/kg")) {
+        nombre <- linea
+        datos <- str_match(linea_siguiente, "(\\d+[.,]\\d+)\\s*kg\\s+(\\d+[.,]\\d+)\\s*€/kg\\s+(\\d+[.,]\\d{2})")
+        peso <- as.numeric(str_replace(datos[2], ",", "."))
+        precio_kg <- as.numeric(str_replace(datos[3], ",", "."))
+        importe <- as.numeric(str_replace(datos[4], ",", "."))
+
+        categoria <- if (en_pescado) "pescado" else if (str_detect(tolower(nombre), "kiwi|banana|mandarina|tomate|espinaca|ajo|champiñon")) "fruta/verdura" else "venta_por_unidades"
+
+        productos[[length(productos) + 1]] <- data.frame(
+          producto = nombre, cantidad = peso,
+          precio_unitario = precio_kg, importe = importe,
+          es_peso = TRUE, categoria = categoria, stringsAsFactors = FALSE
+        )
+        next
+      }
+    }
+    partes <- str_match(linea, "^(\\d+)\\s+(.*?)\\s+(\\d+[.,]\\d{2})(?:\\s+(\\d+[.,]\\d{2}))?$")
+    if (!all(is.na(partes))) {
+      cantidad <- as.numeric(partes[2])
+      producto <- partes[3]
+      precio_unit <- as.numeric(str_replace(partes[4], ",", "."))
+      importe <- ifelse(!is.na(partes[5]), as.numeric(str_replace(partes[5], ",", ".")), precio_unit * cantidad)
+
+      categoria <- if (en_pescado) "pescado" else "venta_por_unidades"
+      
+
+      productos[[length(productos) + 1]] <- data.frame(
+        producto = producto, cantidad = cantidad,
+        precio_unitario = precio_unit, importe = importe,
+        es_peso = FALSE, categoria = categoria, stringsAsFactors = FALSE
+      )
+    }
   }
 
+  if (length(productos) == 0) return(NULL)
+
+  df_productos <- do.call(rbind, productos) %>%
+    mutate(
+      ticket_id = factura, supermercado = supermercado, direccion = direccion,
+      codigo_postal = codigo_postal, municipio = municipio, telefono = telefono,
+      fecha = fecha, hora = hora, op = op, tienda = tienda, caja = caja, num_factura = num_factura,
+      entrada = entrada, salida = salida, total = total, tarjeta = tarjeta,
+      nc = nc, aut = aut, aid = aid, arc = arc, tipo_pago = tipo_pago
+    )
+  df_productos <- df_productos %>%
+  mutate(
+    categoria = ifelse(str_detect(producto, "^1\\s+"), "fruta/verdura", categoria),
+    producto = str_replace(producto, "^1\\s+", ""),
+    cantidad = ifelse(es_peso, round(importe / precio_unitario, 1), cantidad),
+    categoria = as.factor(categoria)
+  )
+
+  return(df_productos)
 }
+
 
 # Procesamiento con filtrado
 lista_tickets <- lapply(tickets, procesar_ticket)
@@ -205,12 +228,12 @@ if (!is.null(tickets_df)) {
       aut = as.integer(aut),
       arc = as.integer(arc),
       fecha = dmy(fecha),
-      hora = as.POSIXct(hora, format = "%H:%M"),
-      entrada = as.POSIXct(entrada, format = "%H:%M"),
-      salida = as.POSIXct(salida, format = "%H:%M")
-    )
-  
- 
+      hora = format(as.POSIXct(hora, format = "%H:%M"), "%H:%M"),  
+      entrada = format(as.POSIXct(entrada, format = "%H:%M"), "%H:%M"),  
+      salida = format(as.POSIXct(salida, format = "%H:%M"), "%H:%M")    
+    )%>%mutate(
+    cantidad = ifelse(es_peso, round(importe / precio_unitario,1), cantidad)
+  )
 }
 #
 
@@ -358,83 +381,12 @@ Posteriormente, se realiza la carga de los tickets. Estos tickets se encuentran
 
 # Conclusiones
 
-¿Cuáles son los 5 productos, de los vendidos por unidades, con más ventas ? ¿Cuántas unidades de cada uno se han vendido ?
+
+Pregunta -> ¿Cuáles son los 5 productos, de los vendidos por unidades, con más ventas ? ¿Cuántas unidades de cada uno se han vendido ?
 
 ```{r}
-#Analizamos primero el nombre de todas las columnas para que el analisis sea más claro
-colnames(tickets_df)
-
-
-
-# Agrupar por producto y sumar cantidad vendida
-top_5_unidades <- tickets_df %>%
-  group_by(producto) %>%
-  summarise(unidades_vendidas = sum(cantidad, na.rm = TRUE)) %>%
-  arrange(desc(unidades_vendidas)) %>%
-  slice_head(n = 5)
-top_5_unidades
-
-# Gráfico
-library(ggplot2)
-ggplot(top_5_unidades, aes(x = reorder(producto, unidades_vendidas), y = unidades_vendidas)) +
-  geom_bar(stat = "identity", fill = "steelblue") +
-  coord_flip() +
-  labs(title = "Top 5 productos más vendidos por unidades",
-       x = "Producto",
-       y = "Unidades vendidas")
-  
-
-
-
-
-
+# Filtrar productos vendidos por unidades
+productos_unidades <- df_productos %>%
+  filter(categoria == "venta_por_unidades") %>%
 ```
 
-Para responder esta pregunta, se ha analizado la columna producto del conjunto de datos y se ha calculado el total de unidades vendidas a través de la variable cantidad. Posteriormente, se han ordenado los productos en función del total acumulado y se han seleccionado los cinco con mayor número de unidades vendidas.
-
-Como se muestra en la tabla, los cinco productos más vendidos por unidades han sido:
-
-LECHE DESNAT. CALCIO
-
-QUESO LONCHAS CABRA
-
-COPOS DE AVENA
-
-GARBANZO M.COCIDO
-
-BARRA CAMPESINA
-
-Se observa que los productos lácteos (leche y queso), así como productos de consumo básico como legumbres, pan y cereales, lideran el volumen de ventas por unidades. Esto puede indicar una alta frecuencia de consumo y reposición, probablemente porque son productos básicos en la cesta de la compra semanal.
-
-Este análisis es útil para identificar productos de alta rotación, lo cual tiene aplicaciones prácticas en gestión de inventario y promociones específicas.
-
-**Si consideramos la categoría de FRUTAS Y VERDURAS. Cuáles son los 5 productos más vendidos ? ¿Cuántos kilos se han vendido de cada uno de estos productos ?**
-
-```{r}
-
-# Palabras clave típicas de frutas y verduras
-frutas_verduras_pattern <- "manzana|pera|naranja|plátano|kiwi|sandía|melón|zanahoria|tomate|lechuga|pepino|cebolla|ajo|pimiento|calabacín|brócoli|espinaca"
-
-# Filtrar productos de frutas y verduras
-fv_top5 <- tickets_df %>%
-  filter(str_detect(str_to_lower(producto), frutas_verduras_pattern)) %>%
-  group_by(producto) %>%
-  summarise(kilos_vendidos = sum(cantidad, na.rm = TRUE)) %>%
-  arrange(desc(kilos_vendidos)) %>%
-  slice_head(n = 5)
-
-# Ver tabla
-fv_top5
-
-# Gráfico de barras
-ggplot(fv_top5, aes(x = reorder(producto, kilos_vendidos), y = kilos_vendidos)) +
-  geom_bar(stat = "identity", fill = "darkgreen") +
-  coord_flip() +
-  labs(title = "Top 5 productos de frutas y verduras más vendidos",
-       subtitle = "Según kilos vendidos",
-       x = "Producto",
-       y = "Kilos vendidos")
-
-
-
-```
