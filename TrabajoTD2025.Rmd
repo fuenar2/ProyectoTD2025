@@ -48,9 +48,10 @@ procesar_ticket <- function(ticket){
   # Extraemos toda la información del ticket como un vector
   texto <- pdf_text(ticket)
   texto <- paste(texto, collapse = "\n") # unimos todo el texto en un solo string
-  # 1. Verificación rápida de Mercadona (antes de todo el procesamiento)
+  
+  #Verificación de que es un ticket de Mercadona
   if (!str_detect(texto, "MERCADONA, S\\.A\\.")) {
-    return(NULL)  # Descarta inmediatamente si no es Mercadona
+    return(NULL)  
   }
   supermercado <- "MERCADONA"
   
@@ -102,10 +103,8 @@ procesar_ticket <- function(ticket){
   }
   
   # Parking
-  entrada <- str_extract(texto, "ENTRADA\\s+\\d{2}:\\d{2}")
-  entrada <- ifelse(is.na(entrada), NA, str_extract(entrada, "\\d{2}:\\d{2}"))
-  salida <- str_extract(texto, "SALIDA\\s+\\d{2}:\\d{2}")
-  salida <- ifelse(is.na(salida), NA, str_extract(salida, "\\d{2}:\\d{2}"))
+  entrada <- str_extract(texto, "ENTRADA\\s+\\d{2}:\\d{2}") %>% str_extract("\\d{2}:\\d{2}")
+  salida <- str_extract(texto, "SALIDA\\s+\\d{2}:\\d{2}") %>% str_extract("\\d{2}:\\d{2}")
   
   # Total
   total <- str_match(texto, "TOTAL \\(€\\)\\s+(\\d+,\\d{2})")[,2]
