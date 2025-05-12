@@ -284,6 +284,17 @@ top_frutas_verduras <- tickets_df %>%
   slice_max(order_by = kilos_vendidos, n = 5)
 
 kable(top_frutas_verduras)
+
+ggplot(top_frutas_verduras, aes(x = reorder(producto, kilos_vendidos), y = kilos_vendidos)) +
+  geom_bar(stat = "identity", fill = "darkgreen") +
+  labs(
+    title = "Top 5 frutas y verduras más vendidas",
+    x = "Producto",
+    y = "Kilos vendidos"
+  ) +
+  coord_flip() +
+  theme_minimal()
+
 ```
 
 Si consideramos la categoría de PESCADO. Cuáles son los 5 productos más vendidos ? ¿Cuántos kilos se han vendido de cada uno de estos productos ?
