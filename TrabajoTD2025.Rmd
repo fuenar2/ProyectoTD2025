@@ -324,9 +324,26 @@ ggplot(top_pescado, aes(x = reorder(producto, kilos_vendidos), y = kilos_vendido
 
 ```
 
-Muestra mediante un gráfico de líneas como ha variado el precio por kilo de las bananas y los plátanos en los tickets disponibles, a lo largo del tiempo.
+***Muestra mediante un gráfico de líneas como ha variado el precio por kilo de las bananas y los plátanos en los tickets disponibles, a lo largo del tiempo.***
 
-¿ Cuál es la procedencia de los tickets ?¿ Qué ciudad/ pueblo tiene un mayor número de tickets ?
+***¿ Cuál es la procedencia de los tickets ?¿ Qué ciudad/ pueblo tiene un mayor número de tickets ?***
+
+```{r}
+
+library(lubridate)
+
+# Filtrar bananas y plátanos vendidos por peso
+banana_platano <- tickets_df %>%
+  filter(es_peso == TRUE, str_detect(tolower(producto), "banana|plátano|platano")) %>%
+  mutate(fecha = as.Date(fecha)) %>%
+  group_by(producto, fecha) %>%
+  summarise(precio_promedio = mean(precio_unitario), .groups = "drop")  
+
+
+
+
+
+```
 
 Muestra mediante un diagrama el número de tickets recogidos cada día de las semana. ¿Si tuvieses que cerrar un día entre semana qué día lo harías ?
 
