@@ -288,9 +288,29 @@ tickets_por_municipio %>%
 Muestra mediante un diagrama el número de tickets recogidos cada día de las semana. ¿Si tuvieses que cerrar un día entre semana qué día lo harías ?
 
 ```{r}
-library(dplyr)
+library(dplyr) 
 library(ggplot2)
 library(lubridate)
+
+# Asegurarse de que la columna fecha es tipo Date
+tickets_df <- tickets_df %>%
+  mutate(fecha = as.Date(fecha))
+
+# Obtener día de la semana por ticket
+tickets_dia_semana <- tickets_df %>%
+  distinct(ticket_id, fecha) %>%
+  mutate(dia_semana = wday(fecha, label = TRUE, abbr = FALSE)) %>%
+  count(dia_semana)
+
+ggplot(tickets_dia_semana, aes(x = reorder(dia_semana, n), y = n)) +
+  geom_bar(stat = "identity", fill = "pink") +
+  labs(title = "Número de tickets por día de la semana", x = "Día", y = "Número de tickets") +
+  coord_flip() +
+  theme_minimal()
+
+
+
+
 ```
 
 
