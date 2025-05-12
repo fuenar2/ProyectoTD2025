@@ -313,7 +313,7 @@ total gastado y cantidad de tickets por día).
 ```{r}
 library(knitr)
 
-tickets_por_dia <- tickets_df %>%
+gasto_por_dia <- tickets_df %>%
   distinct(ticket_id, .keep_all = TRUE) %>%  
   mutate(dia_semana = weekdays(fecha)) %>%   
   group_by(dia_semana) %>%
@@ -324,16 +324,21 @@ tickets_por_dia <- tickets_df %>%
   ) %>%
   arrange(match(dia_semana, c("lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo")))
 
-tickets_por_dia %>%  
+gasto_por_dia %>%  
   kable(caption = "Gasto promedio por día de la semana")
 ```
-
+El gasto promedio es más alto durante el fin de semana(Sábados) probablemente porque la gente hace más compras grandes. El gasto disminuye entre semana, siendo el jueves el día con el promedio más bajo.
 
 9.¿Qué día tiene menos volumen de compras? ¿Y cuál el mayor? (Contar
 número de tickets por día de la semana).
 
 ```{r}
-
+tickets_por_dia <- tickets_df %>%
+  distinct(ticket_id, .keep_all = TRUE) %>%  
+  mutate(dia_semana = weekdays(fecha)) %>%   
+  group_by(dia_semana) %>%
+  summarise(tickets = n())%>%
+  arrange(tickets)
 ```
 
 
