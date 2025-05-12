@@ -340,7 +340,14 @@ El domingo registra el menor volumen de compras (solo 1 ticket), ya que Mercadon
 categoría y agrupar por mes).
 
 ```{r}
-frutas_verduras <- tickets_df 
+library(lubridate)
+
+frutas_verduras <- tickets_df %>%
+  filter(categoria %in% "fruta/verdura") %>%     
+  mutate(mes = month(fecha, label = TRUE)) %>% 
+  group_by(mes, categoria) %>%
+  summarise(kilos = sum(cantidad, na.rm = TRUE), .groups = "drop") %>%
+  arrange(desc(kilos))
 ```
 
 
