@@ -310,6 +310,18 @@ top_pescado <- tickets_df %>%
 
 # Mostrar tabla con los resultados
 kable(top_pescado)
+
+# Representación gráfica
+ggplot(top_pescado, aes(x = reorder(producto, kilos_vendidos), y = kilos_vendidos)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  labs(
+    title = "Top 5 productos de pescado más vendidos",
+    x = "Producto",
+    y = "Kilos vendidos"
+  ) +
+  coord_flip() +
+  theme_minimal()
+
 ```
 
 Muestra mediante un gráfico de líneas como ha variado el precio por kilo de las bananas y los plátanos en los tickets disponibles, a lo largo del tiempo.
