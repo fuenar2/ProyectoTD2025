@@ -311,6 +311,8 @@ getwd()
 total gastado y cantidad de tickets por día).
 
 ```{r}
+library(knitr)
+
 tickets_por_dia <- tickets_df %>%
   distinct(ticket_id, .keep_all = TRUE) %>%  
   mutate(dia_semana = weekdays(fecha)) %>%   
@@ -321,6 +323,7 @@ tickets_por_dia <- tickets_df %>%
     gasto_promedio = total_gastado / tickets      
   ) %>%
   arrange(match(dia_semana, c("lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo")))
+
 
 ```
 
