@@ -154,7 +154,7 @@ procesar_ticket <- function(ticket){
         precio_kg <- as.numeric(str_replace(datos[3], ",", "."))
         importe <- as.numeric(str_replace(datos[4], ",", "."))
 
-        categoria <- if (en_pescado) "pescado" else if (str_detect(tolower(nombre), "kiwi|banana|mandarina|tomate|espinaca|ajo|champiñon")) "fruta/verdura" else "otros"
+        categoria <- if (en_pescado) "pescado" else if (str_detect(tolower(nombre), "kiwi|banana|mandarina|tomate|espinaca|ajo|champiñon")) "fruta/verdura" else "venta_por_unidades"
 
         productos[[length(productos) + 1]] <- data.frame(
           producto = nombre, cantidad = peso,
@@ -171,7 +171,7 @@ procesar_ticket <- function(ticket){
       precio_unit <- as.numeric(str_replace(partes[4], ",", "."))
       importe <- ifelse(!is.na(partes[5]), as.numeric(str_replace(partes[5], ",", ".")), precio_unit * cantidad)
 
-      categoria <- if (en_pescado) "pescado" else "otros"
+      categoria <- if (en_pescado) "pescado" else "venta_por_unidades"
       
 
       productos[[length(productos) + 1]] <- data.frame(
