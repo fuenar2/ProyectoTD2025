@@ -3,14 +3,14 @@ title: " Mini Proyecto 2025. Análisis de tickets de supermercado"
 author: "Mar Fuentes Armenteros, Paula Girbés Plaza, Pablo Fernando Navarro Sánchez, Andreu Serrano Briz, Hugo Cuñat Alabau y Rafael Cebrián Pérez"
 date: "`r Sys.Date()`"
 output:
+ 
+ 
   bookdown::pdf_document2:
     fig_caption: yes
     df_print: kable
   bookdown::html_document2:
     fig_caption: yes
     df_print: kable
- 
- 
 ---
 
 ```{r setup, include=FALSE}
@@ -360,6 +360,29 @@ knitr::kable(
 )
 ```
 
+```{r tabla-funciones}
+funciones_metadatos <- data.frame(
+  "Función" = c("str_detect", "str_extract", "str_match", "str_remove", 
+                "str_trim", "grep", "grepl", "ifelse"),
+  "Descripción" = c(
+    "Detecta si un texto contiene un patrón específico",
+    "Extrae el primer fragmento que coincide con una expresión regular (como fechas o importes)",
+    "Extrae fragmentos más complejos usando grupos de captura, útil para líneas con múltiples datos ",
+    "Elimina partes del texto como etiquetas",
+    "Elimina espacios al inicio y final de la línea (para limpiar direcciones y otras cadenas)",
+    "Devuelve el índice de líneas que contienen un patrón (usado para ubicar líneas clave como la dirección)",
+    "Devuelve un vector lógico indicando si cada línea contiene el patrón ",
+    "Estructura condicional para asignar valores según se cumpla o no una condición"
+  )
+)
+
+knitr::kable(
+  funciones_metadatos,
+  caption = "Funciones utilizadas en la extracción de metadatos",
+  booktabs = TRUE
+)
+
+```
 
 Para el correcto desarrollo de la exportación y análisis de los datos, en primer lugar, se cargan todas las librerías necesarias al principio del código. Estas librerías son las mostradas en la Tabla \ref{tab:tabla-librerias}.
 
@@ -367,6 +390,8 @@ Posteriormente, se realiza la carga de los tickets. Estos tickets se encuentran 
 En este trabajo solo se tienen en cuenta aquellos tickets con extensión *.pdf*, para ello, a la hora de cargarlos se ha utilizado **list.files()**, que lee la carpeta *data* y usando el parámetro **pattern = "\\.pdf$"**, que selecciona solo los archivos con extensión *.pdf*, devuelve un vector con la ruta de todos los archivos.
 Después de filtrar y obtener la ruta de los archivos, a resultado útil crear una función que se encargue de procesar ticket por ticket toda la información necesaria, para ello, primero se utiliza **pdf_text()**, que convierte el contenido del *pdf* en un vector de texto plano, donde cada elemento representa una página y mediante **paste()** estas se unen, de esta menera se obtiene el texto del recibo.
 Dado que el formato no es el mismo en tickets de diferentes cadenas de supermercado y el enfoque de este análisis se centra únicamente en los recibos de Mercadona, para evitar conflictos a la hora separar la información, en el caso que exista un recibo de otro supermercado o incluso en un pdf en vez de el recibo hay una imagen, se ha utilizado **str_detect** para verificar si el texto del ticket contiene el identificador único de Mercadona, en el caso de no detectarlo, descarta el ticket devolviendo **null**.
+Una vez verificado que el ticket pertenece a Mercadona, se procede a extraer la información línea por línea. Para ello, el texto plano se divide con la función **str_split()**, separándolo por saltos de línea *\n*, y luego se limpian los espacios sobrantes mediante **str_trim()**, eliminando líneas vacías con *.[. != ""]*. Esto permite trabajar con un vector de líneas limpio, donde cada línea representa un fragmento legible del recibo.
+A la hora de extraer las variables, se utilizan varias funciones, como se puede observar en la \@ref{tab:tabla-funciones}, donde se ven representadas las funciónes y para que han sido utilizadas, y también patrones o expresiones regulares. Estos patrones 36666
 
 ## *Características de los datos*
 
