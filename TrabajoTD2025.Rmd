@@ -303,7 +303,13 @@ ggplot(top_frutas_verduras, aes(x = reorder(producto, kilos_vendidos), y = kilos
 # Filtrar y agrupar productos de categoría "pescado"
 top_pescado <- tickets_df %>%
   filter(categoria == "pescado", es_peso == TRUE) %>%
-  
+  group_by(producto) %>%
+  summarise(kilos_vendidos = sum(cantidad)) %>%
+  arrange(desc(kilos_vendidos)) %>%
+  slice_max(order_by = kilos_vendidos, n = 5)
+
+# Mostrar tabla con los resultados
+kable(top_pescado)
 ```
 
 Muestra mediante un gráfico de líneas como ha variado el precio por kilo de las bananas y los plátanos en los tickets disponibles, a lo largo del tiempo.
