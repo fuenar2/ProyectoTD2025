@@ -196,7 +196,8 @@ procesar_ticket <- function(ticket){
   mutate(
     categoria = ifelse(str_detect(producto, "^1\\s+"), "fruta/verdura", categoria),
     producto = str_replace(producto, "^1\\s+", ""),
-    cantidad = ifelse(es_peso, round(importe / precio_unitario, 1), cantidad)
+    cantidad = ifelse(es_peso, round(importe / precio_unitario, 1), cantidad),
+    categoria = as.factor(categoria)
   )
 
   return(df_productos)
