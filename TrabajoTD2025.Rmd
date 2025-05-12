@@ -310,11 +310,27 @@ getwd()
 8.¿Cómo cambia el gasto promedio según el día de la semana? (Comparar el
 total gastado y cantidad de tickets por día).
 
+```{r}
+tickets_por_dia <- tickets_df 
+
+```
+
+
 9.¿Qué día tiene menos volumen de compras? ¿Y cuál el mayor? (Contar
 número de tickets por día de la semana).
 
+```{r}
+
+```
+
+
 10¿Qué mes registra mayores compras de frutas y verduras? (Filtrar por
 categoría y agrupar por mes).
+
+```{r}
+
+```
+
 
 11. ¿Qué productos tienen mayor rotación semanal y cuáles permanecen más
     tiempo sin comprarse? (Agrupar ventas por semana y producto,
