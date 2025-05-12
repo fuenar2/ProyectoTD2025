@@ -287,6 +287,13 @@ tickets_por_municipio %>%
 
 Muestra mediante un diagrama el número de tickets recogidos cada día de las semana. ¿Si tuvieses que cerrar un día entre semana qué día lo harías ?
 
+```{r}
+library(dplyr)
+library(ggplot2)
+library(lubridate)
+```
+
+
 1.¿Cuáles son las frutas más compradas durante la
 primavera? (Filtrar por fecha y categoría de producto).
 
