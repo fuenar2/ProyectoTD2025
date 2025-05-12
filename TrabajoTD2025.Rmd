@@ -334,8 +334,6 @@ El resto del ranking lo componen productos frescos y de consumo estacional como 
 
 ***Muestra mediante un gráfico de líneas como ha variado el precio por kilo de las bananas y los plátanos en los tickets disponibles, a lo largo del tiempo.***
 
-***¿ Cuál es la procedencia de los tickets ?¿ Qué ciudad/ pueblo tiene un mayor número de tickets ?***
-
 ```{r}
 
 library(lubridate)
@@ -360,6 +358,14 @@ ggplot(banana_platano, aes(x = fecha, y = precio_promedio, color = producto)) +
 
 
 ```
+
+Se aprecia que el precio del plátano ha sido más variable, alcanzando máximos por encima de los 3 €/kg durante el verano de 2024, lo que sugiere posibles efectos estacionales o fluctuaciones en la oferta. A partir de septiembre, ese precio desciende de forma gradual, estabilizándose en torno a los 2 €/kg a inicios de 2025.
+
+Por el contrario, el precio de la banana se mantiene relativamente estable en torno a 1,4 €/kg durante la mayor parte del periodo. Solo hacia finales de 2024 se observa una caída puntual por debajo de 1,2 €/kg, seguida de una recuperación en los primeros meses de 2025. Esta estabilidad podría deberse a una cadena de suministro más global o menos expuesta a factores locales.
+
+La comparación entre ambas frutas refleja cómo productos similares pueden comportarse de forma distinta en el mercado, y cómo el precio del plátano parece estar más expuesto a variaciones estacionales o logísticas.
+
+¿ Cuál es la procedencia de los tickets ?¿ Qué ciudad/ pueblo tiene un mayor número de tickets ?
 
 Muestra mediante un diagrama el número de tickets recogidos cada día de las semana. ¿Si tuvieses que cerrar un día entre semana qué día lo harías ?
 
