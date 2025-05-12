@@ -348,6 +348,9 @@ frutas_verduras <- tickets_df %>%
   group_by(mes, categoria) %>%
   summarise(kilos = sum(cantidad, na.rm = TRUE), .groups = "drop") %>%
   arrange(desc(kilos))
+
+frutas_verduras %>%  
+  kable(caption = "Número de compras de frutas/verduras por meses del año")
 ```
 
 
