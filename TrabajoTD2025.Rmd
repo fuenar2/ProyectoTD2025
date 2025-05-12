@@ -269,7 +269,7 @@ ggplot(top_productos_unidades, aes(x = reorder(producto, unidades_vendidas), y =
 
 ```
 
-Destaca en primer lugar el producto HUEVOS GRANDES-L, con una cantidad notablemente superior al resto, lo que sugiere que es un artículo de consumo recurrente y básico en la cesta de la compra. Le siguen productos como ATÚN CLARO OLIVA y BOLSA PLÁSTICO, siendo este último un caso interesante por tratarse de un artículo no alimenticio que aparece con frecuencia debido probablemente a que se registra individualmente en cada compra. Completan la lista QUESO LONCHAS CABRA y YOGUR COCO, productos de valor añadido que podrían reflejar hábitos de consumo específicos. Este gráfico permite visualizar con claridad la diferencia relativa en ventas entre productos y ofrece una base útil para decisiones relacionadas con inventario, promociones o análisis de preferencias del consumidor.
+Destaca en primer lugar el producto HUEVOS GRANDES-L, con una cantidad notablemente superior al resto, lo que sugiere que es un artículo de consumo recurrente y básico en la cesta de la compra. Le siguen productos como ATÚN CLARO OLIVA y BOLSA PLÁSTICO, siendo este último un caso interesante por tratarse de un artículo no alimenticio que aparece con frecuencia debido probablemente a que se registra individualmente en cada compra. Completan la lista QUESO LONCHAS CABRA y YOGUR COCO, productos de valor añadido que podrían reflejar hábitos de consumo específicos.
 
 ***Si consideramos la categoría de FRUTAS Y VERDURAS. Cuáles son los 5 productos más vendidos ? ¿Cuántos kilos se han vendido de cada uno de estos productos ?***
 
@@ -296,6 +296,10 @@ ggplot(top_frutas_verduras, aes(x = reorder(producto, kilos_vendidos), y = kilos
   theme_minimal()
 
 ```
+
+El producto con mayor volumen de venta es claramente el PLÁTANO, con 59 kilos vendidos, lo que lo posiciona como el más demandado en este grupo. Le sigue la BANANA, con 26 kilos, lo que confirma que las frutas tropicales tienen una fuerte presencia en la cesta de la compra.
+
+En tercera y cuarta posición aparecen SANDÍA BAJA SEMILLAS y PEPINO, con 23 y 20 kilos respectivamente, productos frescos que suelen tener picos de consumo en temporadas cálidas. Cierra el ranking el MELÓN PIEL SAPO, con 16 kilos, otro producto estacional que se asocia al verano. En conjunto, estos resultados reflejan una preferencia clara por frutas frescas y jugosas, especialmente los plátanos, posiblemente por su versatilidad y consumo habitual.
 
 ***Si consideramos la categoría de PESCADO. Cuáles son los 5 productos más vendidos ? ¿Cuántos kilos se han vendido de cada uno de estos productos ?***
 
