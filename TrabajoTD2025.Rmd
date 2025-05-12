@@ -385,13 +385,29 @@ Posteriormente, se realiza la carga de los tickets. Estos tickets se encuentran
 Pregunta -> ¿Cuáles son los 5 productos, de los vendidos por unidades, con más ventas ? ¿Cuántas unidades de cada uno se han vendido ?
 
 ```{r}
-tickets_df %>%
+library(ggplot2)
+
+# Filtrar, agrupar y seleccionar los 5 productos con más unidades vendidas
+top_productos_unidades <- tickets_df %>%
   filter(categoria == "venta_por_unidades") %>%
   group_by(producto) %>%
   summarise(unidades_vendidas = sum(cantidad)) %>%
   arrange(desc(unidades_vendidas)) %>%
-  slice_max(order_by = unidades_vendidas, n = 5) %>%
-  kable()
+  slice_max(order_by = unidades_vendidas, n = 5)
+
+kable(top_productos_unidades)
+
+# Crear gráfico de barras
+ggplot(top_productos_unidades, aes(x = reorder(producto, unidades_vendidas), y = unidades_vendidas)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  labs(
+    title = "Top 5 productos vendidos por unidades",
+    x = "Producto",
+    y = "Unidades vendidas"
+  ) +
+  coord_flip() +
+  theme_minimal()
+
 ```
 
 
