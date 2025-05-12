@@ -133,6 +133,15 @@ procesar_ticket <- function(ticket){
   tipo_pago <- str_match(texto, "(VISA|MASTERCARD|AMEX|DÉBITO|CRÉDITO|DEBITO|CREDITO|EFECTIVO)[ /A-Z]*")[,1]
   
   # Productos
+  productos <- list()
+  en_pescado <- FALSE
+  
+   for (i in seq_along(lineas)) {
+    linea <- lineas[i]
+    if (str_detect(linea, "^PESCADO$")) {
+      en_pescado <- TRUE
+      next
+    }
   idx_productos <- grep("^(\\d+[.,]?\\d*\\s+)?[A-Za-z].*\\d+[.,]\\d{2}", lineas, value = FALSE)
   
   if (length(idx_productos) > 0) {
