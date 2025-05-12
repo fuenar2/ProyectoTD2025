@@ -328,6 +328,10 @@ ggplot(top_pescado, aes(x = reorder(producto, kilos_vendidos), y = kilos_vendido
 
 ```
 
+El líder destacado en volumen de venta es el PLÁTANO, con 59 kilos, lo que lo sitúa como una fruta de consumo diario y constante, probablemente por su versatilidad, valor nutricional y bajo precio. En segundo lugar se encuentra la BANANA, con 26 kilos vendidos, lo que confirma la alta demanda general de frutas tropicales.
+
+El resto del ranking lo componen productos frescos y de consumo estacional como la SANDÍA BAJA SEMILLAS (23 kg), el PEPINO (20 kg) y el MELÓN PIEL SAPO (16 kg). Estos datos reflejan una clara inclinación del consumidor por productos frescos, saludables y especialmente apropiados para el verano, lo cual puede estar ligado al momento del año en que se recopilaron los tickets.
+
 ***Muestra mediante un gráfico de líneas como ha variado el precio por kilo de las bananas y los plátanos en los tickets disponibles, a lo largo del tiempo.***
 
 ***¿ Cuál es la procedencia de los tickets ?¿ Qué ciudad/ pueblo tiene un mayor número de tickets ?***
