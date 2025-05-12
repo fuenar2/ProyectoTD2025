@@ -48,9 +48,10 @@ procesar_ticket <- function(ticket){
   # Extraemos toda la información del ticket como un vector
   texto <- pdf_text(ticket)
   texto <- paste(texto, collapse = "\n") # unimos todo el texto en un solo string
-  # 1. Verificación rápida de Mercadona (antes de todo el procesamiento)
+  
+  #Verificación de que es un ticket de Mercadona
   if (!str_detect(texto, "MERCADONA, S\\.A\\.")) {
-    return(NULL)  # Descarta inmediatamente si no es Mercadona
+    return(NULL)  
   }
   supermercado <- "MERCADONA"
   
@@ -102,14 +103,11 @@ procesar_ticket <- function(ticket){
   }
   
   # Parking
-  entrada <- str_extract(texto, "ENTRADA\\s+\\d{2}:\\d{2}")
-  entrada <- ifelse(is.na(entrada), NA, str_extract(entrada, "\\d{2}:\\d{2}"))
-  salida <- str_extract(texto, "SALIDA\\s+\\d{2}:\\d{2}")
-  salida <- ifelse(is.na(salida), NA, str_extract(salida, "\\d{2}:\\d{2}"))
+  entrada <- str_extract(texto, "ENTRADA\\s+\\d{2}:\\d{2}") %>% str_extract("\\d{2}:\\d{2}")
+  salida <- str_extract(texto, "SALIDA\\s+\\d{2}:\\d{2}") %>% str_extract("\\d{2}:\\d{2}")
   
   # Total
-  total <- str_match(texto, "TOTAL \\(€\\)\\s+(\\d+,\\d{2})")[,2]
-  total <- ifelse(!is.na(total), as.numeric(str_replace(total, ",", ".")), NA)
+  total <- str_match(texto, "TOTAL \\(€\\)\\s+(\\d+,\\d{2})")[,2] %>% str_replace(",", ".") %>% as.numeric()
   
   #Tarjeta
   tarjeta <- str_extract(texto, "TARJ\\. BANCARIA.*?(\\d{4})")
@@ -135,84 +133,76 @@ procesar_ticket <- function(ticket){
   tipo_pago <- str_match(texto, "(VISA|MASTERCARD|AMEX|DÉBITO|CRÉDITO|DEBITO|CREDITO|EFECTIVO)[ /A-Z]*")[,1]
   
   # Productos
-  idx_productos <- grep("^(\\d+[.,]?\\d*\\s+)?[A-Za-z].*\\d+[.,]\\d{2}", lineas, value = FALSE)
+  productos <- list()
+  en_pescado <- FALSE
   
-  if (length(idx_productos) > 0) {
-    productos <- lapply(lineas[idx_productos], function(linea) {
-      partes <- str_match(linea, "^(?:(\\d+[.,]?\\d*)\\s+)?([A-Za-z].*?)\\s+(?:\\d+[.,]\\d+\\s+[€/]?[\\w]*\\s+)?(\\d+[.,]\\d{2})(?:\\s+(\\d+[.,]\\d{2}))?\\s*$")
-      if (str_detect(linea, "\\d+[.,]\\d+\\s*kg")) {
-        peso <- str_match(linea, "(\\d+[.,]\\d+)\\s*kg")[,2] %>% 
-          str_replace(",", ".") %>% 
-          as.numeric()
-        precio_kg <- str_match(linea, "(\\d+[.,]\\d+)\\s*€/kg")[,2] %>% 
-          str_replace(",", ".") %>% 
-          as.numeric()
-        importe <- str_match(linea, "(\\d+[.,]\\d{2})\\s*$")[,2] %>% 
-          str_replace(",", ".") %>% 
-          as.numeric()
-        
-        data.frame(
-          producto = str_match(linea, "([A-Za-z].*?)\\s+\\d")[,2] %>% str_trim(),
-          cantidad = peso,
-          precio_unitario = precio_kg,
-          importe = importe,
-          es_peso = TRUE,
-          stringsAsFactors = FALSE
+   for (i in seq_along(lineas)) {
+    linea <- lineas[i]
+    if (str_detect(linea, "^PESCADO$")) {
+      en_pescado <- TRUE
+      next
+    }
+    
+    if (i < length(lineas)) {
+      linea_siguiente <- lineas[i + 1]
+
+      # Detectar formato de producto con peso
+      if (str_detect(linea_siguiente, "\\d+[.,]\\d+\\s*kg\\s+\\d+[.,]\\d+\\s*€/kg")) {
+        nombre <- linea
+        datos <- str_match(linea_siguiente, "(\\d+[.,]\\d+)\\s*kg\\s+(\\d+[.,]\\d+)\\s*€/kg\\s+(\\d+[.,]\\d{2})")
+        peso <- as.numeric(str_replace(datos[2], ",", "."))
+        precio_kg <- as.numeric(str_replace(datos[3], ",", "."))
+        importe <- as.numeric(str_replace(datos[4], ",", "."))
+
+        categoria <- if (en_pescado) "pescado" else if (str_detect(tolower(nombre), "kiwi|banana|mandarina|tomate|espinaca|ajo|champiñon")) "fruta/verdura" else "venta_por_unidades"
+
+        productos[[length(productos) + 1]] <- data.frame(
+          producto = nombre, cantidad = peso,
+          precio_unitario = precio_kg, importe = importe,
+          es_peso = TRUE, categoria = categoria, stringsAsFactors = FALSE
         )
-      } else {
-        # Productos normales
-        cantidad <- ifelse(!is.na(partes[2]), 
-                          partes[2] %>% str_replace(",", ".") %>% as.numeric(), 
-                          1)  # Valor por defecto 1 si no hay cantidad
-        producto <- partes[3] %>% str_trim()
-        precio_unit <- ifelse(!is.na(partes[4]), 
-                             partes[4] %>% str_replace(",", ".") %>% as.numeric(),
-                             NA)
-        importe <- ifelse(!is.na(partes[5]), 
-                         partes[5] %>% str_replace(",", ".") %>% as.numeric(),
-                         precio_unit * cantidad)
-        
-        data.frame(
-          producto = producto,
-          cantidad = cantidad,
-          precio_unitario = precio_unit,
-          importe = importe,
-          es_peso = FALSE,
-          stringsAsFactors = FALSE
-        )
+        next
       }
-    })
-    
-    df_productos <- do.call(rbind, productos) %>% 
-      mutate(
-        ticket_id = factura,
-        supermercado = supermercado,
-        direccion = direccion,
-        codigo_postal = codigo_postal,
-        municipio = municipio,
-        telefono = telefono,
-        fecha = fecha,
-        hora = hora,
-        op = op,
-        tienda = tienda,
-        caja = caja,
-        num_factura = num_factura,
-        entrada = entrada,
-        salida = salida,
-        total = total,
-        tarjeta = tarjeta,
-        nc = nc,
-        aut = aut,
-        aid = aid,
-        arc = arc,
-        tipo_pago = tipo_pago
+    }
+    partes <- str_match(linea, "^(\\d+)\\s+(.*?)\\s+(\\d+[.,]\\d{2})(?:\\s+(\\d+[.,]\\d{2}))?$")
+    if (!all(is.na(partes))) {
+      cantidad <- as.numeric(partes[2])
+      producto <- partes[3]
+      precio_unit <- as.numeric(str_replace(partes[4], ",", "."))
+      importe <- ifelse(!is.na(partes[5]), as.numeric(str_replace(partes[5], ",", ".")), precio_unit * cantidad)
+
+      categoria <- if (en_pescado) "pescado" else "venta_por_unidades"
+      
+
+      productos[[length(productos) + 1]] <- data.frame(
+        producto = producto, cantidad = cantidad,
+        precio_unitario = precio_unit, importe = importe,
+        es_peso = FALSE, categoria = categoria, stringsAsFactors = FALSE
       )
-    
-    return(df_productos)
-  } else {
-    return(NULL)
+    }
   }
+
+  if (length(productos) == 0) return(NULL)
+
+  df_productos <- do.call(rbind, productos) %>%
+    mutate(
+      ticket_id = factura, supermercado = supermercado, direccion = direccion,
+      codigo_postal = codigo_postal, municipio = municipio, telefono = telefono,
+      fecha = fecha, hora = hora, op = op, tienda = tienda, caja = caja, num_factura = num_factura,
+      entrada = entrada, salida = salida, total = total, tarjeta = tarjeta,
+      nc = nc, aut = aut, aid = aid, arc = arc, tipo_pago = tipo_pago
+    )
+  df_productos <- df_productos %>%
+  mutate(
+    categoria = ifelse(str_detect(producto, "^1\\s+"), "fruta/verdura", categoria),
+    producto = str_replace(producto, "^1\\s+", ""),
+    cantidad = ifelse(es_peso, round(importe / precio_unitario, 1), cantidad),
+    categoria = as.factor(categoria)
+  )
+
+  return(df_productos)
 }
+
 
 # Procesamiento con filtrado
 lista_tickets <- lapply(tickets, procesar_ticket)
@@ -241,13 +231,14 @@ if (!is.null(tickets_df)) {
       hora = format(as.POSIXct(hora, format = "%H:%M"), "%H:%M"),  
       entrada = format(as.POSIXct(entrada, format = "%H:%M"), "%H:%M"),  
       salida = format(as.POSIXct(salida, format = "%H:%M"), "%H:%M")    
-    )
-  
- 
+    )%>%mutate(
+    cantidad = ifelse(es_peso, round(importe / precio_unitario,1), cantidad)
+  )
 }
 #
 
 ```
+
 
 
 # Introducción
@@ -349,7 +340,7 @@ El domingo registra el menor volumen de compras (solo 1 ticket), ya que Mercadon
 categoría y agrupar por mes).
 
 ```{r}
-
+frutas_verduras <- tickets_df 
 ```
 
 
