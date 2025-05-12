@@ -283,6 +283,8 @@ tickets_por_municipio %>%
 
 #La ciudad con mayor numero tickets es Valencia
 ```
+Los tickets provienen de Valencia y de pueblos de alrededor. Y la ciudad con mayor número de tickets es Valencia.
+
 
 
 Muestra mediante un diagrama el número de tickets recogidos cada día de las semana. ¿Si tuvieses que cerrar un día entre semana qué día lo harías ?
@@ -312,6 +314,9 @@ ggplot(tickets_dia_semana, aes(x = reorder(dia_semana, n), y = n)) + #Ordenar lo
 
 
 ```
+En el ejercicio del diagrama del número de tickets por día, se puede observar que el dia que menos ventas hay y por lo cual sería el dia que cerraría, seria el jueves, aunque en el diagrama salga el domingo, pero ese dia siempre está cerrado el Mercadona.
+
+
 
 
 1.¿Cuáles son las frutas más compradas durante la
@@ -356,11 +361,17 @@ top_fallas <- tickets_df %>%
   arrange(desc(unidades)) %>%
   slice_head(n = 3)
 
-top_navidad
-top_semana_santa
-top_fallas
-      
+list("Navidad" = top_navidad %>% mutate(festivo = "Navidad"),      
+  "Semana Santa" = top_semana_santa %>% mutate(festivo = "Semana Santa"),
+  "Fallas" = top_fallas %>% mutate(festivo = "Fallas")
+) %>%
+  bind_rows() %>%               
+  select(festivo, producto, unidades) %>%  
+  arrange(festivo, desc(unidades)) 
 ```
+Los productos que mas se suelen vender en Fallas son: Harina Integral, Habas y Azúcar. Mientras que en Navidad es: Cola sin cafeína, Yogur coco y Agua Cortes. Y por último en Semana Santa: Chapata Cristal, Tinto Bobal y Arroz.
+
+
 
 
 3.¿Se compran productos diferentes en zonas urbanas frente a rurales?
@@ -424,6 +435,40 @@ categoría y agrupar por mes).
 19. ¿Cuáles son los productos más comprados por la mañana frente a la
     tarde? (Agrupar tickets por franja horaria y analizar top
     productos).
+
+```{r}
+library(dplyr)
+library(readr)
+library(knitr)
+
+mañana_tarde <- tickets_df %>%
+  mutate(
+    hora_numeric = as.numeric(substr(hora, 1, 2)),  # Extraer hora
+    franja = case_when(
+      hora_numeric >= 8 & hora_numeric < 14 ~ "Mañana",
+      hora_numeric >= 14 & hora_numeric < 20 ~ "Tarde",
+      TRUE ~ "Otro"
+    )
+  ) %>%
+  filter(franja != "Otro")  
+
+top_productos <- tickets_df %>%
+  group_by(franja, producto) %>%
+  summarise(cantidad_total = sum(cantidad, na.rm = TRUE), .groups = "drop") %>%
+  group_by(franja) %>%
+  slice_max(order_by = cantidad_total, n = 5)  # Top 5 por franja
+
+kable(
+  top_productos,
+  caption = "Top 5 productos por franja horaria",
+  col.names = c("Franja", "Producto", "Cantidad Total")
+)
+
+
+```
+Los productos que mas se venden por la mañana son: Espárragos verde fino, Atún claro oliva, Queso lonchas cabra, Tomate triturado y Sandía baja semillas. Mientras que por la tarde: Atún claro olivam Plátano, Yogur coco, Bolsa de plástico y Leche Desnatada
+
+
 
 20. ¿Qué artículos aumentan su venta a fin de mes (posiblemente por
     cobro de sueldos)? (Comparar ventas por semana del mes,
