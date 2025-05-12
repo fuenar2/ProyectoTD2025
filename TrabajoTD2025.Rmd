@@ -321,6 +321,48 @@ primavera? (Filtrar por fecha y categoría de producto).
 Semana Santa o Fallas? (Comparar ventas en fechas clave con el resto del
 año).
 
+```{r}
+library(dplyr)
+
+tickets_df <- tickets_df %>%
+  mutate(fecha = as.Date(fecha))
+
+top_navidad <- tickets_df %>%
+  filter(
+    (fecha >= as.Date("2023-12-20") & fecha <= as.Date("2023-12-31")) |  # Navidad 2023
+    (fecha >= as.Date("2024-12-20") & fecha <= as.Date("2024-12-31"))     # Navidad 2024
+  ) %>%
+  group_by(producto) %>%
+  summarise(unidades = sum(cantidad), .groups = "drop") %>%
+  arrange(desc(unidades)) %>%
+  slice_head(n = 3)
+
+top_semana_santa <- tickets_df %>%
+  filter(
+    fecha >= as.Date("2024-03-23") & fecha <= as.Date("2024-03-30")  # Semana Santa 2024
+  ) %>%
+  group_by(producto) %>%
+  summarise(unidades = sum(cantidad), .groups = "drop") %>%
+  arrange(desc(unidades)) %>%
+  slice_head(n = 3)
+
+top_fallas <- tickets_df %>%
+  filter(
+    (fecha >= as.Date("2024-03-15") & fecha <= as.Date("2024-03-19")) |  # Fallas 2024
+    (fecha >= as.Date("2025-03-15") & fecha <= as.Date("2025-03-15"))    # Único día disponible en 2025
+  ) %>%
+  group_by(producto) %>%
+  summarise(unidades = sum(cantidad), .groups = "drop") %>%
+  arrange(desc(unidades)) %>%
+  slice_head(n = 3)
+
+top_navidad
+top_semana_santa
+top_fallas
+      
+```
+
+
 3.¿Se compran productos diferentes en zonas urbanas frente a rurales?
 (Agrupar por ciudad o código postal y comparar top productos).
 
