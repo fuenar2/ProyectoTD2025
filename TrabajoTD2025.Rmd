@@ -357,3 +357,37 @@ Posteriormente, se realiza la carga de los tickets. Estos tickets se encuentran
 # Resultados
 
 # Conclusiones
+```{r}
+# Agregar una nueva columna 'semana' para identificar la semana de cada venta
+tickets_df <- tickets_df %>%
+  mutate(semana = week(fecha))  # Utilizamos la función week() de lubridate para obtener el número de la semana
+
+# Agrupar por semana y producto, y contar las unidades vendidas por cada producto cada semana
+rotacion_semanal <- tickets_df %>%
+  group_by(semana, producto) %>%
+  summarise(unidades_vendidas = sum(cantidad, na.rm = TRUE)) %>%
+  arrange(semana, desc(unidades_vendidas))
+
+# Identificar los productos con mayor rotación (mayor cantidad vendida)
+productos_mayor_rotacion <- rotacion_semanal %>%
+  group_by(producto) %>%
+  summarise(total_unidades_vendidas = sum(unidades_vendidas)) %>%
+  arrange(desc(total_unidades_vendidas))
+
+# Los productos que más tiempo permanecen sin comprarse son aquellos con menos unidades vendidas a lo largo del tiempo
+productos_menor_rotacion <- rotacion_semanal %>%
+  group_by(producto) %>%
+  summarise(total_unidades_vendidas = sum(unidades_vendidas)) %>%
+  arrange(total_unidades_vendidas)
+
+# Mostrar los productos con mayor rotación (los 10 primeros)
+head(productos_mayor_rotacion, 10)
+
+# Mostrar los productos con menor rotación (los 10 primeros)
+head(productos_menor_rotacion, 10)
+
+
+
+
+  
+```
