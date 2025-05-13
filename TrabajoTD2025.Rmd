@@ -288,13 +288,6 @@ productos por ticket y calcular la media).
 library(tidyr)
 library(dplyr)
 
-productos_unicos <- tickets_df %>%
-  distinct(producto) %>%
-  mutate(categoria = NA)
-
-write.csv(productos_unicos, "productos_para_etiquetar.csv", row.names = FALSE)
-getwd()
-
 ```
 
 
