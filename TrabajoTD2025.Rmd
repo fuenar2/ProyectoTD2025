@@ -407,9 +407,9 @@ Los tickets provienen de Valencia y de pueblos de alrededor. Y la ciudad con may
 
 Muestra mediante un diagrama el número de tickets recogidos cada día de las semana. ¿Si tuvieses que cerrar un día entre semana qué día lo harías ?
 
-<<<<<<< HEAD
+
 1.¿Cuáles son las frutas más compradas durante la primavera? (Filtrar por fecha y categoría de producto).
-=======
+
 ```{r}
 library(dplyr) 
 library(ggplot2)
@@ -446,9 +446,9 @@ primavera? (Filtrar por fecha y categoría de producto).
 
 2.¿Qué productos suelen comprarse más durante festivos como Navidad, Semana Santa o Fallas? (Comparar ventas en fechas clave con el resto del año).
 
-<<<<<<< HEAD
+
 3.¿Se compran productos diferentes en zonas urbanas frente a rurales? (Agrupar por ciudad o código postal y comparar top productos).
-=======
+
 ```{r}
 library(dplyr)
 
@@ -499,7 +499,7 @@ Los productos que mas se suelen vender en Fallas son: Harina Integral, Habas y A
 
 3.¿Se compran productos diferentes en zonas urbanas frente a rurales?
 (Agrupar por ciudad o código postal y comparar top productos).
->>>>>>> respuestas-preguntas
+
 
 4.¿Qué productos suelen comprarse juntos con frecuencia? (por ejemplo, pan con chocolate) (Analizar combinaciones frecuentes dentro del mismo ticket).
 
@@ -533,9 +533,9 @@ Los productos que mas se suelen vender en Fallas son: Harina Integral, Habas y A
 
 19. ¿Cuáles son los productos más comprados por la mañana frente a la tarde? (Agrupar tickets por franja horaria y analizar top productos).
 
-<<<<<<< HEAD
+
 20. ¿Qué artículos aumentan su venta a fin de mes (posiblemente por cobro de sueldos)? (Comparar ventas por semana del mes, especialmente última semana)
-=======
+
 ```{r}
 library(dplyr)
 library(lubridate)
@@ -567,7 +567,7 @@ Los productos que mas se venden por la mañana son: Tomate triturado, Atún clar
 20. ¿Qué artículos aumentan su venta a fin de mes (posiblemente por
     cobro de sueldos)? (Comparar ventas por semana del mes,
     especialmente última semana)
->>>>>>> respuestas-preguntas
+
 
 # Material y Métodos
 
