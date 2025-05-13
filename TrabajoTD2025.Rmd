@@ -9,16 +9,11 @@ output:
   bookdown::html_document2:
     fig_caption: yes
     df_print: kable
- 
- 
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
 
 ```{r Carga-librerias, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE) 
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 library(pdftools)
 library(stringr)
 library(dplyr)
@@ -216,13 +211,9 @@ if (!is.null(tickets_df)) {
 
 ```
 
-
 # Introducción
-En este proyecto se aborda el análisis exploratorio de
-datos a partir de tickets de supermercado, con el objetivo de extraer
-información relevante sobre los hábitos de consumo, productos
-adquiridos, precios y comportamiento de compra. El conjunto de datos que se utiliza pertenece a varios tickets del supermercado Mercadona proporcionados por la Universidad de Valencia (UV). En concreto, pertenece a una recolecta entre el profesor y varios alumnos de la asignatura de Tratamiento de datos.
-Este proyecto tiene como objetivo analizar los datos extraidos de los tickets para responder a las siguientes preguntas:
+
+En este proyecto se aborda el análisis exploratorio de datos a partir de tickets de supermercado, con el objetivo de extraer información relevante sobre los hábitos de consumo, productos adquiridos, precios y comportamiento de compra. El conjunto de datos que se utiliza pertenece a varios tickets del supermercado Mercadona proporcionados por la Universidad de Valencia (UV). En concreto, pertenece a una recolecta entre el profesor y varios alumnos de la asignatura de Tratamiento de datos. Este proyecto tiene como objetivo analizar los datos extraidos de los tickets para responder a las siguientes preguntas:
 
 ¿Cuáles son los 5 productos, de los vendidos por unidades, con más ventas ? ¿Cuántas unidades de cada uno se han vendido ?
 
@@ -236,90 +227,51 @@ Muestra mediante un gráfico de líneas como ha variado el precio por kilo de la
 
 Muestra mediante un diagrama el número de tickets recogidos cada día de las semana. ¿Si tuvieses que cerrar un día entre semana qué día lo harías ?
 
-1.¿Cuáles son las frutas más compradas durante la
-primavera? (Filtrar por fecha y categoría de producto).
+1.¿Cuáles son las frutas más compradas durante la primavera? (Filtrar por fecha y categoría de producto).
 
-2.¿Qué productos suelen comprarse más durante festivos como Navidad,
-Semana Santa o Fallas? (Comparar ventas en fechas clave con el resto del
-año).
+2.¿Qué productos suelen comprarse más durante festivos como Navidad, Semana Santa o Fallas? (Comparar ventas en fechas clave con el resto del año).
 
-3.¿Se compran productos diferentes en zonas urbanas frente a rurales?
-(Agrupar por ciudad o código postal y comparar top productos).
+3.¿Se compran productos diferentes en zonas urbanas frente a rurales? (Agrupar por ciudad o código postal y comparar top productos).
 
-4.¿Qué productos suelen comprarse juntos con frecuencia? (por ejemplo,
-pan con chocolate) (Analizar combinaciones frecuentes dentro del mismo
-ticket).
+4.¿Qué productos suelen comprarse juntos con frecuencia? (por ejemplo, pan con chocolate) (Analizar combinaciones frecuentes dentro del mismo ticket).
 
-5.¿Qué productos se mantienen en la cesta aunque cambien de precio?
-(Observar si bajadas o subidas de precio afectan a las unidades
-compradas).
+5.¿Qué productos se mantienen en la cesta aunque cambien de precio? (Observar si bajadas o subidas de precio afectan a las unidades compradas).
 
-6.¿Cuántos productos se compran en promedio por ticket? (Contar
-productos por ticket y calcular la media).
+6.¿Cuántos productos se compran en promedio por ticket? (Contar productos por ticket y calcular la media).
 
-7.¿Qué categorías suelen comprarse en conjunto? (Ej. frutas + lácteos)
-(Clasificar productos por categoría y ver combinaciones más frecuentes).
+7.¿Qué categorías suelen comprarse en conjunto? (Ej. frutas + lácteos) (Clasificar productos por categoría y ver combinaciones más frecuentes).
 
-8.¿Cómo cambia el gasto promedio según el día de la semana? (Comparar el
-total gastado y cantidad de tickets por día).
+8.¿Cómo cambia el gasto promedio según el día de la semana? (Comparar el total gastado y cantidad de tickets por día).
 
-<<<<<<< HEAD
-9.¿Qué día tiene menos volumen de compras? ¿Y cuál el mayor? (Contar
-número de tickets por día de la semana).
+9.¿Qué día tiene menos volumen de compras? ¿Y cuál el mayor? (Contar número de tickets por día de la semana).
 
-10¿Qué mes registra mayores compras de frutas y verduras? (Filtrar por
-categoría y agrupar por mes).
+10¿Qué mes registra mayores compras de frutas y verduras? (Filtrar por categoría y agrupar por mes).
 
-11. ¿Qué productos tienen mayor rotación semanal y cuáles permanecen más
-    tiempo sin comprarse? (Agrupar ventas por semana y producto,
-    analizar frecuencia de compra).
-=======
-```
->>>>>>> d8a2247f7c238860f56b121ced0d2f5134ff3ee1
+11. ¿Qué productos tienen mayor rotación semanal y cuáles permanecen más tiempo sin comprarse? (Agrupar ventas por semana y producto, analizar frecuencia de compra).
 
-12. ¿Cómo afecta la climatología al tipo de productos comprados? (ej.
-    helados en verano, sopas en invierno) (Relacionar fechas con
-    estaciones y tipos de producto).
+12. ¿Cómo afecta la climatología al tipo de productos comprados? (ej. helados en verano, sopas en invierno) (Relacionar fechas con estaciones y tipos de producto).
 
-13. ¿Qué impacto tienen las promociones o descuentos en la cantidad
-    comprada de un producto? (Comparar unidades vendidas antes, durante
-    y después de una promoción).
+13. ¿Qué impacto tienen las promociones o descuentos en la cantidad comprada de un producto? (Comparar unidades vendidas antes, durante y después de una promoción).
 
-14. ¿Qué ticket promedio se observa según el tipo de establecimiento
-    (urbano, rural, turístico)? (Agrupar por zona y calcular gasto
-    promedio por ticket).
+14. ¿Qué ticket promedio se observa según el tipo de establecimiento (urbano, rural, turístico)? (Agrupar por zona y calcular gasto promedio por ticket).
 
-15. ¿Qué productos suelen ser los primeros en desaparecer en compras
-    grandes (+20 productos)? (Analizar orden de productos en tickets
-    extensos).
+15. ¿Qué productos suelen ser los primeros en desaparecer en compras grandes (+20 productos)? (Analizar orden de productos en tickets extensos).
 
-16. ¿Existen diferencias de compra entre clientes que compran entre
-    semana frente a fines de semana? (Comparar volumen y tipo de
-    productos por día).
+16. ¿Existen diferencias de compra entre clientes que compran entre semana frente a fines de semana? (Comparar volumen y tipo de productos por día).
 
-17. ¿Hay patrones de consumo distintos entre zonas costeras y zonas del
-    interior? (Comparar categorías más compradas según localización
-    geográfica).
+17. ¿Hay patrones de consumo distintos entre zonas costeras y zonas del interior? (Comparar categorías más compradas según localización geográfica).
 
-18. ¿Qué marcas blancas se compran más en comparación con productos de
-    marca? (Clasificar productos por tipo de marca y analizar
-    proporciones de compra).
+18. ¿Qué marcas blancas se compran más en comparación con productos de marca? (Clasificar productos por tipo de marca y analizar proporciones de compra).
 
-19. ¿Cuáles son los productos más comprados por la mañana frente a la
-    tarde? (Agrupar tickets por franja horaria y analizar top
-    productos).
+19. ¿Cuáles son los productos más comprados por la mañana frente a la tarde? (Agrupar tickets por franja horaria y analizar top productos).
 
-<<<<<<< HEAD
-20. ¿Qué artículos aumentan su venta a fin de mes (posiblemente por
-    cobro de sueldos)? (Comparar ventas por semana del mes,
-    especialmente última semana)
-=======
+20. ¿Qué artículos aumentan su venta a fin de mes (posiblemente por cobro de sueldos)? (Comparar ventas por semana del mes, especialmente última semana)
+
 El resto del ranking lo componen productos frescos y de consumo estacional como la SANDÍA BAJA SEMILLAS (23 kg), el PEPINO (20 kg) y el MELÓN PIEL SAPO (16 kg). Estos datos reflejan una clara inclinación del consumidor por productos frescos, saludables y especialmente apropiados para el verano, lo cual puede estar ligado al momento del año en que se recopilaron los tickets.
 
 ***Muestra mediante un gráfico de líneas como ha variado el precio por kilo de las bananas y los plátanos en los tickets disponibles, a lo largo del tiempo.***
 
-```{r}
-
+```{r,echo=FALSE}
 library(lubridate)
 
 # Filtrar bananas y plátanos vendidos por peso
@@ -339,8 +291,6 @@ ggplot(banana_platano, aes(x = fecha, y = precio_promedio, color = producto)) +
   ) +
   theme_minimal()
 
-
-
 ```
 
 Se aprecia que el precio del plátano ha sido más variable, alcanzando máximos por encima de los 3 €/kg durante el verano de 2024, lo que sugiere posibles efectos estacionales o fluctuaciones en la oferta. A partir de septiembre, ese precio desciende de forma gradual, estabilizándose en torno a los 2 €/kg a inicios de 2025.
@@ -351,7 +301,7 @@ La comparación entre ambas frutas refleja cómo productos similares pueden comp
 
 **¿ Cuál es la procedencia de los tickets ?¿ Qué ciudad/ pueblo tiene un mayor número de tickets ?**
 
-```{r}
+```{r,echo=FALSE}
 
 tickets_por_municipio <- tickets_df %>%
   distinct(ticket_id, municipio) %>% #Asegura que cada ticket cuente una vex por municipio
@@ -382,7 +332,7 @@ Los tickets provienen de Valencia y de pueblos de alrededor. Y la ciudad con may
 
 **1.¿Cuáles son las frutas más compradas durante la primavera? (Filtrar por fecha y categoría de producto)**.
 
-```{r}
+```{r,echo=FALSE}
 
 # Asegurarse de que la columna fecha es tipo Date
 tickets_df <- tickets_df %>%
@@ -409,7 +359,7 @@ En el ejercicio del diagrama del número de tickets por día, se puede observar 
 
 **2.¿Qué productos suelen comprarse más durante festivos como Navidad, Semana Santa o Fallas? (Comparar ventas en fechas clave con el resto del año).**
 
-```{r}
+```{r,echo=FALSE}
 library(dplyr)
 
 tickets_df <- tickets_df %>%
@@ -457,7 +407,7 @@ Los productos que mas se suelen vender en Fallas son: Harina Integral, Habas y A
 
 3.¿Se compran productos diferentes en zonas urbanas frente a rurales? (Agrupar por ciudad o código postal y comparar top productos).
 
-```{r}
+```{r,echo=FALSE}
 library(pdftools)
 library(stringr)
 library(dplyr)
@@ -494,14 +444,15 @@ if (is.data.frame(tickets_df)) {
 } else {
   print("El dataframe tickets_df no se ha creado correctamente.")
 }
-#En la zona urbana, los productos más comprados parecen ser leche desnatada con calcio y queso lonchas cabra, que son productos lácteos y envasados al contario que en la zona rural, cuyos productos más comprados incluyen copos de avena y garbanzo m. cocido, que son alimentos más básicos y no tan procesados.
-#En la zona urbana, hay una mayor presencia de productos procesados y envasados, como leches y quesos, que pueden ser más comunes en áreas con mayores recursos y una oferta variada en supermercados, no como en la zona rural, que los productos tienden a ser más básicos y naturales, como el garbanzo cocido y chapata cristal, lo que podría reflejar una preferencia por alimentos menos procesados
+
 ```
+En la zona urbana, los productos más comprados parecen ser leche desnatada con calcio y queso lonchas cabra, que son productos lácteos y envasados al contario que en la zona rural, cuyos productos más comprados incluyen copos de avena y garbanzo m. cocido, que son alimentos más básicos y no tan procesados.
+En la zona urbana, hay una mayor presencia de productos procesados y envasados, como leches y quesos, que pueden ser más comunes en áreas con mayores recursos y una oferta variada en supermercados, no como en la zona rural, que los productos tienden a ser más básicos y naturales, como el garbanzo cocido y chapata cristal, lo que podría reflejar una preferencia por alimentos menos procesados
 
 4.¿Qué productos suelen comprarse juntos con frecuencia? (por ejemplo, pan con chocolate) (Analizar combinaciones frecuentes dentro del mismo ticket).
 
-```{r}
-library(dplyr)
+```{r,echo=FALSE}
+
 library(arules)
 # Crear una lista de transacciones
 transacciones <- tickets_df %>%
@@ -524,7 +475,7 @@ inspect(reglas_interesantes)
 
 5.¿Qué productos se mantienen en la cesta aunque cambien de precio? (Observar si bajadas o subidas de precio afectan a las unidades compradas).
 
-```{r}
+```{r,echo=FALSE}
 library(ggplot2)
 library(dplyr)
 # Agrupar por producto y calcular la media de precio y cantidad comprada por cada producto
@@ -547,13 +498,14 @@ ggplot(productos_precio_cantidad, aes(x = precio_promedio, y = cantidad_total)) 
        x = "Precio Promedio",
        y = "Cantidad Total Comprada")
 colnames(tickets_df)
-#El gráfico muestra una correlación negativa entre el precio promedio y la cantidad comprada. Es decir, a medida que el precio promedio aumenta, la cantidad comprada disminuye.
-# La línea azul de regresión parece indicar que, en general, los productos más caros tienden a venderse menos
+
 ```
+El gráfico muestra una correlación negativa entre el precio promedio y la cantidad comprada. Es decir, a medida que el precio promedio aumenta, la cantidad comprada disminuye.
+La línea azul de regresión parece indicar que, en general, los productos más caros tienden a venderse menos
 
 6.¿Cuántos productos se compran en promedio por ticket? (Contar productos por ticket y calcular la media).
 
-```{r}
+```{r,echo=FALSE}
 library(tidyr)
 library(dplyr)
 library(purrr)
@@ -586,7 +538,7 @@ Los productos de venta por unidades (como pan, huevos, o productos no pesados) s
 
 8.¿Cómo cambia el gasto promedio según el día de la semana? (Comparar el total gastado y cantidad de tickets por día).
 
-```{r}
+```{r,echo=FALSE}
 library(knitr)
 
 gasto_por_dia <- tickets_df %>%
@@ -608,7 +560,7 @@ El gasto promedio es más alto durante el día del Sábado, probablemente porque
 
 9.¿Qué día tiene menos volumen de compras? ¿Y cuál el mayor? (Contar número de tickets por día de la semana).
 
-```{r}
+```{r,echo=FALSE}
 tickets_por_dia <- tickets_df %>%
   distinct(ticket_id, .keep_all = TRUE) %>%  
   mutate(dia_semana = weekdays(fecha)) %>%   
@@ -624,7 +576,7 @@ El domingo registra el menor volumen de compras (solo 1 ticket), ya que Mercadon
 
 10¿Qué mes registra mayores compras de frutas y verduras? (Filtrar por categoría y agrupar por mes).
 
-```{r}
+```{r,echo=FALSE}
 library(lubridate)
 
 frutas_verduras <- tickets_df %>%
@@ -698,7 +650,7 @@ list(
 
 19. ¿**Cuáles son los productos más comprados por la mañana frente a la tarde? (Agrupar tickets por franja horaria y analizar top productos).**
 
-```{r}
+```{r,echo=FALSE}
 library(hms)
 
 tickets_df <- tickets_df %>%
@@ -723,6 +675,7 @@ top_por_franja
 
 Los productos que mas se venden por la mañana son: Tomate triturado, Atún claro calvom copos de avena, queso lonchas cabra y espárragos verde fino. Mientras que por la tarde: huevos grandes-L, plátano, atún claro oliva, bolsa plástico y yogur coco
 
+<<<<<<< HEAD
 20. ¿Qué artículos aumentan su venta a fin de mes (posiblemente por cobro de sueldos)? (Comparar ventas por semana del mes, especialmente última semana)
 ```{r}
 tickets_df <- tickets_df %>%
@@ -740,10 +693,13 @@ ventas_totales
 
 #Con los datos obtenidos, se observa que las ventas antes del día 20 del mes fueron significativamente mayores (488 unidades) en comparación con las ventas después del día 20 (291 unidades). Esto puede estar relacionado con el comportamiento de compra de los consumidores, ya que generalmente muchas personas cobran su sueldo durante la primera semana del mes, lo que podría incentivar compras más grandes en los primeros días. En cambio, después del día 20, las compras parecen disminuir, posiblemente debido a la menor disponibilidad de dinero disponible tras la recepción del sueldo. Este patrón sugiere que las compras tienden a ser más elevadas al inicio del mes.
 ```
+=======
+20. ¿Qué artículos aumentan su venta a fin de mes (posiblemente por cobro de sueldos)? (Comparar ventas por semana del mes, especialmente última semana) \>\>\>\>\>\>\> d8a2247f7c238860f56b121ced0d2f5134ff3ee1
+>>>>>>> e2658af6dd5d56957491497c1cefc75b8dd16bd7
 
 # Material y Métodos
 
-## *Carga de librerías y datos necesarios para el análisis*
+Para el correcto desarrollo de la exportación y análisis de los datos, en primer lugar, se cargan todas las librerías necesarias al principio del código. Estas librerías son las mostradas en la Tabla \@ref(tab:tabla-librerias).
 
 ```{r tabla-librerias}
 librerias <- data.frame(
@@ -765,27 +721,374 @@ librerias <- data.frame(
 knitr::kable(
   librerias,
   caption = "Librerías utilizadas y su función",
-  booktabs = TRUE
+  booktabs = TRUE,
+  label = "tabla-librerias"
 )
 ```
 
+Posteriormente, se realiza la carga de los tickets. Estos tickets se encuentran en la carpeta *./data* y pueden tener diferentes formatos aparte de estar repetidos o no ser del supermercado Mercadona. 
 
-Para el correcto desarrollo de la exportación y análisis de los datos, en primer lugar, se cargan todas las librerías necesarias al principio del código. Estas librerías son las mostradas en la Tabla \ref{tab:tabla-librerias}.
+En este trabajo solo se tienen en cuenta aquellos tickets con extensión *.pdf*, para ello, a la hora de cargarlos se ha utilizado **list.files()**, que lee la carpeta *data* y usando el parámetro **pattern = "\\.pdf$"**, que selecciona solo los archivos con extensión *.pdf*, devuelve un vector con la ruta de todos los archivos. 
 
-Posteriormente, se realiza la carga de los tickets. Estos tickets se encuentran
+Después de filtrar y obtener la ruta de los archivos, a resultado útil crear una función que se encargue de procesar, ticket por ticket, toda la información necesaria, para ello, primero se utiliza **pdf_text()**, que convierte el contenido del *pdf* en un vector de texto plano, donde cada elemento representa una página y mediante **paste()** estas se unen, de esta menera se obtiene el texto del recibo. 
 
-## *Características de los datos*
+Dado que el formato no es el mismo en tickets de diferentes cadenas de supermercado y el enfoque de este análisis se centra únicamente en los recibos de Mercadona, para evitar conflictos a la hora separar la información, en el caso que exista un recibo de otro supermercado o incluso que en un pdf en vez de el recibo haya una imagen, se ha utilizado **str_detect** para verificar si el texto del ticket contiene el identificador único de Mercadona, en el caso de no detectarlo, descarta el ticket devolviendo **null**.
 
-### *Análisis de missing data en nuestro conjunto de interés*
 
-### *Variables de tipo numérico*
+Una vez verificado que el ticket pertenece a Mercadona, se procede a extraer la información línea por línea. Para ello, el texto plano se divide con la función **str_split()**, separándolo por saltos de línea , y luego se limpian los espacios sobrantes mediante **str_trim()**, eliminando líneas vacías con *.[. != ""]*. Esto permite trabajar con un vector de líneas limpio, donde cada línea representa un fragmento legible del recibo.
 
-### *Variables de tipo categórico*
 
-### *Análisis de los outliers*
+A la hora de extraer las variables, se utilizan varias funciones, como se pueden observar en la Tabla \@ref(tab:tabla-funciones), donde se ven representadas las funciónes y para que han sido utilizadas. 
+
+```{r tabla-funciones}
+funciones_metadatos <- data.frame(
+  "Función" = c("str_detect", "str_extract", "str_match", "str_remove", 
+                "str_trim", "grep", "grepl", "ifelse"),
+  "Descripción" = c(
+    "Detecta si un texto contiene un patrón específico",
+    "Extrae el primer fragmento que coincide con una expresión regular (como fechas o importes)",
+    "Extrae fragmentos más complejos usando grupos de captura, útil para líneas con múltiples datos ",
+    "Elimina partes del texto como etiquetas",
+    "Elimina espacios al inicio y final de la línea (para limpiar direcciones y otras cadenas)",
+    "Devuelve el índice de líneas que contienen un patrón ",
+    "Devuelve un vector lógico indicando si cada línea contiene el patrón ",
+    "Estructura condicional para asignar valores según se cumpla o no una condición"
+  )
+)
+
+knitr::kable(
+  funciones_metadatos,
+  caption = "Funciones utilizadas en la extracción de metadatos",
+  booktabs = TRUE,
+  label = "tabla-funciones"
+)
+
+```
+
+
+Además también se utilizán patrones o expresiones regulares, estos son muy útiles, y se pueden encontrar repetidamente en el codigo ya que están formados por subconjuntos, que al unirlos de diferentes maneras permiten seleccionar comodamente las partes del ticket que se necesitan guardar en las variables. Los  sbconjuntos más utilizados estan representados y explicados en la Tabla \@ref(tab:tabla-patrones).
+
+
+```{r tabla-patrones}
+elementos_regex <- data.frame(
+  "Elemento" = c(
+    "\\\\d{2}",  "/",
+    "(?<=...)", "^", "\\\\s+", 
+    "[.,]", "\\\\d+[.,]\\\\d{2}", "\\\\d+[.,]\\\\d+", 
+    "€", "kg", ":", "-",
+    "[A-ZÁÉÍÓÚÑa-záéíóúñ]+", "\\\\w+", "\\\\d+"
+  ),
+  "Función" = c(
+    "Detecta exactamente los dígitos que se encuentran dentro de las claves ",
+    "Detecta una barra inclinada, común en fechas ",
+    "Lookbehind: permite buscar un patrón solo si está precedido por otro",
+    "Indica el inicio de línea ",
+    "Detecta uno o más espacios",
+    "Detecta punto o coma como separador decimal",
+    "Número con dos decimales ",
+    "Número decimal general ",
+    "Busca el símbolo del euro",
+    "Detecta unidades de peso como 'kg'",
+    "Detecta dos puntos ",
+    "Detecta guiones ",
+    "Detecta palabras compuestas por letras ",
+    "Detecta cualquier carácter alfanumérico ",
+    "Detecta uno o más dígitos"
+  )
+)
+
+knitr::kable(
+  elementos_regex,
+  caption = "Componentes utilizados en las expresiones regulares y su propósito",
+  booktabs = TRUE,
+  label = "tabla-patrones"
+)
+ 
+```
+
+Con la implementación de las funciónes y las expresiónes regulares el código permite extraer la información de los recibos, aunque por la estructura de estos se ha debido de dividir la identificación de las variables en dos:
+
+Primero se guarda información general sobre el ticket, es decir, aquellos datos que són iguales para todos los productos del mismo ticket. 
+Las variables que se extraen en esta parte se detectan mediante la localización de palabras clave como  *TOTAL (€)*, extrayendo el valor y luego convirtiéndolo a formato numérico, o inclúso, las expresiones buscan el formato típico de fechas u horas. Muchas de estas operaciónes són el resultado de búsquedas de lineas anteriores, por lo que también se utilizan estructuras como **ifelse()**, que evitan errores en el caso de que en la busqueda anterior no se hubiera encontrado nada. Al final del código los datos se transforman y limpian para garantizar su coherencia. De esta manera conseguimos extraer las variables que están representadas y definidas en la Tabla \@ref(tab:tabla-variables-generales)
+
+```{r tabla-variables-generales}
+metadatos <- data.frame(
+  "Variable extraída" = c(
+    "direccion", "codigo_postal", "municipio", "telefono",
+    "fecha", "hora", "op", "tienda", "caja", "num_factura",
+    "entrada", "salida", "total", "tarjeta", "nc", "aut", "aid", "arc"
+  ),
+  "Descripción" = c(
+    "Dirección del supermercado",
+    "Código postal",
+    "Municipio",
+    "Número de teléfono",
+    "Fecha de compra en formato aaaa-mm-dd",
+    "Hora de compra en formato hh:mm",
+    "Número de operador ",
+    "Número de tienda",
+    "Número de caja",
+    "Número de factura",
+    "Hora de entrada al parking en formato hh:mm",
+    "Hora de salida del parking en formato hh:mm",
+    "Importe total del ticket",
+    "Últimos 4 dígitos de la tarjeta bancaria",
+    "Número de comercio ",
+    "Número de autorización de la operación",
+    "Identificador AID de la tarjeta",
+    "Código ARC de la operación"
+  ),
+  "Tipo" = c(
+    "character", "integer", "character", "integer",
+    "Date", "character", "integer", "integer", "integer", "integer",
+    "character", "character", "numeric", "integer", "integer",
+    "integer", "character", "integer"
+  )
+)
+
+knitr::kable(
+  metadatos,
+  caption = "Tipo y descripción de las variables generales",
+  booktabs = TRUE,
+  label = "tabla-variables-generales"
+)
+
+```
+
+
+
+Después de extraer las variables generales, se analiza de una manera mas compleja las variables que provienen de los productos.  Para este análisis se han considerado dos tipos de productos, diferenciados por su formato de aparición en el ticket, aquellos productos vendidos por peso y los productos vendidos por unidades. En primer lugar se emplea **list()** para crear una lista vacía que almacene todos los artículos encontrados y se inicia un flag booleano para rastrear si estamos en la sección de pescado del ticket. Luego iterando sobre cada línea del texto y utilizando su índice, detecta si hay pescado en el ticket mediante la busqueda de *PESCADO*  y, detecta y analiza los productos con peso. Posteriormente, se añade la categoria, en este punto del codigo solo se añade en el caso de que sea pescado, *pescado*, y en el caso de que sea otra cosa, *venta_por_unidades*, mas tarde, como los productos que són frutas y verduras los añade con un número al principio, en el caso de que un producto tenga un número y un espacio, cambia su categoría a *fruta/verdura*. Después de extraer el resto de datos, guarda el producto como un **data.frame** dentro de la lista *productos*. Por último, se analizan los productos vendidos por unidades, y se crea el **data.frame** y se guarda en la lista.
+
+En el caso de que no hayan productos, es decir, que la longitud de la lista *productos* sea cero, se descarta el ticket.
+
+Después de analizar todos los productos se combinan en un solo **data.frame**, cambiando de categoria los productos, como ya se ha explicado con anterioridad,  corigiendo el valor numerico que aparecen en los productos con categoria fruta/verdura o calculando correctamente con una regla de tres la cantidad de aquellos productos vendidos por peso. Como resultado de toda la extración de la parte de productos y su posterior corrección de tipos, salen resultantes las variables representadas en la Tabla \@ref(tab:tabla-variables-productos)
+
+```{r tabla-variables-productos}
+variables_productos <- data.frame(
+  "Variable" = c(
+    "producto", "cantidad", "precio_unitario", "importe", "es_peso", "categoria"),
+  "Significado" = c(
+    "Nombre del producto comprado",
+    "Cantidad del producto (número o peso)",
+    "Precio por unidad o por kg",
+    "Importe total pagado por el producto",
+    "Indica si el producto se vendió por peso ",
+    "Clasificación del producto "),
+  "Tipo final" = c(
+    "character", "integer", "numeric", "numeric", "logical", "factor")
+)
+
+knitr::kable(
+  variables_productos,
+  caption = "Tipo y descripción de las variables derivadas de productos",
+  booktabs = TRUE,
+  label = "tabla-variables-productos"
+
+)
+
+```
+
+
+A continuación, se aplica la función **procesar_ticket()** a todos los tickets, eliminando los tickets vacíos y se unen todos los data frames de productos en uno solo, eliminando duplicados.
+
+Por último, establece correctamente los tipos de las variables para el posterior análisis
+
+
+# Análisis de datos perdidos 
+
+Al analizar los datos faltantes nos encontramos tres situaciónes:
+
+La primera son datos faltantes por parte de las variables *entrada* y *salida*. Estos valores eran esperados, ya que ha sido la manera de registrar los productos que no utilizaban parking.
+
+La segunda, son datos faltantes por parte de las variables *tarjeta* y *tipo pago *.
+
+Por último, faltan datos de una observación en todas las variables, esto puede ser por un ticket repetido o cuyo id no es válido.
+
+Como se muestra en el gráfico, que muestra el porcentaje de valores perdidos por variable, las variables que mayor porcentaje tienen són las de la primera situación, y están justificadas, pues si no se a utilizado el parking no se pueden tener valores.
+```{r, include=FALSE}
+# Resumen simple de datos faltantes por columna
+missing_summary <- sapply(tickets_df, function(x) sum(is.na(x)))
+missing_summary <- sort(missing_summary[missing_summary > 0], decreasing = TRUE)
+print(missing_summary)
+
+
+missing_pct <- sapply(tickets_df, function(x) mean(is.na(x))) * 100
+missing_pct <- sort(missing_pct[missing_pct > 0], decreasing = TRUE)
+print(round(missing_pct, 2))
+
+library(naniar)
+
+
+
+```
+
+
+
+
+# Análisis de los outliers y métodos de imputación aplicados.
+
 
 
 
 # Resultados
 
 # Conclusiones
+<<<<<<< HEAD
+=======
+
+¿Qué productos tienen mayor rotación semanal y cuáles permanecen más tiempo sin comprarse? (Agrupar ventas por semana y producto,analizar frecuencia de compra).
+
+```{r,echo=FALSE}
+rotacion_semanal <- tickets_df %>%
+  mutate(semana = week(fecha)) %>%
+  group_by(semana, producto) %>%
+  summarise(unidades_vendidas = sum(cantidad, na.rm = TRUE)) %>%
+  ungroup()
+
+rotacion_total <- rotacion_semanal %>%
+  group_by(producto) %>%
+  summarise(total_unidades_vendidas = sum(unidades_vendidas)) %>%
+  ungroup()
+
+list(
+  mayor_rotacion = head(arrange(rotacion_total, desc(total_unidades_vendidas)), 10),
+  menor_rotacion = head(arrange(rotacion_total, total_unidades_vendidas), 10)
+)
+```
+
+¿Cuáles son los productos más comprados por la mañana frente a la tarde? (Agrupar tickets por franja horaria y analizar productos).
+
+```{r,echo=FALSE}
+tickets_df <- tickets_df %>%
+  mutate(dia_semana = weekdays(fecha),
+         grupo_dia = ifelse(dia_semana %in% c("sábado", "domingo"), "Fines de semana", "Entre semana"))
+
+productos_por_dia <- tickets_df %>%
+  group_by(grupo_dia, producto) %>%
+  summarise(unidades_vendidas = sum(cantidad, na.rm = TRUE)) %>%
+  ungroup()
+
+productos_entre_semana <- productos_por_dia %>%
+  filter(grupo_dia == "Entre semana") %>%
+  arrange(desc(unidades_vendidas))
+
+productos_fines_semana <- productos_por_dia %>%
+  filter(grupo_dia == "Fines de semana") %>%
+  arrange(desc(unidades_vendidas))
+
+list(
+  productos_entre_semana_top = head(productos_entre_semana, 10),
+  productos_fines_semana_top = head(productos_fines_semana, 10)
+)
+
+
+```
+Entre semana, los productos más comprados son básicos y de uso diario, como copos de avena, garbanzo cocido y leche desnatada, lo que refleja un consumo rutinario y enfocado en la alimentación diaria. En cambio, durante los fines de semana, los productos más populares incluyen bebidas alcohólicas, como cerveza Radler, y productos más relacionados con el ocio, como la chapata y el jamón cocido. Esto sugiere que las compras de fin de semana están más orientadas a momentos sociales y consumos ocasionales, mientras que entre semana se priorizan alimentos esenciales.
+¿Qué artículos aumentan su venta a fin de mes (posiblemente por cobro de sueldos)? (Comparar ventas por semana del mes, especialmente última semana)
+
+
+
+
+```{r,echo=FALSE}
+tickets_df <- tickets_df %>%
+  mutate(fecha = as.POSIXct(fecha, format="%d/%m/%Y %H:%M"),  
+         periodo = ifelse(as.integer(format(fecha, "%d")) <= 20, "Antes del 20", "Después del 20"))
+
+# Sumar todas las unidades vendidas en cada período
+ventas_totales <- tickets_df %>%
+  group_by(periodo) %>%
+  summarise(total_unidades_vendidas = sum(cantidad, na.rm = TRUE)) %>%
+  ungroup()
+
+ventas_totales
+
+
+
+```
+Con los datos obtenidos, se observa que las ventas antes del día 20 del mes fueron significativamente mayores (488 unidades) en comparación con las ventas después del día 20 (291 unidades). Esto puede estar relacionado con el comportamiento de compra de los consumidores, ya que generalmente muchas personas cobran su sueldo durante la primera semana del mes, lo que podría incentivar compras más grandes en los primeros días. En cambio, después del día 20, las compras parecen disminuir, posiblemente debido a la menor disponibilidad de dinero disponible tras la recepción del sueldo. Este patrón sugiere que las compras tienden a ser más elevadas al inicio del mes.
+
+
+
+
+### *Análisis de los outliers*
+
+```{r,echo=FALSE}
+
+library(scales)
+
+# 1. cantidad vs precio_unitario
+ggplot(tickets_df, aes(x = cantidad, y = precio_unitario)) +
+  geom_point(alpha = 0.4, color = "steelblue") +
+  scale_x_log10(labels = comma) +
+  scale_y_log10(labels = comma) +
+  labs(title = "Relación entre cantidad y precio unitario",
+       x = "Cantidad (log10)", y = "Precio unitario (€) (log10)")
+
+
+```
+
+Este gráfico corresponde a uno de dispersión con puntos “jittered” o dispersos, lo que resulta útil dada la gran concentración de valores sobre ciertas combinaciones de cantidad y precio_unitario. Para una mejor visualización, ambos ejes se han escalado en logaritmo base 10, permitiendo observar detalles tanto en valores bajos como altos.
+
+Es evidente notar que hay una mayor densidad de observaciones cuando la cantidad comprada es igual a 1. Este comportamiento es esperable en compras de supermercado, donde los productos se adquieren frecuentemente de forma unitaria. En cambio, a medida que la cantidad aumenta, los precios unitarios tienden a disminuir, lo cual podría indicar productos más económicos vendidos por peso (por ejemplo, fruta o legumbres), o bien productos en formato ahorro.
+
+También se identifican algunos puntos dispersos hacia la parte superior izquierda del gráfico: observaciones con precio unitario elevado y cantidad baja, lo que probablemente corresponda a productos premium o de alto valor añadido. Estos casos pueden ser considerados outliers naturales que aportan información útil sobre el comportamiento del consumidor.
+
+Los resultados numéricos y agrupaciones específicas no se detallan en el presente documento para no sobrecargar el texto, pero se encuentran disponibles en el fichero .Rmd para su consulta y reproducción.
+
+```{r,echo=FALSE}
+
+# Agrupar y contar combinaciones
+bar_data <- tickets_df %>%
+  group_by(supermercado, tipo_pago) %>%
+  summarise(n = n()) %>%
+  ungroup()
+
+# Gráfico de barras agrupadas
+ggplot(bar_data, aes(x = supermercado, y = n, fill = tipo_pago)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Distribución del tipo de pago según supermercado",
+       x = "Supermercado", y = "Número de tickets",
+       fill = "Tipo de pago") +
+  theme_minimal()
+
+```
+
+Este gráfico corresponde a una representación de barras agrupadas que muestra la relación entre la variable categórica supermercado y las distintas modalidades de tipo_pago registradas en las transacciones. En él, se visualiza claramente la distribución de los métodos de pago utilizados por los clientes, diferenciando entre las distintas tarjetas y registros sin información (NA).
+
+Es evidente notar que la tarjeta Mastercard es la forma de pago mayoritariamente utilizada en el supermercado MERCADONA, con una diferencia considerable respecto al resto de métodos. Este dominio podría deberse a acuerdos comerciales, promociones específicas o simplemente preferencias de los consumidores habituales de la cadena.
+
+También se observa una participación menor de las tarjetas VISA y VISA CRÉDITO/DÉBITO, mientras que los casos con valores faltantes (NA) representan una proporción no despreciable, lo que sugiere posibles problemas de registro o tickets pagados en efectivo u otros medios no especificados.
+
+Aunque en este gráfico solo se representa un supermercado (MERCADONA), la estructura del análisis permite su generalización a otros comercios si estuvieran presentes en el conjunto de datos
+
+```{r,echo=FALSE}
+library(ggplot2)
+
+ggplot(tickets_df, aes(x = tipo_pago, y = precio_unitario)) +
+  geom_boxplot(fill = "skyblue", outlier.color = "red", outlier.shape = 16, alpha = 0.7) +
+  scale_y_log10() +
+  labs(title = "Distribución del precio unitario según tipo de pago",
+       x = "Tipo de pago", y = "Precio unitario (€) (log10)") +
+  theme_minimal()
+library(ggplot2)
+
+ggplot(tickets_df, aes(x = categoria, y = precio_unitario)) +
+  geom_boxplot(fill = "lightblue", outlier.color = "red", outlier.size = 1) +
+  scale_y_log10() +
+  labs(title = "Distribución del precio unitario según categoría de producto",
+       x = "Categoría", y = "Precio unitario (€) (log10)") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
+
+Este gráfico de tipo boxplot representa la distribución del precio_unitario según la categoria del producto. El objetivo es comparar cómo varía el coste por unidad entre distintos tipos de artículos: venta_por_unidades, fruta/verdura y pescado. Para facilitar la comparación entre rangos de precios muy dispares, el eje vertical se ha transformado mediante logaritmo base 10.
+
+Se observa que los productos de la categoría pescado presentan, en general, los precios unitarios más elevados, con una mediana cercana a 10 €, lo cual es coherente con el carácter premium o perecedero de este tipo de alimentos. Además, su distribución está más concentrada, indicando cierta homogeneidad de precios dentro de esta categoría, aunque no exenta de outliers.
+
+Por otro lado, la categoría venta_por_unidades muestra una alta variabilidad en los precios unitarios. Si bien su mediana es moderada (\~2€), se detectan numerosos valores atípicos, tanto en el rango bajo como en el alto, lo que indica que este grupo incluye productos muy heterogéneos, desde artículos básicos hasta productos de alto valor por unidad.
+
+La categoría más interesante es fruta/verdura, ya que presenta una distribución muy compacta y simétrica, con una mediana inferior a 2 € y pocos valores extremos. Este comportamiento indica una clara estabilidad de precios en esta categoría, que probablemente se vende a granel o por peso, lo que limita la dispersión de precios unitarios. Esta coherencia sugiere un control de precios más homogéneo, posiblemente por parte del supermercado o por la naturaleza del producto.
+
+En conjunto, este análisis permite entender cómo varía el precio unitario entre distintos tipos de productos y facilita la detección de anomalías o productos fuera de la norma. Resulta especialmente útil para tareas de supervisión de precios, segmentación comercial o estudio de hábitos de consumo por categoría.
+>>>>>>> e2658af6dd5d56957491497c1cefc75b8dd16bd7
