@@ -296,6 +296,15 @@ categorias_por_ticket <- tickets_df %>%
   summarise(categorias = list(unique(categoria))) %>%
   filter(lengths(categorias) >= 2) 
 
+# Obtenemos combinaciones de 2 categorías
+pares_categorias <- categorias_por_ticket %>%
+  mutate(
+    pares = map(categorias, ~combn(sort(.x), 2, simplify = FALSE))
+  ) %>%
+  select(pares) %>%
+  unnest(pares) %>%
+  count(pares, sort = TRUE)
+
 ```
 
 
