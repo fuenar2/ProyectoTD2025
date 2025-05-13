@@ -256,16 +256,16 @@ top_productos_unidades <- tickets_df %>%
 
 kable(top_productos_unidades)
 
-# Crear gráfico de barras
-ggplot(top_productos_unidades, aes(x = reorder(producto, unidades_vendidas), y = unidades_vendidas)) +
-  geom_bar(stat = "identity", fill = "steelblue") +
+ggplot(top_productos_unidades, aes(x = unidades_vendidas, y = reorder(producto, unidades_vendidas))) +
+  geom_segment(aes(x = 0, xend = unidades_vendidas, y = producto, yend = producto), color = "gray70") +
+  geom_point(size = 5, color = "steelblue") +
   labs(
     title = "Top 5 productos vendidos por unidades",
-    x = "Producto",
-    y = "Unidades vendidas"
+    x = "Unidades vendidas",
+    y = "Producto"
   ) +
-  coord_flip() +
   theme_minimal()
+
 
 ```
 
@@ -285,15 +285,18 @@ top_frutas_verduras <- tickets_df %>%
 
 kable(top_frutas_verduras)
 
-ggplot(top_frutas_verduras, aes(x = reorder(producto, kilos_vendidos), y = kilos_vendidos)) +
-  geom_bar(stat = "identity", fill = "darkgreen") +
+ggplot(top_frutas_verduras, aes(x = reorder(producto, kilos_vendidos), y = kilos_vendidos, fill = producto)) +
+  geom_col() +
+  geom_text(aes(label = kilos_vendidos), vjust = -0.5) +
   labs(
     title = "Top 5 frutas y verduras más vendidas",
     x = "Producto",
     y = "Kilos vendidos"
   ) +
-  coord_flip() +
-  theme_minimal()
+  theme_minimal() +
+  theme(legend.position = "none")
+
+
 
 ```
 
