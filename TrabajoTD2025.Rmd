@@ -305,6 +305,12 @@ pares_categorias <- categorias_por_ticket %>%
   unnest(pares) %>%
   count(pares, sort = TRUE)
 
+# Mostramos las combinaciones más frecuentes
+pares_categorias %>% 
+  slice_max(n, n = 10) %>%
+  mutate(pares = map_chr(pares, ~ paste(.x, collapse = " + "))) %>%
+  kable(caption = "Top combinaciones de categorías en tickets")
+
 ```
 
 
