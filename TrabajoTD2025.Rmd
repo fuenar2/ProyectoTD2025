@@ -11,12 +11,9 @@ output:
     df_print: kable
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
 
 ```{r Carga-librerias, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE) 
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 library(pdftools)
 library(stringr)
 library(dplyr)
@@ -642,7 +639,7 @@ Los productos que mas se venden por la mañana son: Tomate triturado, Atún clar
 
 # Material y Métodos
 
-## *Carga de librerías y datos necesarios para el análisis*
+Para el correcto desarrollo de la exportación y análisis de los datos, en primer lugar, se cargan todas las librerías necesarias al principio del código. Estas librerías son las mostradas en la Tabla \@ref(tab:tabla-librerias).
 
 ```{r tabla-librerias}
 librerias <- data.frame(
@@ -664,23 +661,214 @@ librerias <- data.frame(
 knitr::kable(
   librerias,
   caption = "Librerías utilizadas y su función",
-  booktabs = TRUE
+  booktabs = TRUE,
+  label = "tabla-librerias"
 )
 ```
 
-Para el correcto desarrollo de la exportación y análisis de los datos, en primer lugar, se cargan todas las librerías necesarias al principio del código. Estas librerías son las mostradas en la Tabla \ref{tab:tabla-librerias}.
+Posteriormente, se realiza la carga de los tickets. Estos tickets se encuentran en la carpeta *./data* y pueden tener diferentes formatos aparte de estar repetidos o no ser del supermercado Mercadona. 
 
-Posteriormente, se realiza la carga de los tickets. Estos tickets se encuentran
+En este trabajo solo se tienen en cuenta aquellos tickets con extensión *.pdf*, para ello, a la hora de cargarlos se ha utilizado **list.files()**, que lee la carpeta *data* y usando el parámetro **pattern = "\\.pdf$"**, que selecciona solo los archivos con extensión *.pdf*, devuelve un vector con la ruta de todos los archivos. 
 
-## *Características de los datos*
+Después de filtrar y obtener la ruta de los archivos, a resultado útil crear una función que se encargue de procesar, ticket por ticket, toda la información necesaria, para ello, primero se utiliza **pdf_text()**, que convierte el contenido del *pdf* en un vector de texto plano, donde cada elemento representa una página y mediante **paste()** estas se unen, de esta menera se obtiene el texto del recibo. 
 
-### *Análisis de missing data en nuestro conjunto de interés*
+Dado que el formato no es el mismo en tickets de diferentes cadenas de supermercado y el enfoque de este análisis se centra únicamente en los recibos de Mercadona, para evitar conflictos a la hora separar la información, en el caso que exista un recibo de otro supermercado o incluso que en un pdf en vez de el recibo haya una imagen, se ha utilizado **str_detect** para verificar si el texto del ticket contiene el identificador único de Mercadona, en el caso de no detectarlo, descarta el ticket devolviendo **null**.
 
-### *Variables de tipo numérico*
 
-### *Variables de tipo categórico*
+Una vez verificado que el ticket pertenece a Mercadona, se procede a extraer la información línea por línea. Para ello, el texto plano se divide con la función **str_split()**, separándolo por saltos de línea , y luego se limpian los espacios sobrantes mediante **str_trim()**, eliminando líneas vacías con *.[. != ""]*. Esto permite trabajar con un vector de líneas limpio, donde cada línea representa un fragmento legible del recibo.
 
-### *Análisis de los outliers*
+
+A la hora de extraer las variables, se utilizan varias funciones, como se pueden observar en la Tabla \@ref(tab:tabla-funciones), donde se ven representadas las funciónes y para que han sido utilizadas. 
+
+```{r tabla-funciones}
+funciones_metadatos <- data.frame(
+  "Función" = c("str_detect", "str_extract", "str_match", "str_remove", 
+                "str_trim", "grep", "grepl", "ifelse"),
+  "Descripción" = c(
+    "Detecta si un texto contiene un patrón específico",
+    "Extrae el primer fragmento que coincide con una expresión regular (como fechas o importes)",
+    "Extrae fragmentos más complejos usando grupos de captura, útil para líneas con múltiples datos ",
+    "Elimina partes del texto como etiquetas",
+    "Elimina espacios al inicio y final de la línea (para limpiar direcciones y otras cadenas)",
+    "Devuelve el índice de líneas que contienen un patrón ",
+    "Devuelve un vector lógico indicando si cada línea contiene el patrón ",
+    "Estructura condicional para asignar valores según se cumpla o no una condición"
+  )
+)
+
+knitr::kable(
+  funciones_metadatos,
+  caption = "Funciones utilizadas en la extracción de metadatos",
+  booktabs = TRUE,
+  label = "tabla-funciones"
+)
+
+```
+
+
+Además también se utilizán patrones o expresiones regulares, estos son muy útiles, y se pueden encontrar repetidamente en el codigo ya que están formados por subconjuntos, que al unirlos de diferentes maneras permiten seleccionar comodamente las partes del ticket que se necesitan guardar en las variables. Los  sbconjuntos más utilizados estan representados y explicados en la Tabla \@ref(tab:tabla-patrones).
+
+
+```{r tabla-patrones}
+elementos_regex <- data.frame(
+  "Elemento" = c(
+    "\\\\d{2}",  "/",
+    "(?<=...)", "^", "\\\\s+", 
+    "[.,]", "\\\\d+[.,]\\\\d{2}", "\\\\d+[.,]\\\\d+", 
+    "€", "kg", ":", "-",
+    "[A-ZÁÉÍÓÚÑa-záéíóúñ]+", "\\\\w+", "\\\\d+"
+  ),
+  "Función" = c(
+    "Detecta exactamente los dígitos que se encuentran dentro de las claves ",
+    "Detecta una barra inclinada, común en fechas ",
+    "Lookbehind: permite buscar un patrón solo si está precedido por otro",
+    "Indica el inicio de línea ",
+    "Detecta uno o más espacios",
+    "Detecta punto o coma como separador decimal",
+    "Número con dos decimales ",
+    "Número decimal general ",
+    "Busca el símbolo del euro",
+    "Detecta unidades de peso como 'kg'",
+    "Detecta dos puntos ",
+    "Detecta guiones ",
+    "Detecta palabras compuestas por letras ",
+    "Detecta cualquier carácter alfanumérico ",
+    "Detecta uno o más dígitos"
+  )
+)
+
+knitr::kable(
+  elementos_regex,
+  caption = "Componentes utilizados en las expresiones regulares y su propósito",
+  booktabs = TRUE,
+  label = "tabla-patrones"
+)
+ 
+```
+
+Con la implementación de las funciónes y las expresiónes regulares el código permite extraer la información de los recibos, aunque por la estructura de estos se ha debido de dividir la identificación de las variables en dos:
+
+Primero se guarda información general sobre el ticket, es decir, aquellos datos que són iguales para todos los productos del mismo ticket. 
+Las variables que se extraen en esta parte se detectan mediante la localización de palabras clave como  *TOTAL (€)*, extrayendo el valor y luego convirtiéndolo a formato numérico, o inclúso, las expresiones buscan el formato típico de fechas u horas. Muchas de estas operaciónes són el resultado de búsquedas de lineas anteriores, por lo que también se utilizan estructuras como **ifelse()**, que evitan errores en el caso de que en la busqueda anterior no se hubiera encontrado nada. Al final del código los datos se transforman y limpian para garantizar su coherencia. De esta manera conseguimos extraer las variables que están representadas y definidas en la Tabla \@ref(tab:tabla-variables-generales)
+
+```{r tabla-variables-generales}
+metadatos <- data.frame(
+  "Variable extraída" = c(
+    "direccion", "codigo_postal", "municipio", "telefono",
+    "fecha", "hora", "op", "tienda", "caja", "num_factura",
+    "entrada", "salida", "total", "tarjeta", "nc", "aut", "aid", "arc"
+  ),
+  "Descripción" = c(
+    "Dirección del supermercado",
+    "Código postal",
+    "Municipio",
+    "Número de teléfono",
+    "Fecha de compra en formato aaaa-mm-dd",
+    "Hora de compra en formato hh:mm",
+    "Número de operador ",
+    "Número de tienda",
+    "Número de caja",
+    "Número de factura",
+    "Hora de entrada al parking en formato hh:mm",
+    "Hora de salida del parking en formato hh:mm",
+    "Importe total del ticket",
+    "Últimos 4 dígitos de la tarjeta bancaria",
+    "Número de comercio ",
+    "Número de autorización de la operación",
+    "Identificador AID de la tarjeta",
+    "Código ARC de la operación"
+  ),
+  "Tipo" = c(
+    "character", "integer", "character", "integer",
+    "Date", "character", "integer", "integer", "integer", "integer",
+    "character", "character", "numeric", "integer", "integer",
+    "integer", "character", "integer"
+  )
+)
+
+knitr::kable(
+  metadatos,
+  caption = "Tipo y descripción de las variables generales",
+  booktabs = TRUE,
+  label = "tabla-variables-generales"
+)
+
+```
+
+
+
+Después de extraer las variables generales, se analiza de una manera mas compleja las variables que provienen de los productos.  Para este análisis se han considerado dos tipos de productos, diferenciados por su formato de aparición en el ticket, aquellos productos vendidos por peso y los productos vendidos por unidades. En primer lugar se emplea **list()** para crear una lista vacía que almacene todos los artículos encontrados y se inicia un flag booleano para rastrear si estamos en la sección de pescado del ticket. Luego iterando sobre cada línea del texto y utilizando su índice, detecta si hay pescado en el ticket mediante la busqueda de *PESCADO*  y, detecta y analiza los productos con peso. Posteriormente, se añade la categoria, en este punto del codigo solo se añade en el caso de que sea pescado, *pescado*, y en el caso de que sea otra cosa, *venta_por_unidades*, mas tarde, como los productos que són frutas y verduras los añade con un número al principio, en el caso de que un producto tenga un número y un espacio, cambia su categoría a *fruta/verdura*. Después de extraer el resto de datos, guarda el producto como un **data.frame** dentro de la lista *productos*. Por último, se analizan los productos vendidos por unidades, y se crea el **data.frame** y se guarda en la lista.
+
+En el caso de que no hayan productos, es decir, que la longitud de la lista *productos* sea cero, se descarta el ticket.
+
+Después de analizar todos los productos se combinan en un solo **data.frame**, cambiando de categoria los productos, como ya se ha explicado con anterioridad,  corigiendo el valor numerico que aparecen en los productos con categoria fruta/verdura o calculando correctamente con una regla de tres la cantidad de aquellos productos vendidos por peso. Como resultado de toda la extración de la parte de productos y su posterior corrección de tipos, salen resultantes las variables representadas en la Tabla \@ref(tab:tabla-variables-productos)
+
+```{r tabla-variables-productos}
+variables_productos <- data.frame(
+  "Variable" = c(
+    "producto", "cantidad", "precio_unitario", "importe", "es_peso", "categoria"),
+  "Significado" = c(
+    "Nombre del producto comprado",
+    "Cantidad del producto (número o peso)",
+    "Precio por unidad o por kg",
+    "Importe total pagado por el producto",
+    "Indica si el producto se vendió por peso ",
+    "Clasificación del producto "),
+  "Tipo final" = c(
+    "character", "integer", "numeric", "numeric", "logical", "factor")
+)
+
+knitr::kable(
+  variables_productos,
+  caption = "Tipo y descripción de las variables derivadas de productos",
+  booktabs = TRUE,
+  label = "tabla-variables-productos"
+
+)
+
+```
+
+
+A continuación, se aplica la función **procesar_ticket()** a todos los tickets, eliminando los tickets vacíos y se unen todos los data frames de productos en uno solo, eliminando duplicados.
+
+Por último, establece correctamente los tipos de las variables para el posterior análisis
+
+
+# Análisis de datos perdidos 
+
+Al analizar los datos faltantes nos encontramos tres situaciónes:
+
+La primera son datos faltantes por parte de las variables *entrada* y *salida*. Estos valores eran esperados, ya que ha sido la manera de registrar los productos que no utilizaban parking.
+
+La segunda, son datos faltantes por parte de las variables *tarjeta* y *tipo pago *.
+
+Por último, faltan datos de una observación en todas las variables, esto puede ser por un ticket repetido o cuyo id no es válido.
+
+Como se muestra en el gráfico, que muestra el porcentaje de valores perdidos por variable, las variables que mayor porcentaje tienen són las de la primera situación, y están justificadas, pues si no se a utilizado el parking no se pueden tener valores.
+```{r, include=FALSE}
+# Resumen simple de datos faltantes por columna
+missing_summary <- sapply(tickets_df, function(x) sum(is.na(x)))
+missing_summary <- sort(missing_summary[missing_summary > 0], decreasing = TRUE)
+print(missing_summary)
+
+
+missing_pct <- sapply(tickets_df, function(x) mean(is.na(x))) * 100
+missing_pct <- sort(missing_pct[missing_pct > 0], decreasing = TRUE)
+print(round(missing_pct, 2))
+
+library(naniar)
+
+
+
+```
+
+
+
+
+# Análisis de los outliers y métodos de imputación aplicados.
+
+
+
 
 # Resultados
 
