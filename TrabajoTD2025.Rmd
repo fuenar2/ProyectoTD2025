@@ -287,6 +287,14 @@ productos por ticket y calcular la media).
 ```{r}
 library(tidyr)
 library(dplyr)
+library(purrr)
+
+# Agrupamos las categorías por ticket
+categorias_por_ticket <- tickets_df %>%
+  filter(!is.na(categoria)) %>%  
+  group_by(ticket_id) %>%
+  summarise(categorias = list(unique(categoria))) %>%
+  filter(lengths(categorias) >= 2) 
 
 ```
 
