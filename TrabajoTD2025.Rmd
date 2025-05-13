@@ -593,7 +593,23 @@ frutas_verduras %>%
 El mes de Enero es el que registra mayores compras de fruta y verdura con un total de 68kg.
 
 11. ¿Qué productos tienen mayor rotación semanal y cuáles permanecen más tiempo sin comprarse? (Agrupar ventas por semana y producto, analizar frecuencia de compra).
+```{r}
+rotacion_semanal <- tickets_df %>%
+  mutate(semana = week(fecha)) %>%
+  group_by(semana, producto) %>%
+  summarise(unidades_vendidas = sum(cantidad, na.rm = TRUE)) %>%
+  ungroup()
 
+rotacion_total <- rotacion_semanal %>%
+  group_by(producto) %>%
+  summarise(total_unidades_vendidas = sum(unidades_vendidas)) %>%
+  ungroup()
+
+list(
+  mayor_rotacion = head(arrange(rotacion_total, desc(total_unidades_vendidas)), 10),
+  menor_rotacion = head(arrange(rotacion_total, total_unidades_vendidas), 10)
+)
+```
 12. ¿Cómo afecta la climatología al tipo de productos comprados? (ej. helados en verano, sopas en invierno) (Relacionar fechas con estaciones y tipos de producto).
 
 13. ¿Qué impacto tienen las promociones o descuentos en la cantidad comprada de un producto? (Comparar unidades vendidas antes, durante y después de una promoción).
@@ -603,7 +619,31 @@ El mes de Enero es el que registra mayores compras de fruta y verdura con un tot
 15. ¿Qué productos suelen ser los primeros en desaparecer en compras grandes (+20 productos)? (Analizar orden de productos en tickets extensos).
 
 16. ¿Existen diferencias de compra entre clientes que compran entre semana frente a fines de semana? (Comparar volumen y tipo de productos por día).
+```{r}
+tickets_df <- tickets_df %>%
+  mutate(dia_semana = weekdays(fecha),
+         grupo_dia = ifelse(dia_semana %in% c("sábado", "domingo"), "Fines de semana", "Entre semana"))
 
+productos_por_dia <- tickets_df %>%
+  group_by(grupo_dia, producto) %>%
+  summarise(unidades_vendidas = sum(cantidad, na.rm = TRUE)) %>%
+  ungroup()
+
+productos_entre_semana <- productos_por_dia %>%
+  filter(grupo_dia == "Entre semana") %>%
+  arrange(desc(unidades_vendidas))
+
+productos_fines_semana <- productos_por_dia %>%
+  filter(grupo_dia == "Fines de semana") %>%
+  arrange(desc(unidades_vendidas))
+
+list(
+  productos_entre_semana_top = head(productos_entre_semana, 10),
+  productos_fines_semana_top = head(productos_fines_semana, 10)
+)
+
+#Entre semana, los productos más comprados son básicos y de uso diario, como copos de avena, garbanzo cocido y leche desnatada, lo que refleja un consumo rutinario y enfocado en la alimentación diaria. En cambio, durante los fines de semana, los productos más populares incluyen bebidas alcohólicas, como cerveza Radler, y productos más relacionados con el ocio, como la chapata y el jamón cocido. Esto sugiere que las compras de fin de semana están más orientadas a momentos sociales y consumos ocasionales, mientras que entre semana se priorizan alimentos esenciales.
+```
 17. ¿Hay patrones de consumo distintos entre zonas costeras y zonas del interior? (Comparar categorías más compradas según localización geográfica).
 
 18. ¿Qué marcas blancas se compran más en comparación con productos de marca? (Clasificar productos por tipo de marca y analizar proporciones de compra).
@@ -635,7 +675,31 @@ top_por_franja
 
 Los productos que mas se venden por la mañana son: Tomate triturado, Atún claro calvom copos de avena, queso lonchas cabra y espárragos verde fino. Mientras que por la tarde: huevos grandes-L, plátano, atún claro oliva, bolsa plástico y yogur coco
 
+<<<<<<< HEAD
 20. ¿Qué artículos aumentan su venta a fin de mes (posiblemente por cobro de sueldos)? (Comparar ventas por semana del mes, especialmente última semana)  
+=======
+<<<<<<< HEAD
+20. ¿Qué artículos aumentan su venta a fin de mes (posiblemente por cobro de sueldos)? (Comparar ventas por semana del mes, especialmente última semana)
+```{r}
+tickets_df <- tickets_df %>%
+  mutate(fecha = as.POSIXct(fecha, format="%d/%m/%Y %H:%M"),  
+         periodo = ifelse(as.integer(format(fecha, "%d")) <= 20, "Antes del 20", "Después del 20"))
+
+# Sumar todas las unidades vendidas en cada período
+ventas_totales <- tickets_df %>%
+  group_by(periodo) %>%
+  summarise(total_unidades_vendidas = sum(cantidad, na.rm = TRUE)) %>%
+  ungroup()
+
+ventas_totales
+
+
+#Con los datos obtenidos, se observa que las ventas antes del día 20 del mes fueron significativamente mayores (488 unidades) en comparación con las ventas después del día 20 (291 unidades). Esto puede estar relacionado con el comportamiento de compra de los consumidores, ya que generalmente muchas personas cobran su sueldo durante la primera semana del mes, lo que podría incentivar compras más grandes en los primeros días. En cambio, después del día 20, las compras parecen disminuir, posiblemente debido a la menor disponibilidad de dinero disponible tras la recepción del sueldo. Este patrón sugiere que las compras tienden a ser más elevadas al inicio del mes.
+```
+=======
+20. ¿Qué artículos aumentan su venta a fin de mes (posiblemente por cobro de sueldos)? (Comparar ventas por semana del mes, especialmente última semana) \>\>\>\>\>\>\> d8a2247f7c238860f56b121ced0d2f5134ff3ee1
+>>>>>>> e2658af6dd5d56957491497c1cefc75b8dd16bd7
+>>>>>>> 4b4cd4c4a10295f65bbe5f985f41f8da97d39f16
 
 # Material y Métodos
 
@@ -873,6 +937,8 @@ library(naniar)
 # Resultados
 
 # Conclusiones
+<<<<<<< HEAD
+=======
 
 ¿Qué productos tienen mayor rotación semanal y cuáles permanecen más tiempo sin comprarse? (Agrupar ventas por semana y producto,analizar frecuencia de compra).
 
@@ -1029,3 +1095,4 @@ Por otro lado, la categoría venta_por_unidades muestra una alta variabilidad en
 La categoría más interesante es fruta/verdura, ya que presenta una distribución muy compacta y simétrica, con una mediana inferior a 2€ y pocos valores extremos. Este comportamiento indica una clara estabilidad de precios en esta categoría, que probablemente se vende a granel o por peso, lo que limita la dispersión de precios unitarios. Esta coherencia sugiere un control de precios más homogéneo, posiblemente por parte del supermercado o por la naturaleza del producto.
 
 En conjunto, este análisis permite entender cómo varía el precio unitario entre distintos tipos de productos y facilita la detección de anomalías o productos fuera de la norma. Resulta especialmente útil para tareas de supervisión de precios, segmentación comercial o estudio de hábitos de consumo por categoría.
+>>>>>>> e2658af6dd5d56957491497c1cefc75b8dd16bd7
