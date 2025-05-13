@@ -263,6 +263,7 @@ productos por ticket y calcular la media).
 8.¿Cómo cambia el gasto promedio según el día de la semana? (Comparar el
 total gastado y cantidad de tickets por día).
 
+<<<<<<< HEAD
 9.¿Qué día tiene menos volumen de compras? ¿Y cuál el mayor? (Contar
 número de tickets por día de la semana).
 
@@ -272,6 +273,9 @@ categoría y agrupar por mes).
 11. ¿Qué productos tienen mayor rotación semanal y cuáles permanecen más
     tiempo sin comprarse? (Agrupar ventas por semana y producto,
     analizar frecuencia de compra).
+=======
+```
+>>>>>>> d8a2247f7c238860f56b121ced0d2f5134ff3ee1
 
 12. ¿Cómo afecta la climatología al tipo de productos comprados? (ej.
     helados en verano, sopas en invierno) (Relacionar fechas con
@@ -305,9 +309,382 @@ categoría y agrupar por mes).
     tarde? (Agrupar tickets por franja horaria y analizar top
     productos).
 
+<<<<<<< HEAD
 20. ¿Qué artículos aumentan su venta a fin de mes (posiblemente por
     cobro de sueldos)? (Comparar ventas por semana del mes,
     especialmente última semana)
+=======
+El resto del ranking lo componen productos frescos y de consumo estacional como la SANDÍA BAJA SEMILLAS (23 kg), el PEPINO (20 kg) y el MELÓN PIEL SAPO (16 kg). Estos datos reflejan una clara inclinación del consumidor por productos frescos, saludables y especialmente apropiados para el verano, lo cual puede estar ligado al momento del año en que se recopilaron los tickets.
+
+***Muestra mediante un gráfico de líneas como ha variado el precio por kilo de las bananas y los plátanos en los tickets disponibles, a lo largo del tiempo.***
+
+```{r}
+
+library(lubridate)
+
+# Filtrar bananas y plátanos vendidos por peso
+banana_platano <- tickets_df %>%
+  filter(es_peso == TRUE, str_detect(tolower(producto), "banana|plátano|platano")) %>%
+  mutate(fecha = as.Date(fecha)) %>%
+  group_by(producto, fecha) %>%
+  summarise(precio_promedio = mean(precio_unitario), .groups = "drop")  
+
+# Gráfico de evolución temporal del precio por kilo
+ggplot(banana_platano, aes(x = fecha, y = precio_promedio, color = producto)) +
+  geom_line(linewidth = 1) + 
+  labs(
+    title = "Evolución del precio por kilo de bananas y plátanos",
+    x = "Fecha",
+    y = "Precio por kilo (€)"
+  ) +
+  theme_minimal()
+
+
+
+```
+
+Se aprecia que el precio del plátano ha sido más variable, alcanzando máximos por encima de los 3 €/kg durante el verano de 2024, lo que sugiere posibles efectos estacionales o fluctuaciones en la oferta. A partir de septiembre, ese precio desciende de forma gradual, estabilizándose en torno a los 2 €/kg a inicios de 2025.
+
+Por el contrario, el precio de la banana se mantiene relativamente estable en torno a 1,4 €/kg durante la mayor parte del periodo. Solo hacia finales de 2024 se observa una caída puntual por debajo de 1,2 €/kg, seguida de una recuperación en los primeros meses de 2025. Esta estabilidad podría deberse a una cadena de suministro más global o menos expuesta a factores locales.
+
+La comparación entre ambas frutas refleja cómo productos similares pueden comportarse de forma distinta en el mercado, y cómo el precio del plátano parece estar más expuesto a variaciones estacionales o logísticas.
+
+**¿ Cuál es la procedencia de los tickets ?¿ Qué ciudad/ pueblo tiene un mayor número de tickets ?**
+
+```{r}
+
+tickets_por_municipio <- tickets_df %>%
+  distinct(ticket_id, municipio) %>% #Asegura que cada ticket cuente una vex por municipio
+  count(municipio, sort = TRUE) #Agrupa por municipio y cuenta registros y ordena de manera desdendente
+
+head(tickets_por_municipio, 10) #Muestra los 10 primeros municipios
+
+tickets_por_municipio %>%
+  slice_max(n, n = 10) %>% #Selecciona los 10 municipios con mayor numero de tickets
+  ggplot(aes(x = reorder(municipio, n), y = n))  + #Ordena municipios por el valor de n (es decir, 10)
+  geom_bar(stat = "identity", fill = "steelblue") + #Creagrafico de barras
+  coord_flip() #Invierte el grafico para que se vea horizontal
+  labs(
+    title = "Top 10 municipios con más tickets",
+    x = "Municipio",
+    y = "Número de tickets"
+  ) +
+  theme_minimal()
+
+#Los tickets provienen de Valencia, y de pueblos de alrededor
+
+#La ciudad con mayor numero tickets es Valencia
+```
+
+Los tickets provienen de Valencia y de pueblos de alrededor. Y la ciudad con mayor número de tickets es Valencia.
+
+**Muestra mediante un diagrama el número de tickets recogidos cada día de las semana. ¿Si tuvieses que cerrar un día entre semana qué día lo harías ?**
+
+**1.¿Cuáles son las frutas más compradas durante la primavera? (Filtrar por fecha y categoría de producto)**.
+
+```{r}
+
+# Asegurarse de que la columna fecha es tipo Date
+tickets_df <- tickets_df %>%
+  mutate(fecha = as.Date(fecha)) #convertir en tipo fecha (si no lo era)
+
+# Obtener día de la semana por ticket
+tickets_dia_semana <- tickets_df %>%
+  distinct(ticket_id, fecha) %>% #eliminar duplicados
+  mutate(dia_semana = wday(fecha, label = TRUE, abbr = FALSE)) %>% #extraer dia de la semana con wday y con label usar nombres de los dias de la semana.
+  count(dia_semana)
+
+ggplot(tickets_dia_semana, aes(x = reorder(dia_semana, n), y = n)) + #Ordenar los dias de la semana por frecuencia de tickets
+  geom_bar(stat = "identity", fill = "pink") +#crear grafico de barras vertical
+  labs(title = "Número de tickets por día de la semana", x = "Día", y = "Número de tickets") + 
+  coord_flip() + #invertir el grafico em horizontal
+  theme_minimal() 
+
+#Como el domingo está cerrado, el que menos ventas tiene es el Jueves.
+
+
+```
+
+En el ejercicio del diagrama del número de tickets por día, se puede observar que el dia que menos ventas hay y por lo cual sería el dia que cerraría, seria el jueves, aunque en el diagrama salga el domingo, pero ese dia siempre está cerrado el Mercadona.
+
+**2.¿Qué productos suelen comprarse más durante festivos como Navidad, Semana Santa o Fallas? (Comparar ventas en fechas clave con el resto del año).**
+
+```{r}
+library(dplyr)
+
+tickets_df <- tickets_df %>%
+  mutate(fecha = as.Date(fecha))
+
+top_navidad <- tickets_df %>%
+  filter(
+    (fecha >= as.Date("2023-12-20") & fecha <= as.Date("2023-12-31")) |  # Navidad 2023
+    (fecha >= as.Date("2024-12-20") & fecha <= as.Date("2024-12-31"))     # Navidad 2024
+  ) %>%
+  group_by(producto) %>%
+  summarise(unidades = sum(cantidad), .groups = "drop") %>%
+  arrange(desc(unidades)) %>%
+  slice_head(n = 3)
+
+top_semana_santa <- tickets_df %>%
+  filter(
+    fecha >= as.Date("2024-03-23") & fecha <= as.Date("2024-03-30")  # Semana Santa 2024
+  ) %>%
+  group_by(producto) %>%
+  summarise(unidades = sum(cantidad), .groups = "drop") %>%
+  arrange(desc(unidades)) %>%
+  slice_head(n = 3)
+
+top_fallas <- tickets_df %>%
+  filter(
+    (fecha >= as.Date("2024-03-15") & fecha <= as.Date("2024-03-19")) |  # Fallas 2024
+    (fecha >= as.Date("2025-03-15") & fecha <= as.Date("2025-03-15"))    # Único día disponible en 2025
+  ) %>%
+  group_by(producto) %>%
+  summarise(unidades = sum(cantidad), .groups = "drop") %>%
+  arrange(desc(unidades)) %>%
+  slice_head(n = 3)
+
+list("Navidad" = top_navidad %>% mutate(festivo = "Navidad"),      
+  "Semana Santa" = top_semana_santa %>% mutate(festivo = "Semana Santa"),
+  "Fallas" = top_fallas %>% mutate(festivo = "Fallas")
+) %>%
+  bind_rows() %>%               
+  select(festivo, producto, unidades) %>%  
+  arrange(festivo, desc(unidades)) 
+```
+
+Los productos que mas se suelen vender en Fallas son: Harina Integral, Habas y Azúcar. Mientras que en Navidad es: Cola sin cafeína, Yogur coco y Agua Cortes. Y por último en Semana Santa: Chapata Cristal, Tinto Bobal y Arroz.
+
+3.¿Se compran productos diferentes en zonas urbanas frente a rurales? (Agrupar por ciudad o código postal y comparar top productos).
+
+```{r}
+library(pdftools)
+library(stringr)
+library(dplyr)
+# Obtener la lista de archivos PDF
+pdf_files <- list.files(path = "C:/Users/hcuny/Desktop/proyectoTD/CarpetaAlumno/data", pattern = "\\.pdf$", full.names = TRUE)
+# Procesar cada archivo PDF y combinar los resultados en un solo dataframe
+ticket_data_list <- lapply(pdf_files, function(file_path) {
+  procesar_ticket(file_path)  # Asumiendo que procesar_ticket devuelve un dataframe
+})
+# Combinar los resultados en un solo dataframe
+tickets_df <- do.call(rbind, ticket_data_list)
+# Verificar si tickets_df es un dataframe
+if (is.data.frame(tickets_df)) {
+  # Definir una función para clasificar como 'urbana' o 'rural' según el código postal
+  clasificar_zona <- function(codigo_postal) {
+    # Definir los códigos postales urbanos
+    urbanos <- c('46001', '46002', '46003', '46004', '46005', '46006', '46007', '46008', '46009', '46010', '46011', '46012', '46013', '46014', '46015', '46016', '46017', '46018', '46019', '46020', '46021', '46022', '46023', '46024', '46025', '46026', '46027', '46028', '46029', '46030', '46031')  # Códigos postales urbanos de la zona
+    # Clasificar la zona según el código postal
+    if (substr(as.character(codigo_postal), 1, 5) %in% urbanos) {
+      return('Urbana')
+    } else {
+      return('Rural')
+    }
+  }
+  # Aplicar la clasificación de zona a cada código postal en el dataframe
+  tickets_df$zona <- sapply(tickets_df$codigo_postal, clasificar_zona)
+  # Agrupar por zona y producto, y sumar las cantidades
+  productos_por_zona <- tickets_df %>%
+    group_by(zona, producto) %>%
+    summarise(cantidad_total = sum(cantidad, na.rm = TRUE)) %>%
+    arrange(desc(cantidad_total))
+  # Ver los productos más comprados por zona
+  head(productos_por_zona)
+} else {
+  print("El dataframe tickets_df no se ha creado correctamente.")
+}
+#En la zona urbana, los productos más comprados parecen ser leche desnatada con calcio y queso lonchas cabra, que son productos lácteos y envasados al contario que en la zona rural, cuyos productos más comprados incluyen copos de avena y garbanzo m. cocido, que son alimentos más básicos y no tan procesados.
+#En la zona urbana, hay una mayor presencia de productos procesados y envasados, como leches y quesos, que pueden ser más comunes en áreas con mayores recursos y una oferta variada en supermercados, no como en la zona rural, que los productos tienden a ser más básicos y naturales, como el garbanzo cocido y chapata cristal, lo que podría reflejar una preferencia por alimentos menos procesados
+```
+
+4.¿Qué productos suelen comprarse juntos con frecuencia? (por ejemplo, pan con chocolate) (Analizar combinaciones frecuentes dentro del mismo ticket).
+
+```{r}
+library(dplyr)
+library(arules)
+# Crear una lista de transacciones
+transacciones <- tickets_df %>%
+  group_by(ticket_id) %>%
+  summarise(productos = list(producto)) %>%
+  ungroup()
+# Convertimos las transacciones en un formato transaccional
+transacciones_list <- as(transacciones$productos, "transactions")
+# Ejecutar el algoritmo Apriori para encontrar combinaciones frecuentes
+# Ajustamos los parámetros para filtrar las reglas menos frecuentes
+reglas <- apriori(transacciones_list, parameter = list(supp = 0.05, conf = 0.5))  # Aumentamos el soporte
+# Inspeccionar las reglas generadas
+inspect(reglas)
+# Filtrar reglas interesantes con un lift mayor a 1.5
+reglas_interesantes <- subset(reglas, lift > 1.5)
+# Ver las reglas interesantes
+inspect(reglas_interesantes)
+#Parece que los clientes que compran CACAHUETE CHOCOLATE tienden a comprar también ALMENDRA NATURAL y/o PEPINO, lo que podría indicar una preferencia por productos saludables o snacks que se complementan entre sí
+```
+
+5.¿Qué productos se mantienen en la cesta aunque cambien de precio? (Observar si bajadas o subidas de precio afectan a las unidades compradas).
+
+```{r}
+library(ggplot2)
+library(dplyr)
+# Agrupar por producto y calcular la media de precio y cantidad comprada por cada producto
+productos_precio_cantidad <- tickets_df %>%
+  group_by(producto) %>%
+  summarise(
+    precio_promedio = mean(precio_unitario, na.rm = TRUE),  # Cambiar 'precio' por el nombre correcto
+    cantidad_total = sum(cantidad, na.rm = TRUE),
+    cantidad_var = var(cantidad, na.rm = TRUE),
+    precio_var = var(precio_unitario, na.rm = TRUE),  # Cambiar 'precio' por el nombre correcto
+    .groups = 'drop'
+  )
+# Ver los resultados
+head(productos_precio_cantidad)
+# Gráfico para visualizar la relación entre precio y cantidad
+ggplot(productos_precio_cantidad, aes(x = precio_promedio, y = cantidad_total)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "Relación entre Precio Promedio y Cantidad Comprada",
+       x = "Precio Promedio",
+       y = "Cantidad Total Comprada")
+colnames(tickets_df)
+#El gráfico muestra una correlación negativa entre el precio promedio y la cantidad comprada. Es decir, a medida que el precio promedio aumenta, la cantidad comprada disminuye.
+# La línea azul de regresión parece indicar que, en general, los productos más caros tienden a venderse menos
+```
+
+6.¿Cuántos productos se compran en promedio por ticket? (Contar productos por ticket y calcular la media).
+
+```{r}
+library(tidyr)
+library(dplyr)
+library(purrr)
+
+# Agrupamos las categorías por ticket
+categorias_por_ticket <- tickets_df %>%
+  filter(!is.na(categoria)) %>%  
+  group_by(ticket_id) %>%
+  summarise(categorias = list(unique(categoria))) %>%
+  filter(lengths(categorias) >= 2) 
+
+# Obtenemos combinaciones de 2 categorías
+pares_categorias <- categorias_por_ticket %>%
+  mutate(
+    pares = map(categorias, ~combn(sort(.x), 2, simplify = FALSE))
+  ) %>%
+  select(pares) %>%
+  unnest(pares) %>%
+  count(pares, sort = TRUE)
+
+# Mostramos las combinaciones más frecuentes
+pares_categorias %>% 
+  slice_max(n, n = 10) %>%
+  mutate(pares = map_chr(pares, ~ paste(.x, collapse = " + "))) %>%
+  kable(caption = "Top combinaciones de categorías en tickets")
+
+```
+
+Los productos de venta por unidades (como pan, huevos, o productos no pesados) suelen comprarse junto a frutas y verduras, y en mucha menor medida, junto al pescado. También es común que los consumidores compren frutas/verduras junto con pescado.
+
+8.¿Cómo cambia el gasto promedio según el día de la semana? (Comparar el total gastado y cantidad de tickets por día).
+
+```{r}
+library(knitr)
+
+gasto_por_dia <- tickets_df %>%
+  distinct(ticket_id, .keep_all = TRUE) %>%  
+  mutate(dia_semana = weekdays(fecha)) %>%   
+  group_by(dia_semana) %>%
+  summarise(
+    total_gastado = sum(total, na.rm = TRUE),     
+    tickets = n(),                                
+    gasto_promedio = total_gastado / tickets      
+  ) %>%
+  arrange(match(dia_semana, c("lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo")))
+
+gasto_por_dia %>%  
+  kable(caption = "Gasto promedio por día de la semana")
+```
+
+El gasto promedio es más alto durante el día del Sábado, probablemente porque la gente hace más compras grandes. El gasto disminuye entre semana, siendo el jueves el día con el promedio más bajo.
+
+9.¿Qué día tiene menos volumen de compras? ¿Y cuál el mayor? (Contar número de tickets por día de la semana).
+
+```{r}
+tickets_por_dia <- tickets_df %>%
+  distinct(ticket_id, .keep_all = TRUE) %>%  
+  mutate(dia_semana = weekdays(fecha)) %>%   
+  group_by(dia_semana) %>%
+  summarise(tickets = n())%>%
+  arrange(tickets)
+
+tickets_por_dia %>%  
+  kable(caption = "Número de tickets por día de la semana")
+```
+
+El domingo registra el menor volumen de compras (solo 1 ticket), ya que Mercadona permanece cerrado ese día, excepto en fechas especiales como Navidad. Probablemente por este motivo, debido a la planificación de los clientes, el día con mayor actividad registrada es el sábado (alcanzando 81 tickets).
+
+10¿Qué mes registra mayores compras de frutas y verduras? (Filtrar por categoría y agrupar por mes).
+
+```{r}
+library(lubridate)
+
+frutas_verduras <- tickets_df %>%
+  filter(categoria %in% "fruta/verdura") %>%     
+  mutate(mes = month(fecha, label = TRUE)) %>% 
+  group_by(mes, categoria) %>%
+  summarise(kilos = sum(cantidad, na.rm = TRUE), .groups = "drop") %>%
+  arrange(desc(kilos))
+
+frutas_verduras %>%  
+  kable(caption = "Número de compras de frutas/verduras por meses del año")
+```
+
+El mes de Enero es el que registra mayores compras de fruta y verdura con un total de 68kg.
+
+11. ¿Qué productos tienen mayor rotación semanal y cuáles permanecen más tiempo sin comprarse? (Agrupar ventas por semana y producto, analizar frecuencia de compra).
+
+12. ¿Cómo afecta la climatología al tipo de productos comprados? (ej. helados en verano, sopas en invierno) (Relacionar fechas con estaciones y tipos de producto).
+
+13. ¿Qué impacto tienen las promociones o descuentos en la cantidad comprada de un producto? (Comparar unidades vendidas antes, durante y después de una promoción).
+
+14. ¿Qué ticket promedio se observa según el tipo de establecimiento (urbano, rural, turístico)? (Agrupar por zona y calcular gasto promedio por ticket).
+
+15. ¿Qué productos suelen ser los primeros en desaparecer en compras grandes (+20 productos)? (Analizar orden de productos en tickets extensos).
+
+16. ¿Existen diferencias de compra entre clientes que compran entre semana frente a fines de semana? (Comparar volumen y tipo de productos por día).
+
+17. ¿Hay patrones de consumo distintos entre zonas costeras y zonas del interior? (Comparar categorías más compradas según localización geográfica).
+
+18. ¿Qué marcas blancas se compran más en comparación con productos de marca? (Clasificar productos por tipo de marca y analizar proporciones de compra).
+
+19. ¿**Cuáles son los productos más comprados por la mañana frente a la tarde? (Agrupar tickets por franja horaria y analizar top productos).**
+
+```{r}
+library(hms)
+
+tickets_df <- tickets_df %>%
+  mutate(
+    hora = ifelse(nchar(hora) == 5, paste0(hora, ":00"), hora), 
+    hora = as_hms(hora),  
+    franja_horaria = case_when(
+      hour(hora) < 15 ~ "mañana",
+      TRUE ~ "tarde"
+    )
+  )
+
+top_por_franja <- tickets_df %>%
+  group_by(franja_horaria, producto) %>%
+  summarise(unidades = sum(cantidad), .groups = "drop") %>%
+  group_by(franja_horaria) %>%
+  slice_max(order_by = unidades, n = 5)
+
+top_por_franja
+
+```
+
+Los productos que mas se venden por la mañana son: Tomate triturado, Atún claro calvom copos de avena, queso lonchas cabra y espárragos verde fino. Mientras que por la tarde: huevos grandes-L, plátano, atún claro oliva, bolsa plástico y yogur coco
+
+20. ¿Qué artículos aumentan su venta a fin de mes (posiblemente por cobro de sueldos)? (Comparar ventas por semana del mes, especialmente última semana)
+>>>>>>> d8a2247f7c238860f56b121ced0d2f5134ff3ee1
 
 # Material y Métodos
 
