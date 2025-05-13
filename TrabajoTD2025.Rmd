@@ -991,7 +991,7 @@ ggplot(bar_data, aes(x = supermercado, y = n, fill = tipo_pago)) +
 
 ```
 
-Este gráfico corresponde a una representación de barras agrupadas que muestra la relación entre la variable categórica supermercado y las distintas modalidades de tipo_pago registradas en las transacciones. En él, se visualiza claramente la distribución de los métodos de pago utilizados por los clientes, diferenciando entre las distintas tarjetas y registros sin información (NA).
+Este gráfico corresponde a una representación de barras agrupadas que muestra la relación entre la variable categórica supermercado y las distintas modalidades de tipo_pago registradas en las transacciones. En él, se visualiza claramente la distribución de los métodos de pago utilizados por los clientes, diferenciando entre las distintas tarjetas y registros sin información  (NA).
 
 Es evidente notar que la tarjeta Mastercard es la forma de pago mayoritariamente utilizada en el supermercado MERCADONA, con una diferencia considerable respecto al resto de métodos. Este dominio podría deberse a acuerdos comerciales, promociones específicas o simplemente preferencias de los consumidores habituales de la cadena.
 
