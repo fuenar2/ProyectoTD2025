@@ -329,11 +329,6 @@ categoría y agrupar por mes).
 
 # Material y Métodos
 
-## *Carga de librerías y datos necesarios para el análisis*
-
-
-
-
 Para el correcto desarrollo de la exportación y análisis de los datos, en primer lugar, se cargan todas las librerías necesarias al principio del código. Estas librerías son las mostradas en la Tabla \@ref(tab:tabla-librerias).
 
 ```{r tabla-librerias}
@@ -528,15 +523,40 @@ A continuación, se aplica la función **procesar_ticket()** a todos los tickets
 Por último, establece correctamente los tipos de las variables para el posterior análisis
 
 
-## *Características de los datos*
+# Análisis de datos perdidos 
 
-### *Análisis de missing data en nuestro conjunto de interés*
+Al analizar los datos faltantes nos encontramos tres situaciónes:
 
-### *Variables de tipo numérico*
+La primera son datos faltantes por parte de las variables *entrada* y *salida*. Estos valores eran esperados, ya que ha sido la manera de registrar los productos que no utilizaban parking.
 
-### *Variables de tipo categórico*
+La segunda, son datos faltantes por parte de las variables *tarjeta* y *tipo pago *.
 
-### *Análisis de los outliers*
+Por último, faltan datos de una observación en todas las variables, esto puede ser por un ticket repetido o cuyo id no es válido.
+
+Como se muestra en el gráfico, que muestra el porcentaje de valores perdidos por variable, las variables que mayor porcentaje tienen són las de la primera situación, y están justificadas, pues si no se a utilizado el parking no se pueden tener valores.
+```{r, include=FALSE}
+# Resumen simple de datos faltantes por columna
+missing_summary <- sapply(tickets_df, function(x) sum(is.na(x)))
+missing_summary <- sort(missing_summary[missing_summary > 0], decreasing = TRUE)
+print(missing_summary)
+
+
+missing_pct <- sapply(tickets_df, function(x) mean(is.na(x))) * 100
+missing_pct <- sort(missing_pct[missing_pct > 0], decreasing = TRUE)
+print(round(missing_pct, 2))
+
+library(naniar)
+
+
+
+```
+
+
+
+# Análisis de los outliers y métodos de imputación aplicados.
+
+
+
 
 
 
