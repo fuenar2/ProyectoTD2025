@@ -688,7 +688,7 @@ Posteriormente, se realiza la carga de los tickets. Estos tickets se encuentran
 
 ¿Qué productos tienen mayor rotación semanal y cuáles permanecen más tiempo sin comprarse? (Agrupar ventas por semana y producto,analizar frecuencia de compra).
 
-```{r}
+```{r,echo=FALSE}
 rotacion_semanal <- tickets_df %>%
   mutate(semana = week(fecha)) %>%
   group_by(semana, producto) %>%
@@ -708,7 +708,7 @@ list(
 
 ¿Cuáles son los productos más comprados por la mañana frente a la tarde? (Agrupar tickets por franja horaria y analizar productos).
 
-```{r}
+```{r,echo=FALSE}
 tickets_df <- tickets_df %>%
   mutate(dia_semana = weekdays(fecha),
          grupo_dia = ifelse(dia_semana %in% c("sábado", "domingo"), "Fines de semana", "Entre semana"))
@@ -731,12 +731,15 @@ list(
   productos_fines_semana_top = head(productos_fines_semana, 10)
 )
 
-#Entre semana, los productos más comprados son básicos y de uso diario, como copos de avena, garbanzo cocido y leche desnatada, lo que refleja un consumo rutinario y enfocado en la alimentación diaria. En cambio, durante los fines de semana, los productos más populares incluyen bebidas alcohólicas, como cerveza Radler, y productos más relacionados con el ocio, como la chapata y el jamón cocido. Esto sugiere que las compras de fin de semana están más orientadas a momentos sociales y consumos ocasionales, mientras que entre semana se priorizan alimentos esenciales.
-```
 
+```
+Entre semana, los productos más comprados son básicos y de uso diario, como copos de avena, garbanzo cocido y leche desnatada, lo que refleja un consumo rutinario y enfocado en la alimentación diaria. En cambio, durante los fines de semana, los productos más populares incluyen bebidas alcohólicas, como cerveza Radler, y productos más relacionados con el ocio, como la chapata y el jamón cocido. Esto sugiere que las compras de fin de semana están más orientadas a momentos sociales y consumos ocasionales, mientras que entre semana se priorizan alimentos esenciales.
 ¿Qué artículos aumentan su venta a fin de mes (posiblemente por cobro de sueldos)? (Comparar ventas por semana del mes, especialmente última semana)
 
-```{r}
+
+
+
+```{r,echo=FALSE}
 tickets_df <- tickets_df %>%
   mutate(fecha = as.POSIXct(fecha, format="%d/%m/%Y %H:%M"),  
          periodo = ifelse(as.integer(format(fecha, "%d")) <= 20, "Antes del 20", "Después del 20"))
@@ -750,11 +753,16 @@ ventas_totales <- tickets_df %>%
 ventas_totales
 
 
-#Con los datos obtenidos, se observa que las ventas antes del día 20 del mes fueron significativamente mayores (488 unidades) en comparación con las ventas después del día 20 (291 unidades). Esto puede estar relacionado con el comportamiento de compra de los consumidores, ya que generalmente muchas personas cobran su sueldo durante la primera semana del mes, lo que podría incentivar compras más grandes en los primeros días. En cambio, después del día 20, las compras parecen disminuir, posiblemente debido a la menor disponibilidad de dinero disponible tras la recepción del sueldo. Este patrón sugiere que las compras tienden a ser más elevadas al inicio del mes.
 
 ```
+Con los datos obtenidos, se observa que las ventas antes del día 20 del mes fueron significativamente mayores (488 unidades) en comparación con las ventas después del día 20 (291 unidades). Esto puede estar relacionado con el comportamiento de compra de los consumidores, ya que generalmente muchas personas cobran su sueldo durante la primera semana del mes, lo que podría incentivar compras más grandes en los primeros días. En cambio, después del día 20, las compras parecen disminuir, posiblemente debido a la menor disponibilidad de dinero disponible tras la recepción del sueldo. Este patrón sugiere que las compras tienden a ser más elevadas al inicio del mes.
 
-```{r}
+
+
+
+### *Análisis de los outliers*
+
+```{r,echo=FALSE}
 
 library(scales)
 
@@ -777,7 +785,7 @@ También se identifican algunos puntos dispersos hacia la parte superior izquier
 
 Los resultados numéricos y agrupaciones específicas no se detallan en el presente documento para no sobrecargar el texto, pero se encuentran disponibles en el fichero .Rmd para su consulta y reproducción.
 
-```{r}
+```{r,echo=FALSE}
 
 # Agrupar y contar combinaciones
 bar_data <- tickets_df %>%
@@ -803,7 +811,7 @@ También se observa una participación menor de las tarjetas VISA y VISA CRÉDIT
 
 Aunque en este gráfico solo se representa un supermercado (MERCADONA), la estructura del análisis permite su generalización a otros comercios si estuvieran presentes en el conjunto de datos
 
-```{r}
+```{r,echo=FALSE}
 library(ggplot2)
 
 ggplot(tickets_df, aes(x = tipo_pago, y = precio_unitario)) +
