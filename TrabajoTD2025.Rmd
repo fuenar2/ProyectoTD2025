@@ -520,9 +520,6 @@ if (is.data.frame(tickets_df)) {
 ```{r}
 library(dplyr)
 library(arules)
-# Asegurarse de que tickets_df contiene la información correcta
-# Aquí, asumimos que tickets_df tiene columnas: 'ticket_id' y 'producto'
-# Creamos un dataframe con transacciones para el análisis de cesta de la compra
 # Crear una lista de transacciones
 transacciones <- tickets_df %>%
   group_by(ticket_id) %>%
@@ -530,18 +527,16 @@ transacciones <- tickets_df %>%
   ungroup()
 # Convertimos las transacciones en un formato transaccional
 transacciones_list <- as(transacciones$productos, "transactions")
-# Ver las primeras transacciones
-summary(transacciones_list)
-# Aplicar el algoritmo Apriori para encontrar combinaciones frecuentes
-# Minimos de soporte y confianza para las reglas de asociación
-reglas <- apriori(transacciones_list, parameter = list(supp = 0.01, conf = 0.5))
-# Ver las reglas generadas
+# Ejecutar el algoritmo Apriori para encontrar combinaciones frecuentes
+# Ajustamos los parámetros para filtrar las reglas menos frecuentes
+reglas <- apriori(transacciones_list, parameter = list(supp = 0.05, conf = 0.5))  # Aumentamos el soporte
+# Inspeccionar las reglas generadas
 inspect(reglas)
-# Filtrar las reglas más interesantes, si es necesario
-reglas_interesantes <- subset(reglas, lift > 1.5)  # Reglas con lift mayor a 1.5, que indica más asociación
+# Filtrar reglas interesantes con un lift mayor a 1.5
+reglas_interesantes <- subset(reglas, lift > 1.5)
 # Ver las reglas interesantes
 inspect(reglas_interesantes)
-
+#Parece que los clientes que compran CACAHUETE CHOCOLATE tienden a comprar también ALMENDRA NATURAL y/o PEPINO, lo que podría indicar una preferencia por productos saludables o snacks que se complementan entre sí
 ```
 
 5.¿Qué productos se mantienen en la cesta aunque cambien de precio? (Observar si bajadas o subidas de precio afectan a las unidades compradas).
