@@ -541,6 +541,33 @@ inspect(reglas_interesantes)
 
 5.¿Qué productos se mantienen en la cesta aunque cambien de precio? (Observar si bajadas o subidas de precio afectan a las unidades compradas).
 
+```{r}
+library(ggplot2)
+library(dplyr)
+# Agrupar por producto y calcular la media de precio y cantidad comprada por cada producto
+productos_precio_cantidad <- tickets_df %>%
+  group_by(producto) %>%
+  summarise(
+    precio_promedio = mean(precio_unitario, na.rm = TRUE),  # Cambiar 'precio' por el nombre correcto
+    cantidad_total = sum(cantidad, na.rm = TRUE),
+    cantidad_var = var(cantidad, na.rm = TRUE),
+    precio_var = var(precio_unitario, na.rm = TRUE),  # Cambiar 'precio' por el nombre correcto
+    .groups = 'drop'
+  )
+# Ver los resultados
+head(productos_precio_cantidad)
+# Gráfico para visualizar la relación entre precio y cantidad
+ggplot(productos_precio_cantidad, aes(x = precio_promedio, y = cantidad_total)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "Relación entre Precio Promedio y Cantidad Comprada",
+       x = "Precio Promedio",
+       y = "Cantidad Total Comprada")
+colnames(tickets_df)
+#El gráfico muestra una correlación negativa entre el precio promedio y la cantidad comprada. Es decir, a medida que el precio promedio aumenta, la cantidad comprada disminuye.
+# La línea azul de regresión parece indicar que, en general, los productos más caros tienden a venderse menos
+```
+
 6.¿Cuántos productos se compran en promedio por ticket? (Contar productos por ticket y calcular la media).
 
 ```{r}
