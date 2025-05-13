@@ -635,7 +635,7 @@ top_por_franja
 
 Los productos que mas se venden por la mañana son: Tomate triturado, Atún claro calvom copos de avena, queso lonchas cabra y espárragos verde fino. Mientras que por la tarde: huevos grandes-L, plátano, atún claro oliva, bolsa plástico y yogur coco
 
-20. ¿Qué artículos aumentan su venta a fin de mes (posiblemente por cobro de sueldos)? (Comparar ventas por semana del mes, especialmente última semana) \>\>\>\>\>\>\> d8a2247f7c238860f56b121ced0d2f5134ff3ee1
+20. ¿Qué artículos aumentan su venta a fin de mes (posiblemente por cobro de sueldos)? (Comparar ventas por semana del mes, especialmente última semana)  
 
 # Material y Métodos
 
