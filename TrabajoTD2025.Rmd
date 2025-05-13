@@ -312,7 +312,7 @@ pares_categorias %>%
   kable(caption = "Top combinaciones de categorías en tickets")
 
 ```
-
+Los productos de venta por unidades (como pan, huevos, o productos no pesados) suelen comprarse junto a frutas y verduras, y en mucha menor medida, junto al pescado. También es común que los consumidores compren frutas/verduras junto con pescado.
 
 8.¿Cómo cambia el gasto promedio según el día de la semana? (Comparar el
 total gastado y cantidad de tickets por día).
