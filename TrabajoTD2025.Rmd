@@ -373,7 +373,7 @@ Dado que el formato no es el mismo en tickets de diferentes cadenas de supermerc
 Una vez verificado que el ticket pertenece a Mercadona, se procede a extraer la información línea por línea. Para ello, el texto plano se divide con la función **str_split()**, separándolo por saltos de línea , y luego se limpian los espacios sobrantes mediante **str_trim()**, eliminando líneas vacías con *.[. != ""]*. Esto permite trabajar con un vector de líneas limpio, donde cada línea representa un fragmento legible del recibo.
 
 
-A la hora de extraer las variables, se utilizan varias funciones, como se pueden observar en la Tabla \@ref(tab:tabla-funciones), donde se ven representadas las funciónes y para que han sido utilizadas. Además también se utilizán patrones o expresiones regulares, estos son muy útiles, y se pueden encontrar repetidamente en el codigo ya que están formados por subconjuntos, que al unirlos de diferentes maneras permiten seleccionar comodamente las partes del ticket que se necesitan guardar en las variables. Los  sbconjuntos más utilizados estan representados y explicados en la Tabla \@ref(tab:tabla-patrones).
+A la hora de extraer las variables, se utilizan varias funciones, como se pueden observar en la Tabla \@ref(tab:tabla-funciones), donde se ven representadas las funciónes y para que han sido utilizadas. 
 
 ```{r tabla-funciones}
 funciones_metadatos <- data.frame(
@@ -399,6 +399,10 @@ knitr::kable(
 )
 
 ```
+
+
+Además también se utilizán patrones o expresiones regulares, estos son muy útiles, y se pueden encontrar repetidamente en el codigo ya que están formados por subconjuntos, que al unirlos de diferentes maneras permiten seleccionar comodamente las partes del ticket que se necesitan guardar en las variables. Los  sbconjuntos más utilizados estan representados y explicados en la Tabla \@ref(tab:tabla-patrones).
+
 
 ```{r tabla-patrones}
 elementos_regex <- data.frame(
@@ -440,10 +444,7 @@ knitr::kable(
 Con la implementación de las funciónes y las expresiónes regulares el código permite extraer la información de los recibos, aunque por la estructura de estos se ha debido de dividir la identificación de las variables en dos:
 
 Primero se guarda información general sobre el ticket, es decir, aquellos datos que són iguales para todos los productos del mismo ticket. 
-Las variables que se extraen en esta parte se detectan mediante la localización de palabras clave como  *TOTAL (€)*, extrayendo el valor y luego convirtiéndolo a formato numérico, o inclúso, las expresiones buscan el formato típico de fechas u horas. Muchas de estas operaciónes són el resultado de búsquedas de lineas anteriores, por lo que también se utilizan estructuras como **ifelse()**, que evitan errores en el caso de que en la busqueda anterior no se hubiera encontrado nada. Al final del código los datos se transforman y limpian para garantizar su coherencia. De esta manera conseguimos extraer las variables que están representadas y definidas en la \@ref(tab:tabla-variables-generales)
-
-
-
+Las variables que se extraen en esta parte se detectan mediante la localización de palabras clave como  *TOTAL (€)*, extrayendo el valor y luego convirtiéndolo a formato numérico, o inclúso, las expresiones buscan el formato típico de fechas u horas. Muchas de estas operaciónes són el resultado de búsquedas de lineas anteriores, por lo que también se utilizan estructuras como **ifelse()**, que evitan errores en el caso de que en la busqueda anterior no se hubiera encontrado nada. Al final del código los datos se transforman y limpian para garantizar su coherencia. De esta manera conseguimos extraer las variables que están representadas y definidas en la Tabla \@ref(tab:tabla-variables-generales)
 
 ```{r tabla-variables-generales}
 metadatos <- data.frame(
@@ -488,6 +489,44 @@ knitr::kable(
 )
 
 ```
+
+
+Después de extraer las variables generales, se analiza de una manera mas compleja las variables que provienen de los productos.  Para este análisis se han considerado dos tipos de productos, diferenciados por su formato de aparición en el ticket, aquellos productos vendidos por peso y los productos vendidos por unidades. En primer lugar se emplea **list()** para crear una lista vacía que almacene todos los artículos encontrados y se inicia un flag booleano para rastrear si estamos en la sección de pescado del ticket. Luego iterando sobre cada línea del texto y utilizando su índice, detecta si hay pescado en el ticket mediante la busqueda de *PESCADO*  y, detecta y analiza los productos con peso. Posteriormente, se añade la categoria, en este punto del codigo solo se añade en el caso de que sea pescado, *pescado*, y en el caso de que sea otra cosa, *venta_por_unidades*, mas tarde, como los productos que són frutas y verduras los añade con un número al principio, en el caso de que un producto tenga un número y un espacio, cambia su categoría a *fruta/verdura*. Después de extraer el resto de datos, guarda el producto como un **data.frame** dentro de la lista *productos*. Por último, se analizan los productos vendidos por unidades, y se crea el **data.frame** y se guarda en la lista.
+
+En el caso de que no hayan productos, es decir, que la longitud de la lista *productos* sea cero, se descarta el ticket.
+
+Después de analizar todos los productos se combinan en un solo **data.frame**, cambiando de categoria los productos, como ya se ha explicado con anterioridad,  corigiendo el valor numerico que aparecen en los productos con categoria fruta/verdura o calculando correctamente con una regla de tres la cantidad de aquellos productos vendidos por peso. Como resultado de toda la extración de la parte de productos y su posterior corrección de tipos, salen resultantes las variables representadas en la Tabla \@ref(tab:tabla-variables-productos)
+
+```{r tabla-variables-productos}
+variables_productos <- data.frame(
+  "Variable" = c(
+    "producto", "cantidad", "precio_unitario", "importe", "es_peso", "categoria"),
+  "Significado" = c(
+    "Nombre del producto comprado",
+    "Cantidad del producto (número o peso)",
+    "Precio por unidad o por kg",
+    "Importe total pagado por el producto",
+    "Indica si el producto se vendió por peso ",
+    "Clasificación del producto "),
+  "Tipo final" = c(
+    "character", "integer", "numeric", "numeric", "logical", "factor")
+)
+
+knitr::kable(
+  variables_productos,
+  caption = "Tipo y descripción de las variables derivadas de productos",
+  booktabs = TRUE,
+  label = "tabla-variables-productos"
+
+)
+
+```
+
+
+A continuación, se aplica la función **procesar_ticket()** a todos los tickets, eliminando los tickets vacíos y se unen todos los data frames de productos en uno solo, eliminando duplicados.
+
+Por último, establece correctamente los tipos de las variables para el posterior análisis
+
 
 ## *Características de los datos*
 
