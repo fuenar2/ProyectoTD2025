@@ -241,14 +241,6 @@ if (!is.null(tickets_df)) {
 
 En este proyecto se aborda el análisis exploratorio de datos a partir de tickets de supermercado, con el objetivo de extraer información relevante sobre los hábitos de consumo, productos adquiridos, precios y comportamiento de compra. El conjunto de datos que se utiliza pertenece a varios tickets del supermercado Mercadona proporcionados por la Universidad de Valencia (UV). En concreto, pertenece a una recolecta entre el profesor y varios alumnos de la asignatura de Tratamiento de datos. Este proyecto tiene como objetivo analizar los datos extraidos de los tickets para responder a las siguientes preguntas:
 
-¿Cuáles son los 5 productos, de los vendidos por unidades, con más ventas ? ¿Cuántas unidades de cada uno se han vendido ?
-
-Si consideramos la categoría de FRUTAS Y VERDURAS. Cuáles son los 5 productos más vendidos ? ¿Cuántos kilos se han vendido de cada uno de estos productos ?
-
-Si consideramos la categoría de PESCADO. Cuáles son los 5 productos más vendidos ? ¿Cuántos kilos se han vendido de cada uno de estos productos ?
-
-Muestra mediante un gráfico de líneas como ha variado el precio por kilo de las bananas y los plátanos en los tickets disponibles, a lo largo del tiempo.
-
 ***¿Cuáles son los 5 productos, de los vendidos por unidades, con más ventas ? ¿Cuántas unidades de cada uno se han vendido ?***
 
 ```{r}
@@ -373,11 +365,9 @@ Por el contrario, el precio de la banana se mantiene relativamente estable en to
 
 La comparación entre ambas frutas refleja cómo productos similares pueden comportarse de forma distinta en el mercado, y cómo el precio del plátano parece estar más expuesto a variaciones estacionales o logísticas.
 
-¿ Cuál es la procedencia de los tickets ?¿ Qué ciudad/ pueblo tiene un mayor número de tickets ?
+**¿ Cuál es la procedencia de los tickets ?¿ Qué ciudad/ pueblo tiene un mayor número de tickets ?**
 
 ```{r}
-library(dplyr)
-library(ggplot2)
 
 tickets_por_municipio <- tickets_df %>%
   distinct(ticket_id, municipio) %>% #Asegura que cada ticket cuente una vex por municipio
@@ -401,19 +391,14 @@ tickets_por_municipio %>%
 
 #La ciudad con mayor numero tickets es Valencia
 ```
+
 Los tickets provienen de Valencia y de pueblos de alrededor. Y la ciudad con mayor número de tickets es Valencia.
 
+**Muestra mediante un diagrama el número de tickets recogidos cada día de las semana. ¿Si tuvieses que cerrar un día entre semana qué día lo harías ?**
 
-
-Muestra mediante un diagrama el número de tickets recogidos cada día de las semana. ¿Si tuvieses que cerrar un día entre semana qué día lo harías ?
-
-
-1.¿Cuáles son las frutas más compradas durante la primavera? (Filtrar por fecha y categoría de producto).
+**1.¿Cuáles son las frutas más compradas durante la primavera? (Filtrar por fecha y categoría de producto)**.
 
 ```{r}
-library(dplyr) 
-library(ggplot2)
-library(lubridate)
 
 # Asegurarse de que la columna fecha es tipo Date
 tickets_df <- tickets_df %>%
@@ -435,19 +420,10 @@ ggplot(tickets_dia_semana, aes(x = reorder(dia_semana, n), y = n)) + #Ordenar lo
 
 
 ```
+
 En el ejercicio del diagrama del número de tickets por día, se puede observar que el dia que menos ventas hay y por lo cual sería el dia que cerraría, seria el jueves, aunque en el diagrama salga el domingo, pero ese dia siempre está cerrado el Mercadona.
 
-
-
-
-1.¿Cuáles son las frutas más compradas durante la
-primavera? (Filtrar por fecha y categoría de producto).
->>>>>>> respuestas-preguntas
-
-2.¿Qué productos suelen comprarse más durante festivos como Navidad, Semana Santa o Fallas? (Comparar ventas en fechas clave con el resto del año).
-
-
-3.¿Se compran productos diferentes en zonas urbanas frente a rurales? (Agrupar por ciudad o código postal y comparar top productos).
+**2.¿Qué productos suelen comprarse más durante festivos como Navidad, Semana Santa o Fallas? (Comparar ventas en fechas clave con el resto del año).**
 
 ```{r}
 library(dplyr)
@@ -492,14 +468,10 @@ list("Navidad" = top_navidad %>% mutate(festivo = "Navidad"),
   select(festivo, producto, unidades) %>%  
   arrange(festivo, desc(unidades)) 
 ```
+
 Los productos que mas se suelen vender en Fallas son: Harina Integral, Habas y Azúcar. Mientras que en Navidad es: Cola sin cafeína, Yogur coco y Agua Cortes. Y por último en Semana Santa: Chapata Cristal, Tinto Bobal y Arroz.
 
-
-
-
-3.¿Se compran productos diferentes en zonas urbanas frente a rurales?
-(Agrupar por ciudad o código postal y comparar top productos).
-
+3.¿Se compran productos diferentes en zonas urbanas frente a rurales? (Agrupar por ciudad o código postal y comparar top productos).
 
 4.¿Qué productos suelen comprarse juntos con frecuencia? (por ejemplo, pan con chocolate) (Analizar combinaciones frecuentes dentro del mismo ticket).
 
@@ -531,14 +503,9 @@ Los productos que mas se suelen vender en Fallas son: Harina Integral, Habas y A
 
 18. ¿Qué marcas blancas se compran más en comparación con productos de marca? (Clasificar productos por tipo de marca y analizar proporciones de compra).
 
-19. ¿Cuáles son los productos más comprados por la mañana frente a la tarde? (Agrupar tickets por franja horaria y analizar top productos).
-
-
-20. ¿Qué artículos aumentan su venta a fin de mes (posiblemente por cobro de sueldos)? (Comparar ventas por semana del mes, especialmente última semana)
+19. ¿**Cuáles son los productos más comprados por la mañana frente a la tarde? (Agrupar tickets por franja horaria y analizar top productos).**
 
 ```{r}
-library(dplyr)
-library(lubridate)
 library(hms)
 
 tickets_df <- tickets_df %>%
@@ -560,14 +527,10 @@ top_por_franja <- tickets_df %>%
 top_por_franja
 
 ```
+
 Los productos que mas se venden por la mañana son: Tomate triturado, Atún claro calvom copos de avena, queso lonchas cabra y espárragos verde fino. Mientras que por la tarde: huevos grandes-L, plátano, atún claro oliva, bolsa plástico y yogur coco
 
-
-
-20. ¿Qué artículos aumentan su venta a fin de mes (posiblemente por
-    cobro de sueldos)? (Comparar ventas por semana del mes,
-    especialmente última semana)
-
+20. ¿Qué artículos aumentan su venta a fin de mes (posiblemente por cobro de sueldos)? (Comparar ventas por semana del mes, especialmente última semana)
 
 # Material y Métodos
 
