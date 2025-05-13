@@ -237,7 +237,6 @@ if (!is.null(tickets_df)) {
 
 ```
 
-
 # Introducción
 
 En este proyecto se aborda el análisis exploratorio de datos a partir de tickets de supermercado, con el objetivo de extraer información relevante sobre los hábitos de consumo, productos adquiridos, precios y comportamiento de compra. El conjunto de datos que se utiliza pertenece a varios tickets del supermercado Mercadona proporcionados por la Universidad de Valencia (UV). En concreto, pertenece a una recolecta entre el profesor y varios alumnos de la asignatura de Tratamiento de datos. Este proyecto tiene como objetivo analizar los datos extraidos de los tickets para responder a las siguientes preguntas:
@@ -480,6 +479,7 @@ Los productos que mas se suelen vender en Fallas son: Harina Integral, Habas y A
 5.¿Qué productos se mantienen en la cesta aunque cambien de precio? (Observar si bajadas o subidas de precio afectan a las unidades compradas).
 
 6.¿Cuántos productos se compran en promedio por ticket? (Contar productos por ticket y calcular la media).
+
 ```{r}
 library(tidyr)
 library(dplyr)
@@ -508,10 +508,10 @@ pares_categorias %>%
   kable(caption = "Top combinaciones de categorías en tickets")
 
 ```
+
 Los productos de venta por unidades (como pan, huevos, o productos no pesados) suelen comprarse junto a frutas y verduras, y en mucha menor medida, junto al pescado. También es común que los consumidores compren frutas/verduras junto con pescado.
 
-8.¿Cómo cambia el gasto promedio según el día de la semana? (Comparar el
-total gastado y cantidad de tickets por día).
+8.¿Cómo cambia el gasto promedio según el día de la semana? (Comparar el total gastado y cantidad de tickets por día).
 
 ```{r}
 library(knitr)
@@ -530,10 +530,10 @@ gasto_por_dia <- tickets_df %>%
 gasto_por_dia %>%  
   kable(caption = "Gasto promedio por día de la semana")
 ```
+
 El gasto promedio es más alto durante el día del Sábado, probablemente porque la gente hace más compras grandes. El gasto disminuye entre semana, siendo el jueves el día con el promedio más bajo.
 
-9.¿Qué día tiene menos volumen de compras? ¿Y cuál el mayor? (Contar
-número de tickets por día de la semana).
+9.¿Qué día tiene menos volumen de compras? ¿Y cuál el mayor? (Contar número de tickets por día de la semana).
 
 ```{r}
 tickets_por_dia <- tickets_df %>%
@@ -546,10 +546,10 @@ tickets_por_dia <- tickets_df %>%
 tickets_por_dia %>%  
   kable(caption = "Número de tickets por día de la semana")
 ```
+
 El domingo registra el menor volumen de compras (solo 1 ticket), ya que Mercadona permanece cerrado ese día, excepto en fechas especiales como Navidad. Probablemente por este motivo, debido a la planificación de los clientes, el día con mayor actividad registrada es el sábado (alcanzando 81 tickets).
 
-10¿Qué mes registra mayores compras de frutas y verduras? (Filtrar por
-categoría y agrupar por mes).
+10¿Qué mes registra mayores compras de frutas y verduras? (Filtrar por categoría y agrupar por mes).
 
 ```{r}
 library(lubridate)
@@ -564,6 +564,7 @@ frutas_verduras <- tickets_df %>%
 frutas_verduras %>%  
   kable(caption = "Número de compras de frutas/verduras por meses del año")
 ```
+
 El mes de Enero es el que registra mayores compras de fruta y verdura con un total de 68kg.
 
 11. ¿Qué productos tienen mayor rotación semanal y cuáles permanecen más tiempo sin comprarse? (Agrupar ventas por semana y producto, analizar frecuencia de compra).
