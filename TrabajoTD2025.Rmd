@@ -274,7 +274,7 @@ El resto del ranking lo componen productos frescos y de consumo estacional como 
 
 ***Muestra mediante un gráfico de líneas como ha variado el precio por kilo de las bananas y los plátanos en los tickets disponibles, a lo largo del tiempo.***
 
-```{r}
+```{r,echo=FALSE}
 library(lubridate)
 
 # Filtrar bananas y plátanos vendidos por peso
@@ -304,7 +304,7 @@ La comparación entre ambas frutas refleja cómo productos similares pueden comp
 
 **¿ Cuál es la procedencia de los tickets ?¿ Qué ciudad/ pueblo tiene un mayor número de tickets ?**
 
-```{r}
+```{r,echo=FALSE}
 
 tickets_por_municipio <- tickets_df %>%
   distinct(ticket_id, municipio) %>% #Asegura que cada ticket cuente una vex por municipio
@@ -335,7 +335,7 @@ Los tickets provienen de Valencia y de pueblos de alrededor. Y la ciudad con may
 
 **1.¿Cuáles son las frutas más compradas durante la primavera? (Filtrar por fecha y categoría de producto)**.
 
-```{r}
+```{r,echo=FALSE}
 
 # Asegurarse de que la columna fecha es tipo Date
 tickets_df <- tickets_df %>%
@@ -362,7 +362,7 @@ En el ejercicio del diagrama del número de tickets por día, se puede observar 
 
 **2.¿Qué productos suelen comprarse más durante festivos como Navidad, Semana Santa o Fallas? (Comparar ventas en fechas clave con el resto del año).**
 
-```{r}
+```{r,echo=FALSE}
 library(dplyr)
 
 tickets_df <- tickets_df %>%
@@ -410,7 +410,7 @@ Los productos que mas se suelen vender en Fallas son: Harina Integral, Habas y A
 
 3.¿Se compran productos diferentes en zonas urbanas frente a rurales? (Agrupar por ciudad o código postal y comparar top productos).
 
-```{r}
+```{r,echo=FALSE}
 library(pdftools)
 library(stringr)
 library(dplyr)
@@ -447,14 +447,15 @@ if (is.data.frame(tickets_df)) {
 } else {
   print("El dataframe tickets_df no se ha creado correctamente.")
 }
-#En la zona urbana, los productos más comprados parecen ser leche desnatada con calcio y queso lonchas cabra, que son productos lácteos y envasados al contario que en la zona rural, cuyos productos más comprados incluyen copos de avena y garbanzo m. cocido, que son alimentos más básicos y no tan procesados.
-#En la zona urbana, hay una mayor presencia de productos procesados y envasados, como leches y quesos, que pueden ser más comunes en áreas con mayores recursos y una oferta variada en supermercados, no como en la zona rural, que los productos tienden a ser más básicos y naturales, como el garbanzo cocido y chapata cristal, lo que podría reflejar una preferencia por alimentos menos procesados
+
 ```
+En la zona urbana, los productos más comprados parecen ser leche desnatada con calcio y queso lonchas cabra, que son productos lácteos y envasados al contario que en la zona rural, cuyos productos más comprados incluyen copos de avena y garbanzo m. cocido, que son alimentos más básicos y no tan procesados.
+En la zona urbana, hay una mayor presencia de productos procesados y envasados, como leches y quesos, que pueden ser más comunes en áreas con mayores recursos y una oferta variada en supermercados, no como en la zona rural, que los productos tienden a ser más básicos y naturales, como el garbanzo cocido y chapata cristal, lo que podría reflejar una preferencia por alimentos menos procesados
 
 4.¿Qué productos suelen comprarse juntos con frecuencia? (por ejemplo, pan con chocolate) (Analizar combinaciones frecuentes dentro del mismo ticket).
 
-```{r}
-library(dplyr)
+```{r,echo=FALSE}
+
 library(arules)
 # Crear una lista de transacciones
 transacciones <- tickets_df %>%
@@ -477,7 +478,7 @@ inspect(reglas_interesantes)
 
 5.¿Qué productos se mantienen en la cesta aunque cambien de precio? (Observar si bajadas o subidas de precio afectan a las unidades compradas).
 
-```{r}
+```{r,echo=FALSE}
 library(ggplot2)
 library(dplyr)
 # Agrupar por producto y calcular la media de precio y cantidad comprada por cada producto
@@ -500,13 +501,14 @@ ggplot(productos_precio_cantidad, aes(x = precio_promedio, y = cantidad_total)) 
        x = "Precio Promedio",
        y = "Cantidad Total Comprada")
 colnames(tickets_df)
-#El gráfico muestra una correlación negativa entre el precio promedio y la cantidad comprada. Es decir, a medida que el precio promedio aumenta, la cantidad comprada disminuye.
-# La línea azul de regresión parece indicar que, en general, los productos más caros tienden a venderse menos
+
 ```
+El gráfico muestra una correlación negativa entre el precio promedio y la cantidad comprada. Es decir, a medida que el precio promedio aumenta, la cantidad comprada disminuye.
+La línea azul de regresión parece indicar que, en general, los productos más caros tienden a venderse menos
 
 6.¿Cuántos productos se compran en promedio por ticket? (Contar productos por ticket y calcular la media).
 
-```{r}
+```{r,echo=FALSE}
 library(tidyr)
 library(dplyr)
 library(purrr)
@@ -539,7 +541,7 @@ Los productos de venta por unidades (como pan, huevos, o productos no pesados) s
 
 8.¿Cómo cambia el gasto promedio según el día de la semana? (Comparar el total gastado y cantidad de tickets por día).
 
-```{r}
+```{r,echo=FALSE}
 library(knitr)
 
 gasto_por_dia <- tickets_df %>%
@@ -561,7 +563,7 @@ El gasto promedio es más alto durante el día del Sábado, probablemente porque
 
 9.¿Qué día tiene menos volumen de compras? ¿Y cuál el mayor? (Contar número de tickets por día de la semana).
 
-```{r}
+```{r,echo=FALSE}
 tickets_por_dia <- tickets_df %>%
   distinct(ticket_id, .keep_all = TRUE) %>%  
   mutate(dia_semana = weekdays(fecha)) %>%   
@@ -577,7 +579,7 @@ El domingo registra el menor volumen de compras (solo 1 ticket), ya que Mercadon
 
 10¿Qué mes registra mayores compras de frutas y verduras? (Filtrar por categoría y agrupar por mes).
 
-```{r}
+```{r,echo=FALSE}
 library(lubridate)
 
 frutas_verduras <- tickets_df %>%
@@ -611,7 +613,7 @@ El mes de Enero es el que registra mayores compras de fruta y verdura con un tot
 
 19. ¿**Cuáles son los productos más comprados por la mañana frente a la tarde? (Agrupar tickets por franja horaria y analizar top productos).**
 
-```{r}
+```{r,echo=FALSE}
 library(hms)
 
 tickets_df <- tickets_df %>%
@@ -752,7 +754,6 @@ ventas_totales
 
 ```
 
-
 ```{r}
 
 library(scales)
@@ -767,6 +768,7 @@ ggplot(tickets_df, aes(x = cantidad, y = precio_unitario)) +
 
 
 ```
+
 Este gráfico corresponde a uno de dispersión con puntos “jittered” o dispersos, lo que resulta útil dada la gran concentración de valores sobre ciertas combinaciones de cantidad y precio_unitario. Para una mejor visualización, ambos ejes se han escalado en logaritmo base 10, permitiendo observar detalles tanto en valores bajos como altos.
 
 Es evidente notar que hay una mayor densidad de observaciones cuando la cantidad comprada es igual a 1. Este comportamiento es esperable en compras de supermercado, donde los productos se adquieren frecuentemente de forma unitaria. En cambio, a medida que la cantidad aumenta, los precios unitarios tienden a disminuir, lo cual podría indicar productos más económicos vendidos por peso (por ejemplo, fruta o legumbres), o bien productos en formato ahorro.
@@ -774,7 +776,6 @@ Es evidente notar que hay una mayor densidad de observaciones cuando la cantidad
 También se identifican algunos puntos dispersos hacia la parte superior izquierda del gráfico: observaciones con precio unitario elevado y cantidad baja, lo que probablemente corresponda a productos premium o de alto valor añadido. Estos casos pueden ser considerados outliers naturales que aportan información útil sobre el comportamiento del consumidor.
 
 Los resultados numéricos y agrupaciones específicas no se detallan en el presente documento para no sobrecargar el texto, pero se encuentran disponibles en el fichero .Rmd para su consulta y reproducción.
-
 
 ```{r}
 
@@ -793,6 +794,7 @@ ggplot(bar_data, aes(x = supermercado, y = n, fill = tipo_pago)) +
   theme_minimal()
 
 ```
+
 Este gráfico corresponde a una representación de barras agrupadas que muestra la relación entre la variable categórica supermercado y las distintas modalidades de tipo_pago registradas en las transacciones. En él, se visualiza claramente la distribución de los métodos de pago utilizados por los clientes, diferenciando entre las distintas tarjetas y registros sin información (NA).
 
 Es evidente notar que la tarjeta Mastercard es la forma de pago mayoritariamente utilizada en el supermercado MERCADONA, con una diferencia considerable respecto al resto de métodos. Este dominio podría deberse a acuerdos comerciales, promociones específicas o simplemente preferencias de los consumidores habituales de la cadena.
@@ -822,15 +824,12 @@ ggplot(tickets_df, aes(x = categoria, y = precio_unitario)) +
 
 ```
 
-
 Este gráfico de tipo boxplot representa la distribución del precio_unitario según la categoria del producto. El objetivo es comparar cómo varía el coste por unidad entre distintos tipos de artículos: venta_por_unidades, fruta/verdura y pescado. Para facilitar la comparación entre rangos de precios muy dispares, el eje vertical se ha transformado mediante logaritmo base 10.
 
 Se observa que los productos de la categoría pescado presentan, en general, los precios unitarios más elevados, con una mediana cercana a 10 €, lo cual es coherente con el carácter premium o perecedero de este tipo de alimentos. Además, su distribución está más concentrada, indicando cierta homogeneidad de precios dentro de esta categoría, aunque no exenta de outliers.
 
-Por otro lado, la categoría venta_por_unidades muestra una alta variabilidad en los precios unitarios. Si bien su mediana es moderada (~2€), se detectan numerosos valores atípicos, tanto en el rango bajo como en el alto, lo que indica que este grupo incluye productos muy heterogéneos, desde artículos básicos hasta productos de alto valor por unidad.
+Por otro lado, la categoría venta_por_unidades muestra una alta variabilidad en los precios unitarios. Si bien su mediana es moderada (\~2€), se detectan numerosos valores atípicos, tanto en el rango bajo como en el alto, lo que indica que este grupo incluye productos muy heterogéneos, desde artículos básicos hasta productos de alto valor por unidad.
 
 La categoría más interesante es fruta/verdura, ya que presenta una distribución muy compacta y simétrica, con una mediana inferior a 2 € y pocos valores extremos. Este comportamiento indica una clara estabilidad de precios en esta categoría, que probablemente se vende a granel o por peso, lo que limita la dispersión de precios unitarios. Esta coherencia sugiere un control de precios más homogéneo, posiblemente por parte del supermercado o por la naturaleza del producto.
 
 En conjunto, este análisis permite entender cómo varía el precio unitario entre distintos tipos de productos y facilita la detección de anomalías o productos fuera de la norma. Resulta especialmente útil para tareas de supervisión de precios, segmentación comercial o estudio de hábitos de consumo por categoría.
-
-
