@@ -9,8 +9,6 @@ output:
   bookdown::html_document2:
     fig_caption: yes
     df_print: kable
- 
- 
 ---
 
 ```{r setup, include=FALSE}
@@ -216,13 +214,9 @@ if (!is.null(tickets_df)) {
 
 ```
 
-
 # Introducción
-En este proyecto se aborda el análisis exploratorio de
-datos a partir de tickets de supermercado, con el objetivo de extraer
-información relevante sobre los hábitos de consumo, productos
-adquiridos, precios y comportamiento de compra. El conjunto de datos que se utiliza pertenece a varios tickets del supermercado Mercadona proporcionados por la Universidad de Valencia (UV). En concreto, pertenece a una recolecta entre el profesor y varios alumnos de la asignatura de Tratamiento de datos.
-Este proyecto tiene como objetivo analizar los datos extraidos de los tickets para responder a las siguientes preguntas:
+
+En este proyecto se aborda el análisis exploratorio de datos a partir de tickets de supermercado, con el objetivo de extraer información relevante sobre los hábitos de consumo, productos adquiridos, precios y comportamiento de compra. El conjunto de datos que se utiliza pertenece a varios tickets del supermercado Mercadona proporcionados por la Universidad de Valencia (UV). En concreto, pertenece a una recolecta entre el profesor y varios alumnos de la asignatura de Tratamiento de datos. Este proyecto tiene como objetivo analizar los datos extraidos de los tickets para responder a las siguientes preguntas:
 
 ¿Cuáles son los 5 productos, de los vendidos por unidades, con más ventas ? ¿Cuántas unidades de cada uno se han vendido ?
 
@@ -236,90 +230,51 @@ Muestra mediante un gráfico de líneas como ha variado el precio por kilo de la
 
 Muestra mediante un diagrama el número de tickets recogidos cada día de las semana. ¿Si tuvieses que cerrar un día entre semana qué día lo harías ?
 
-1.¿Cuáles son las frutas más compradas durante la
-primavera? (Filtrar por fecha y categoría de producto).
+1.¿Cuáles son las frutas más compradas durante la primavera? (Filtrar por fecha y categoría de producto).
 
-2.¿Qué productos suelen comprarse más durante festivos como Navidad,
-Semana Santa o Fallas? (Comparar ventas en fechas clave con el resto del
-año).
+2.¿Qué productos suelen comprarse más durante festivos como Navidad, Semana Santa o Fallas? (Comparar ventas en fechas clave con el resto del año).
 
-3.¿Se compran productos diferentes en zonas urbanas frente a rurales?
-(Agrupar por ciudad o código postal y comparar top productos).
+3.¿Se compran productos diferentes en zonas urbanas frente a rurales? (Agrupar por ciudad o código postal y comparar top productos).
 
-4.¿Qué productos suelen comprarse juntos con frecuencia? (por ejemplo,
-pan con chocolate) (Analizar combinaciones frecuentes dentro del mismo
-ticket).
+4.¿Qué productos suelen comprarse juntos con frecuencia? (por ejemplo, pan con chocolate) (Analizar combinaciones frecuentes dentro del mismo ticket).
 
-5.¿Qué productos se mantienen en la cesta aunque cambien de precio?
-(Observar si bajadas o subidas de precio afectan a las unidades
-compradas).
+5.¿Qué productos se mantienen en la cesta aunque cambien de precio? (Observar si bajadas o subidas de precio afectan a las unidades compradas).
 
-6.¿Cuántos productos se compran en promedio por ticket? (Contar
-productos por ticket y calcular la media).
+6.¿Cuántos productos se compran en promedio por ticket? (Contar productos por ticket y calcular la media).
 
-7.¿Qué categorías suelen comprarse en conjunto? (Ej. frutas + lácteos)
-(Clasificar productos por categoría y ver combinaciones más frecuentes).
+7.¿Qué categorías suelen comprarse en conjunto? (Ej. frutas + lácteos) (Clasificar productos por categoría y ver combinaciones más frecuentes).
 
-8.¿Cómo cambia el gasto promedio según el día de la semana? (Comparar el
-total gastado y cantidad de tickets por día).
+8.¿Cómo cambia el gasto promedio según el día de la semana? (Comparar el total gastado y cantidad de tickets por día).
 
-<<<<<<< HEAD
-9.¿Qué día tiene menos volumen de compras? ¿Y cuál el mayor? (Contar
-número de tickets por día de la semana).
+9.¿Qué día tiene menos volumen de compras? ¿Y cuál el mayor? (Contar número de tickets por día de la semana).
 
-10¿Qué mes registra mayores compras de frutas y verduras? (Filtrar por
-categoría y agrupar por mes).
+10¿Qué mes registra mayores compras de frutas y verduras? (Filtrar por categoría y agrupar por mes).
 
-11. ¿Qué productos tienen mayor rotación semanal y cuáles permanecen más
-    tiempo sin comprarse? (Agrupar ventas por semana y producto,
-    analizar frecuencia de compra).
-=======
-```
->>>>>>> d8a2247f7c238860f56b121ced0d2f5134ff3ee1
+11. ¿Qué productos tienen mayor rotación semanal y cuáles permanecen más tiempo sin comprarse? (Agrupar ventas por semana y producto, analizar frecuencia de compra).
 
-12. ¿Cómo afecta la climatología al tipo de productos comprados? (ej.
-    helados en verano, sopas en invierno) (Relacionar fechas con
-    estaciones y tipos de producto).
+12. ¿Cómo afecta la climatología al tipo de productos comprados? (ej. helados en verano, sopas en invierno) (Relacionar fechas con estaciones y tipos de producto).
 
-13. ¿Qué impacto tienen las promociones o descuentos en la cantidad
-    comprada de un producto? (Comparar unidades vendidas antes, durante
-    y después de una promoción).
+13. ¿Qué impacto tienen las promociones o descuentos en la cantidad comprada de un producto? (Comparar unidades vendidas antes, durante y después de una promoción).
 
-14. ¿Qué ticket promedio se observa según el tipo de establecimiento
-    (urbano, rural, turístico)? (Agrupar por zona y calcular gasto
-    promedio por ticket).
+14. ¿Qué ticket promedio se observa según el tipo de establecimiento (urbano, rural, turístico)? (Agrupar por zona y calcular gasto promedio por ticket).
 
-15. ¿Qué productos suelen ser los primeros en desaparecer en compras
-    grandes (+20 productos)? (Analizar orden de productos en tickets
-    extensos).
+15. ¿Qué productos suelen ser los primeros en desaparecer en compras grandes (+20 productos)? (Analizar orden de productos en tickets extensos).
 
-16. ¿Existen diferencias de compra entre clientes que compran entre
-    semana frente a fines de semana? (Comparar volumen y tipo de
-    productos por día).
+16. ¿Existen diferencias de compra entre clientes que compran entre semana frente a fines de semana? (Comparar volumen y tipo de productos por día).
 
-17. ¿Hay patrones de consumo distintos entre zonas costeras y zonas del
-    interior? (Comparar categorías más compradas según localización
-    geográfica).
+17. ¿Hay patrones de consumo distintos entre zonas costeras y zonas del interior? (Comparar categorías más compradas según localización geográfica).
 
-18. ¿Qué marcas blancas se compran más en comparación con productos de
-    marca? (Clasificar productos por tipo de marca y analizar
-    proporciones de compra).
+18. ¿Qué marcas blancas se compran más en comparación con productos de marca? (Clasificar productos por tipo de marca y analizar proporciones de compra).
 
-19. ¿Cuáles son los productos más comprados por la mañana frente a la
-    tarde? (Agrupar tickets por franja horaria y analizar top
-    productos).
+19. ¿Cuáles son los productos más comprados por la mañana frente a la tarde? (Agrupar tickets por franja horaria y analizar top productos).
 
-<<<<<<< HEAD
-20. ¿Qué artículos aumentan su venta a fin de mes (posiblemente por
-    cobro de sueldos)? (Comparar ventas por semana del mes,
-    especialmente última semana)
-=======
+20. ¿Qué artículos aumentan su venta a fin de mes (posiblemente por cobro de sueldos)? (Comparar ventas por semana del mes, especialmente última semana)
+
 El resto del ranking lo componen productos frescos y de consumo estacional como la SANDÍA BAJA SEMILLAS (23 kg), el PEPINO (20 kg) y el MELÓN PIEL SAPO (16 kg). Estos datos reflejan una clara inclinación del consumidor por productos frescos, saludables y especialmente apropiados para el verano, lo cual puede estar ligado al momento del año en que se recopilaron los tickets.
 
 ***Muestra mediante un gráfico de líneas como ha variado el precio por kilo de las bananas y los plátanos en los tickets disponibles, a lo largo del tiempo.***
 
 ```{r}
-
 library(lubridate)
 
 # Filtrar bananas y plátanos vendidos por peso
@@ -338,8 +293,6 @@ ggplot(banana_platano, aes(x = fecha, y = precio_promedio, color = producto)) +
     y = "Precio por kilo (€)"
   ) +
   theme_minimal()
-
-
 
 ```
 
@@ -683,8 +636,7 @@ top_por_franja
 
 Los productos que mas se venden por la mañana son: Tomate triturado, Atún claro calvom copos de avena, queso lonchas cabra y espárragos verde fino. Mientras que por la tarde: huevos grandes-L, plátano, atún claro oliva, bolsa plástico y yogur coco
 
-20. ¿Qué artículos aumentan su venta a fin de mes (posiblemente por cobro de sueldos)? (Comparar ventas por semana del mes, especialmente última semana)
->>>>>>> d8a2247f7c238860f56b121ced0d2f5134ff3ee1
+20. ¿Qué artículos aumentan su venta a fin de mes (posiblemente por cobro de sueldos)? (Comparar ventas por semana del mes, especialmente última semana) \>\>\>\>\>\>\> d8a2247f7c238860f56b121ced0d2f5134ff3ee1
 
 # Material y Métodos
 
@@ -714,7 +666,6 @@ knitr::kable(
 )
 ```
 
-
 Para el correcto desarrollo de la exportación y análisis de los datos, en primer lugar, se cargan todas las librerías necesarias al principio del código. Estas librerías son las mostradas en la Tabla \ref{tab:tabla-librerias}.
 
 Posteriormente, se realiza la carga de los tickets. Estos tickets se encuentran
@@ -729,12 +680,12 @@ Posteriormente, se realiza la carga de los tickets. Estos tickets se encuentran
 
 ### *Análisis de los outliers*
 
-
-
 # Resultados
 
 # Conclusiones
+
 ¿Qué productos tienen mayor rotación semanal y cuáles permanecen más tiempo sin comprarse? (Agrupar ventas por semana y producto,analizar frecuencia de compra).
+
 ```{r}
 rotacion_semanal <- tickets_df %>%
   mutate(semana = week(fecha)) %>%
@@ -753,11 +704,8 @@ list(
 )
 ```
 
-
-
-
-
 ¿Cuáles son los productos más comprados por la mañana frente a la tarde? (Agrupar tickets por franja horaria y analizar productos).
+
 ```{r}
 tickets_df <- tickets_df %>%
   mutate(dia_semana = weekdays(fecha),
@@ -784,8 +732,8 @@ list(
 #Entre semana, los productos más comprados son básicos y de uso diario, como copos de avena, garbanzo cocido y leche desnatada, lo que refleja un consumo rutinario y enfocado en la alimentación diaria. En cambio, durante los fines de semana, los productos más populares incluyen bebidas alcohólicas, como cerveza Radler, y productos más relacionados con el ocio, como la chapata y el jamón cocido. Esto sugiere que las compras de fin de semana están más orientadas a momentos sociales y consumos ocasionales, mientras que entre semana se priorizan alimentos esenciales.
 ```
 
-
 ¿Qué artículos aumentan su venta a fin de mes (posiblemente por cobro de sueldos)? (Comparar ventas por semana del mes, especialmente última semana)
+
 ```{r}
 tickets_df <- tickets_df %>%
   mutate(fecha = as.POSIXct(fecha, format="%d/%m/%Y %H:%M"),  
@@ -801,4 +749,48 @@ ventas_totales
 
 
 #Con los datos obtenidos, se observa que las ventas antes del día 20 del mes fueron significativamente mayores (488 unidades) en comparación con las ventas después del día 20 (291 unidades). Esto puede estar relacionado con el comportamiento de compra de los consumidores, ya que generalmente muchas personas cobran su sueldo durante la primera semana del mes, lo que podría incentivar compras más grandes en los primeros días. En cambio, después del día 20, las compras parecen disminuir, posiblemente debido a la menor disponibilidad de dinero disponible tras la recepción del sueldo. Este patrón sugiere que las compras tienden a ser más elevadas al inicio del mes.
+
 ```
+
+
+```{r}
+
+library(scales)
+
+# 1. cantidad vs precio_unitario
+ggplot(tickets_df, aes(x = cantidad, y = precio_unitario)) +
+  geom_point(alpha = 0.4, color = "steelblue") +
+  scale_x_log10(labels = comma) +
+  scale_y_log10(labels = comma) +
+  labs(title = "Relación entre cantidad y precio unitario",
+       x = "Cantidad (log10)", y = "Precio unitario (€) (log10)")
+
+
+```
+Este gráfico corresponde a uno de dispersión con puntos “jittered” o dispersos, lo que resulta útil dada la gran concentración de valores sobre ciertas combinaciones de cantidad y precio_unitario. Para una mejor visualización, ambos ejes se han escalado en logaritmo base 10, permitiendo observar detalles tanto en valores bajos como altos.
+
+Es evidente notar que hay una mayor densidad de observaciones cuando la cantidad comprada es igual a 1. Este comportamiento es esperable en compras de supermercado, donde los productos se adquieren frecuentemente de forma unitaria. En cambio, a medida que la cantidad aumenta, los precios unitarios tienden a disminuir, lo cual podría indicar productos más económicos vendidos por peso (por ejemplo, fruta o legumbres), o bien productos en formato ahorro.
+
+También se identifican algunos puntos dispersos hacia la parte superior izquierda del gráfico: observaciones con precio unitario elevado y cantidad baja, lo que probablemente corresponda a productos premium o de alto valor añadido. Estos casos pueden ser considerados outliers naturales que aportan información útil sobre el comportamiento del consumidor.
+
+Los resultados numéricos y agrupaciones específicas no se detallan en el presente documento para no sobrecargar el texto, pero se encuentran disponibles en el fichero .Rmd para su consulta y reproducción.
+
+
+```{r}
+
+# Agrupar y contar combinaciones
+bar_data <- tickets_df %>%
+  group_by(supermercado, tipo_pago) %>%
+  summarise(n = n()) %>%
+  ungroup()
+
+# Gráfico de barras agrupadas
+ggplot(bar_data, aes(x = supermercado, y = n, fill = tipo_pago)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Distribución del tipo de pago según supermercado",
+       x = "Supermercado", y = "Número de tickets",
+       fill = "Tipo de pago") +
+  theme_minimal()
+
+```
+
