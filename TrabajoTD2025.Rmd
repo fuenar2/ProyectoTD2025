@@ -9,7 +9,6 @@ output:
   bookdown::html_document2:
     fig_caption: yes
     df_print: kable
-
 ---
 
 ```{r setup, include=FALSE}
@@ -240,11 +239,7 @@ if (!is.null(tickets_df)) {
 
 # Introducción
 
-En este proyecto se aborda el análisis exploratorio de
-datos a partir de tickets de supermercado, con el objetivo de extraer
-información relevante sobre los hábitos de consumo, productos
-adquiridos, precios y comportamiento de compra. El conjunto de datos que se utiliza pertenece a varios tickets del supermercado Mercadona proporcionados por la Universidad de Valencia (UV). En concreto, pertenece a una recolecta entre el profesor y varios alumnos de la asignatura de Tratamiento de datos.
-Este proyecto tiene como objetivo analizar los datos extraidos de los tickets para responder a las siguientes preguntas:
+En este proyecto se aborda el análisis exploratorio de datos a partir de tickets de supermercado, con el objetivo de extraer información relevante sobre los hábitos de consumo, productos adquiridos, precios y comportamiento de compra. El conjunto de datos que se utiliza pertenece a varios tickets del supermercado Mercadona proporcionados por la Universidad de Valencia (UV). En concreto, pertenece a una recolecta entre el profesor y varios alumnos de la asignatura de Tratamiento de datos. Este proyecto tiene como objetivo analizar los datos extraidos de los tickets para responder a las siguientes preguntas:
 
 ¿Cuáles son los 5 productos, de los vendidos por unidades, con más ventas ? ¿Cuántas unidades de cada uno se han vendido ?
 
@@ -253,7 +248,6 @@ Si consideramos la categoría de FRUTAS Y VERDURAS. Cuáles son los 5 productos 
 Si consideramos la categoría de PESCADO. Cuáles son los 5 productos más vendidos ? ¿Cuántos kilos se han vendido de cada uno de estos productos ?
 
 Muestra mediante un gráfico de líneas como ha variado el precio por kilo de las bananas y los plátanos en los tickets disponibles, a lo largo del tiempo.
-
 
 ***¿Cuáles son los 5 productos, de los vendidos por unidades, con más ventas ? ¿Cuántas unidades de cada uno se han vendido ?***
 
@@ -378,7 +372,6 @@ Se aprecia que el precio del plátano ha sido más variable, alcanzando máximos
 Por el contrario, el precio de la banana se mantiene relativamente estable en torno a 1,4 €/kg durante la mayor parte del periodo. Solo hacia finales de 2024 se observa una caída puntual por debajo de 1,2 €/kg, seguida de una recuperación en los primeros meses de 2025. Esta estabilidad podría deberse a una cadena de suministro más global o menos expuesta a factores locales.
 
 La comparación entre ambas frutas refleja cómo productos similares pueden comportarse de forma distinta en el mercado, y cómo el precio del plátano parece estar más expuesto a variaciones estacionales o logísticas.
-
 
 ¿ Cuál es la procedencia de los tickets ?¿ Qué ciudad/ pueblo tiene un mayor número de tickets ?
 
