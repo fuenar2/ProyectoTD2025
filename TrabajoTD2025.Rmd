@@ -237,6 +237,11 @@ if (!is.null(tickets_df)) {
 
 ```
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> preguntas_78910
 # Introducción
 
 En este proyecto se aborda el análisis exploratorio de datos a partir de tickets de supermercado, con el objetivo de extraer información relevante sobre los hábitos de consumo, productos adquiridos, precios y comportamiento de compra. El conjunto de datos que se utiliza pertenece a varios tickets del supermercado Mercadona proporcionados por la Universidad de Valencia (UV). En concreto, pertenece a una recolecta entre el profesor y varios alumnos de la asignatura de Tratamiento de datos. Este proyecto tiene como objetivo analizar los datos extraidos de los tickets para responder a las siguientes preguntas:
@@ -285,6 +290,7 @@ top_frutas_verduras <- tickets_df %>%
 
 kable(top_frutas_verduras)
 
+<<<<<<< HEAD
 ggplot(top_frutas_verduras, aes(x = reorder(producto, kilos_vendidos), y = kilos_vendidos, fill = producto)) +
   geom_col() +
   geom_text(aes(label = kilos_vendidos), vjust = -0.5) +
@@ -299,6 +305,97 @@ ggplot(top_frutas_verduras, aes(x = reorder(producto, kilos_vendidos), y = kilos
 
 
 ```
+=======
+```{r}
+library(tidyr)
+library(dplyr)
+library(purrr)
+
+# Agrupamos las categorías por ticket
+categorias_por_ticket <- tickets_df %>%
+  filter(!is.na(categoria)) %>%  
+  group_by(ticket_id) %>%
+  summarise(categorias = list(unique(categoria))) %>%
+  filter(lengths(categorias) >= 2) 
+
+# Obtenemos combinaciones de 2 categorías
+pares_categorias <- categorias_por_ticket %>%
+  mutate(
+    pares = map(categorias, ~combn(sort(.x), 2, simplify = FALSE))
+  ) %>%
+  select(pares) %>%
+  unnest(pares) %>%
+  count(pares, sort = TRUE)
+
+# Mostramos las combinaciones más frecuentes
+pares_categorias %>% 
+  slice_max(n, n = 10) %>%
+  mutate(pares = map_chr(pares, ~ paste(.x, collapse = " + "))) %>%
+  kable(caption = "Top combinaciones de categorías en tickets")
+
+```
+Los productos de venta por unidades (como pan, huevos, o productos no pesados) suelen comprarse junto a frutas y verduras, y en mucha menor medida, junto al pescado. También es común que los consumidores compren frutas/verduras junto con pescado.
+
+8.¿Cómo cambia el gasto promedio según el día de la semana? (Comparar el
+total gastado y cantidad de tickets por día).
+
+```{r}
+library(knitr)
+
+gasto_por_dia <- tickets_df %>%
+  distinct(ticket_id, .keep_all = TRUE) %>%  
+  mutate(dia_semana = weekdays(fecha)) %>%   
+  group_by(dia_semana) %>%
+  summarise(
+    total_gastado = sum(total, na.rm = TRUE),     
+    tickets = n(),                                
+    gasto_promedio = total_gastado / tickets      
+  ) %>%
+  arrange(match(dia_semana, c("lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo")))
+
+gasto_por_dia %>%  
+  kable(caption = "Gasto promedio por día de la semana")
+```
+El gasto promedio es más alto durante el día del Sábado, probablemente porque la gente hace más compras grandes. El gasto disminuye entre semana, siendo el jueves el día con el promedio más bajo.
+
+9.¿Qué día tiene menos volumen de compras? ¿Y cuál el mayor? (Contar
+número de tickets por día de la semana).
+
+```{r}
+tickets_por_dia <- tickets_df %>%
+  distinct(ticket_id, .keep_all = TRUE) %>%  
+  mutate(dia_semana = weekdays(fecha)) %>%   
+  group_by(dia_semana) %>%
+  summarise(tickets = n())%>%
+  arrange(tickets)
+
+tickets_por_dia %>%  
+  kable(caption = "Número de tickets por día de la semana")
+```
+El domingo registra el menor volumen de compras (solo 1 ticket), ya que Mercadona permanece cerrado ese día, excepto en fechas especiales como Navidad. Probablemente por este motivo, debido a la planificación de los clientes, el día con mayor actividad registrada es el sábado (alcanzando 81 tickets).
+
+10¿Qué mes registra mayores compras de frutas y verduras? (Filtrar por
+categoría y agrupar por mes).
+
+```{r}
+library(lubridate)
+
+frutas_verduras <- tickets_df %>%
+  filter(categoria %in% "fruta/verdura") %>%     
+  mutate(mes = month(fecha, label = TRUE)) %>% 
+  group_by(mes, categoria) %>%
+  summarise(kilos = sum(cantidad, na.rm = TRUE), .groups = "drop") %>%
+  arrange(desc(kilos))
+
+frutas_verduras %>%  
+  kable(caption = "Número de compras de frutas/verduras por meses del año")
+```
+El mes de Enero es el que registra mayores compras de fruta y verdura con un total de 68kg.
+
+11. ¿Qué productos tienen mayor rotación semanal y cuáles permanecen más
+    tiempo sin comprarse? (Agrupar ventas por semana y producto,
+    analizar frecuencia de compra).
+>>>>>>> preguntas_78910
 
 El producto con mayor volumen de venta es claramente el PLÁTANO, con 59 kilos vendidos, lo que lo posiciona como el más demandado en este grupo. Le sigue la BANANA, con 26 kilos, lo que confirma que las frutas tropicales tienen una fuerte presencia en la cesta de la compra.
 
