@@ -318,7 +318,7 @@ gasto_por_dia <- tickets_df %>%
 gasto_por_dia %>%  
   kable(caption = "Gasto promedio por día de la semana")
 ```
-El gasto promedio es más alto durante el fin de semana(Sábados) probablemente porque la gente hace más compras grandes. El gasto disminuye entre semana, siendo el jueves el día con el promedio más bajo.
+El gasto promedio es más alto durante el día del Sábado, probablemente porque la gente hace más compras grandes. El gasto disminuye entre semana, siendo el jueves el día con el promedio más bajo.
 
 9.¿Qué día tiene menos volumen de compras? ¿Y cuál el mayor? (Contar
 número de tickets por día de la semana).
