@@ -474,7 +474,70 @@ Los productos que mas se suelen vender en Fallas son: Harina Integral, Habas y A
 
 3.¿Se compran productos diferentes en zonas urbanas frente a rurales? (Agrupar por ciudad o código postal y comparar top productos).
 
+```{r}
+library(pdftools)
+library(stringr)
+library(dplyr)
+# Obtener la lista de archivos PDF
+pdf_files <- list.files(path = "C:/Users/hcuny/Desktop/proyectoTD/CarpetaAlumno/data", pattern = "\\.pdf$", full.names = TRUE)
+# Procesar cada archivo PDF y combinar los resultados en un solo dataframe
+ticket_data_list <- lapply(pdf_files, function(file_path) {
+  procesar_ticket(file_path)  # Asumiendo que procesar_ticket devuelve un dataframe
+})
+# Combinar los resultados en un solo dataframe
+tickets_df <- do.call(rbind, ticket_data_list)
+# Verificar si tickets_df es un dataframe
+if (is.data.frame(tickets_df)) {
+  # Definir una función para clasificar como 'urbana' o 'rural' según el código postal
+  clasificar_zona <- function(codigo_postal) {
+    # Definir los códigos postales urbanos
+    urbanos <- c('46001', '46002', '46003', '46004', '46005', '46006', '46007', '46008', '46009', '46010', '46011', '46012', '46013', '46014', '46015', '46016', '46017', '46018', '46019', '46020', '46021', '46022', '46023', '46024', '46025', '46026', '46027', '46028', '46029', '46030', '46031')  # Códigos postales urbanos de la zona
+    # Clasificar la zona según el código postal
+    if (substr(as.character(codigo_postal), 1, 5) %in% urbanos) {
+      return('Urbana')
+    } else {
+      return('Rural')
+    }
+  }
+  # Aplicar la clasificación de zona a cada código postal en el dataframe
+  tickets_df$zona <- sapply(tickets_df$codigo_postal, clasificar_zona)
+  # Agrupar por zona y producto, y sumar las cantidades
+  productos_por_zona <- tickets_df %>%
+    group_by(zona, producto) %>%
+    summarise(cantidad_total = sum(cantidad, na.rm = TRUE)) %>%
+    arrange(desc(cantidad_total))
+  # Ver los productos más comprados por zona
+  head(productos_por_zona)
+} else {
+  print("El dataframe tickets_df no se ha creado correctamente.")
+}
+#En la zona urbana, los productos más comprados parecen ser leche desnatada con calcio y queso lonchas cabra, que son productos lácteos y envasados al contario que en la zona rural, cuyos productos más comprados incluyen copos de avena y garbanzo m. cocido, que son alimentos más básicos y no tan procesados.
+#En la zona urbana, hay una mayor presencia de productos procesados y envasados, como leches y quesos, que pueden ser más comunes en áreas con mayores recursos y una oferta variada en supermercados, no como en la zona rural, que los productos tienden a ser más básicos y naturales, como el garbanzo cocido y chapata cristal, lo que podría reflejar una preferencia por alimentos menos procesados
+```
+
 4.¿Qué productos suelen comprarse juntos con frecuencia? (por ejemplo, pan con chocolate) (Analizar combinaciones frecuentes dentro del mismo ticket).
+
+```{r}
+library(dplyr)
+library(arules)
+# Crear una lista de transacciones
+transacciones <- tickets_df %>%
+  group_by(ticket_id) %>%
+  summarise(productos = list(producto)) %>%
+  ungroup()
+# Convertimos las transacciones en un formato transaccional
+transacciones_list <- as(transacciones$productos, "transactions")
+# Ejecutar el algoritmo Apriori para encontrar combinaciones frecuentes
+# Ajustamos los parámetros para filtrar las reglas menos frecuentes
+reglas <- apriori(transacciones_list, parameter = list(supp = 0.05, conf = 0.5))  # Aumentamos el soporte
+# Inspeccionar las reglas generadas
+inspect(reglas)
+# Filtrar reglas interesantes con un lift mayor a 1.5
+reglas_interesantes <- subset(reglas, lift > 1.5)
+# Ver las reglas interesantes
+inspect(reglas_interesantes)
+#Parece que los clientes que compran CACAHUETE CHOCOLATE tienden a comprar también ALMENDRA NATURAL y/o PEPINO, lo que podría indicar una preferencia por productos saludables o snacks que se complementan entre sí
+```
 
 5.¿Qué productos se mantienen en la cesta aunque cambien de precio? (Observar si bajadas o subidas de precio afectan a las unidades compradas).
 
