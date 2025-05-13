@@ -580,3 +580,41 @@ Posteriormente, se realiza la carga de los tickets. Estos tickets se encuentran
 # Resultados
 
 # Conclusiones
+```{r}
+# Agregar la columna 'semana' y calcular las unidades vendidas por producto cada semana
+rotacion_semanal <- tickets_df %>%
+  mutate(semana = week(fecha)) %>%
+  group_by(semana, producto) %>%
+  summarise(unidades_vendidas = sum(cantidad, na.rm = TRUE)) %>%
+  ungroup()
+
+# Identificar productos con mayor y menor rotación sumando las unidades vendidas
+rotacion_total <- rotacion_semanal %>%
+  group_by(producto) %>%
+  summarise(total_unidades_vendidas = sum(unidades_vendidas)) %>%
+  ungroup()
+
+# Mostrar los 10 productos con mayor y menor rotación
+list(
+  mayor_rotacion = head(arrange(rotacion_total, desc(total_unidades_vendidas)), 10),
+  menor_rotacion = head(arrange(rotacion_total, total_unidades_vendidas), 10)
+)
+ 
+```
+
+
+
+
+```{r}
+```
+
+
+
+
+```{r}
+```
+
+
+
+```{r}
+```
